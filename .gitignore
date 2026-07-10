@@ -1,0 +1,88 @@
+# --- Laravel ---
+/vendor
+/node_modules
+/public/hot
+/public/storage
+/public/build
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/framework/testing/*
+/storage/logs/*
+/storage/pail
+/storage/debugbar
+/storage/*.key
+/bootstrap/cache/*.php
+/bootstrap/cache/packages.php
+/bootstrap/cache/services.php
+
+# --- Environment & Secrets ---
+.env
+.env.backup
+.env.production
+.env.local
+.env.staging
+.env.testing
+/auth.json
+Homestead.json
+Homestead.yaml
+/oauth-private.key
+/oauth-public.key
+
+# --- IDE & Editor ---
+/.codex
+/.cursor/
+/.idea
+/.nova
+/.phpactor.json
+/.phpunit.cache
+/.phpunit.result.cache
+/.vscode
+/.zed
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
+*.sublime-project
+*.swo
+
+# --- OS Files ---
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# --- Logs & Debug ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- Testing ---
+/phpunit.xml
+.phpunit.result.cache
+/.phpunit.cache
+
+# --- Docker ---
+/docker-compose.override.yml
+/docker-compose.prod.yml
+
+# --- Compiled Assets ---
+/public/css/*.map
+/public/js/*.map
+/public/fonts-manifest.dev.json
+/mix-manifest.json
+
+# --- Local DB ---
+*.sqlite
+*.sqlite3
+/database/*.sqlite
+/database/*.sqlite3
+
+# --- Misc ---
+/.fleet
+/.php_cs
+/.php_cs.cache
+/coverage
+/docs/public
+/docs/build

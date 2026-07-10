@@ -1,0 +1,56 @@
+<?php
+// app/Http/Controllers/HomeController.php
+
+namespace App\Http\Controllers;
+
+use App\Models\Course;
+use App\Models\Product;
+use App\Models\Innovation;
+use App\Models\User;
+use App\Models\Order;
+use App\Models\DiseaseAlert;
+use Illuminate\Support\Facades\Cache;
+
+class HomeController extends Controller
+{
+    public function index()
+    {
+        // Cache platform-wide stats for 15 minutes — these are expensive
+        // aggregate queries that don't need to be real-time on the homepage.
+        $stats = Cache::remember('homepage_stats', now()->addMinutes(15), function () {
+            return [
+                'total_farmers'    => User::farmers()->count(),
+                'products_sold'    => Order::where('status', 'delivered')->count(),
+                'active_courses'   => Course::published()->count(),
+                'deliveries'       => \App\Models\Delivery::where('status', 'delivered')->count(),
+            ];
+        });
+
+        $featuredCourses = Course::published()
+            ->featured()
+            ->with('instructor')
+            ->limit(6)
+            ->get();
+
+        $featuredProducts = Product::active()
+            ->featured()
+            ->with('seller')
+            ->limit(8)
+            ->get();
+
+        $topInnovations = Innovation::approved()
+            ->topVoted()
+            ->with('user')
+            ->limit(3)
+            ->get();
+
+        $activeAlert = DiseaseAlert::active()
+            ->where('alert_type', 'critical')
+            ->latest()
+            ->first();
+
+        return view('pages.home', compact(
+            'stats', 'featuredCourses', 'featuredProducts', 'topInnovations', 'activeAlert'
+        ));
+    }
+}

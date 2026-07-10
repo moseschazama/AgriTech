@@ -1,0 +1,244 @@
+/* ============================================================
+   HOME PAGE JAVASCRIPT
+   ============================================================ */
+"use strict";
+
+/* ---- MARKETPLACE PRODUCTS ---- */
+const PRODUCTS = [
+    {
+        id: 1,
+        name: "Hybrid Maize Seed 5kg",
+        category: "Seeds",
+        price: "K 180",
+        unit: "/bag",
+        seller: "Seed-Co Zambia",
+        rating: 4.8,
+        emoji: "🌽",
+        bg: "linear-gradient(135deg,#dcfce7,#bbf7d0)",
+    },
+    {
+        id: 2,
+        name: "NPK Fertilizer 50kg",
+        category: "Fertilizer",
+        price: "K 320",
+        unit: "/bag",
+        seller: "Omnia Fertilizers",
+        rating: 4.7,
+        emoji: "🧪",
+        bg: "linear-gradient(135deg,#e0f2fe,#bae6fd)",
+    },
+    {
+        id: 3,
+        name: "Fresh Tomatoes 10kg Box",
+        category: "Produce",
+        price: "K 95",
+        unit: "/box",
+        seller: "Choma Farms",
+        rating: 4.9,
+        emoji: "🍅",
+        bg: "linear-gradient(135deg,#fef2f2,#fecaca)",
+    },
+    {
+        id: 4,
+        name: "Boer Goat (6 months)",
+        category: "Livestock",
+        price: "K 1,400",
+        unit: "/head",
+        seller: "Kafue Ranch",
+        rating: 4.6,
+        emoji: "🐐",
+        bg: "linear-gradient(135deg,#fef9c3,#fef08a)",
+    },
+    {
+        id: 5,
+        name: "Hand Sprayer 16L",
+        category: "Tools",
+        price: "K 245",
+        unit: "/unit",
+        seller: "AgriTools ZM",
+        rating: 4.5,
+        emoji: "💧",
+        bg: "linear-gradient(135deg,#f0fdf4,#dcfce7)",
+    },
+    {
+        id: 6,
+        name: "Soybean Seed 25kg",
+        category: "Seeds",
+        price: "K 280",
+        unit: "/bag",
+        seller: "Seed Zambia",
+        rating: 4.7,
+        emoji: "🫘",
+        bg: "linear-gradient(135deg,#fff7ed,#fed7aa)",
+    },
+    {
+        id: 7,
+        name: "Organic Compost 50kg",
+        category: "Fertilizer",
+        price: "K 150",
+        unit: "/bag",
+        seller: "EcoFarm",
+        rating: 4.8,
+        emoji: "🌿",
+        bg: "linear-gradient(135deg,#f0fdf4,#bbf7d0)",
+    },
+    {
+        id: 8,
+        name: "Water Pump 1HP",
+        category: "Equipment",
+        price: "K 2,800",
+        unit: "/unit",
+        seller: "IrrigaTech",
+        rating: 4.6,
+        emoji: "⚙️",
+        bg: "linear-gradient(135deg,#f5f3ff,#ede9fe)",
+    },
+];
+
+function renderMarketGrid() {
+    const grid = document.getElementById("marketGrid");
+    if (!grid) return;
+    grid.innerHTML = PRODUCTS.map(
+        (p) => `
+    <div class="product-card" data-reveal data-reveal-delay="${(PRODUCTS.indexOf(p) % 4) * 80}">
+      <div class="product-thumb" style="background:${p.bg};">
+        <div style="font-size:3.8rem;display:flex;align-items:center;justify-content:center;height:100%;">${p.emoji}</div>
+        <button class="product-wishlist" title="Add to wishlist"><i class="far fa-heart"></i></button>
+      </div>
+      <div class="product-body">
+        <div class="product-category">${p.category}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-seller"><i class="fas fa-store"></i> ${p.seller}</div>
+        <div class="product-footer">
+          <div>
+            <span class="product-price">${p.price}</span>
+            <span class="product-unit">${p.unit}</span>
+          </div>
+          <button class="product-add-btn" onclick="addToCart('${p.name}')" title="Add to cart">
+            <i class="fas fa-cart-plus"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  `,
+    ).join("");
+}
+
+window.addToCart = function (name) {
+    window.showToast(`🛒 "${name}" added to cart!`, "success");
+};
+
+/* ---- INNOVATIONS ---- */
+const INNOVATIONS = [
+    {
+        title: "Solar-Powered Drip Irrigation Controller",
+        category: "Water Management",
+        desc: "An affordable solar-powered controller that automates drip irrigation based on soil moisture sensors, reducing water usage by 45%.",
+        votes: 847,
+        farmer: "Bwalya Mwansa",
+        district: "Mzimba",
+        emoji: "☀️",
+        bg: "linear-gradient(135deg,#fef9c3,#fef08a,#fbbf24)",
+    },
+    {
+        title: "Cassava Leaf Disease Detection App",
+        category: "Technology",
+        desc: "A simple mobile app that uses AI to identify cassava diseases from photos taken with a basic smartphone, even without internet.",
+        votes: 1204,
+        farmer: "Mutale Chipanta",
+        district: "Mangochi",
+        emoji: "📱",
+        bg: "linear-gradient(135deg,#dcfce7,#86efac,#4ade80)",
+    },
+    {
+        title: "Low-Cost Greenhouse from Recycled Materials",
+        category: "Infrastructure",
+        desc: "A greenhouse design built entirely from locally-sourced recycled plastic bottles and bamboo — costing 80% less than traditional greenhouses.",
+        votes: 632,
+        farmer: "Thandiwe Phiri",
+        district: "Blantyre",
+        emoji: "🌱",
+        bg: "linear-gradient(135deg,#e0f2fe,#7dd3fc,#38bdf8)",
+    },
+];
+
+function renderInnovations() {
+    const grid = document.getElementById("innovationGrid");
+    if (!grid) return;
+    grid.innerHTML = INNOVATIONS.map(
+        (inn, i) => `
+    <div class="innovation-card" data-reveal data-reveal-delay="${i * 100}">
+      <div class="innovation-img" style="background:${inn.bg};display:flex;align-items:center;justify-content:center;font-size:4rem;">${inn.emoji}</div>
+      <div class="innovation-category">${inn.category}</div>
+      <div class="innovation-title">${inn.title}</div>
+      <p class="innovation-desc">${inn.desc}</p>
+      <div class="innovation-footer">
+        <div class="innovation-votes">
+          <i class="fas fa-map-marker-alt" style="color:rgba(255,255,255,0.5);"></i>
+          <span>${inn.farmer} · ${inn.district}</span>
+        </div>
+        <button class="vote-btn" onclick="voteInnovation(this, ${i})">
+          <i class="fas fa-thumbs-up"></i> ${inn.votes.toLocaleString()}
+        </button>
+      </div>
+    </div>
+  `,
+    ).join("");
+}
+
+window.voteInnovation = function (btn, idx) {
+    if (btn.classList.contains("voted")) {
+        btn.classList.remove("voted");
+        INNOVATIONS[idx].votes--;
+        window.showToast("Vote removed.", "info");
+    } else {
+        btn.classList.add("voted");
+        INNOVATIONS[idx].votes++;
+        window.showToast("👍 Vote recorded! Thank you.", "success");
+    }
+    btn.innerHTML = `<i class="fas fa-thumbs-up"></i> ${INNOVATIONS[idx].votes.toLocaleString()}`;
+};
+
+/* ---- COURSE FILTER ---- */
+(function initCourseFilter() {
+    const filterBtns = document.querySelectorAll("#coursesFilter .filter-btn");
+    const cards = document.querySelectorAll("#coursesGrid .course-card");
+
+    filterBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            filterBtns.forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            const filter = btn.dataset.filter;
+            cards.forEach((card) => {
+                const cat = card.dataset.category || "all";
+                const show = filter === "all" || cat === filter;
+                card.style.display = show ? "" : "none";
+                if (show) {
+                    card.style.animation = "fadeInUp 0.4s ease both";
+                    setTimeout(() => (card.style.animation = ""), 500);
+                }
+            });
+        });
+    });
+})();
+
+/* ---- NAV SEARCH ---- */
+(function initNavSearch() {
+    const input = document.getElementById("navSearchInput");
+    if (!input) return;
+    input.addEventListener("keypress", (e) => {
+        if (e.key === "Enter" && input.value.trim()) {
+            window.showToast(
+                `🔍 Searching for "${input.value.trim()}"...`,
+                "info",
+            );
+            input.value = "";
+        }
+    });
+})();
+
+/* ---- INIT ---- */
+document.addEventListener("DOMContentLoaded", () => {
+    renderMarketGrid();
+    renderInnovations();
+});

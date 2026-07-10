@@ -1,0 +1,202 @@
+<svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#bae6fd"/>
+      <stop offset="100%" stop-color="#e0f2fe"/>
+    </linearGradient>
+    <linearGradient id="groundGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4ade80"/>
+      <stop offset="100%" stop-color="#16a34a"/>
+    </linearGradient>
+    <linearGradient id="fieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#86efac"/>
+      <stop offset="100%" stop-color="#22c55e"/>
+    </linearGradient>
+    <linearGradient id="sunGrad" cx="50%" cy="50%" r="50%" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+    <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fef9c3" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#fef9c3" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="rgba(0,0,0,0.15)"/>
+    </filter>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="900" height="480" fill="url(#skyGrad)"/>
+
+  <!-- Sun glow -->
+  <circle cx="760" cy="80" r="70" fill="url(#sunGlow)"/>
+  <circle cx="760" cy="80" r="40" fill="url(#sunGrad)" opacity="0.9"/>
+
+  <!-- Clouds -->
+  <g opacity="0.85">
+    <ellipse cx="180" cy="90" rx="70" ry="30" fill="#fff"/>
+    <ellipse cx="150" cy="98" rx="45" ry="25" fill="#fff"/>
+    <ellipse cx="210" cy="95" rx="50" ry="22" fill="#fff"/>
+    <ellipse cx="520" cy="65" rx="55" ry="22" fill="#fff"/>
+    <ellipse cx="495" cy="72" rx="38" ry="18" fill="#fff"/>
+    <ellipse cx="550" cy="68" rx="40" ry="18" fill="#fff"/>
+  </g>
+
+  <!-- Hills background -->
+  <ellipse cx="200" cy="380" rx="320" ry="140" fill="#86efac" opacity="0.5"/>
+  <ellipse cx="700" cy="390" rx="300" ry="130" fill="#4ade80" opacity="0.4"/>
+
+  <!-- Ground -->
+  <rect x="0" y="310" width="900" height="170" fill="url(#groundGrad)"/>
+
+  <!-- Fields (alternating rows) -->
+  <rect x="0" y="310" width="900" height="20" fill="#22c55e" opacity="0.4"/>
+  <rect x="0" y="335" width="900" height="15" fill="#16a34a" opacity="0.3"/>
+  <rect x="0" y="355" width="900" height="15" fill="#22c55e" opacity="0.2"/>
+
+  <!-- Field rows (crop lines) -->
+  <g stroke="#15803d" stroke-width="1.5" opacity="0.3">
+    <line x1="0" y1="325" x2="900" y2="325"/>
+    <line x1="0" y1="345" x2="900" y2="345"/>
+    <line x1="0" y1="365" x2="900" y2="365"/>
+  </g>
+
+  <!-- Trees left -->
+  <g filter="url(#shadow)">
+    <rect x="60" y="230" width="16" height="80" rx="4" fill="#92400e"/>
+    <ellipse cx="68" cy="220" rx="38" ry="44" fill="#16a34a"/>
+    <ellipse cx="68" cy="210" rx="30" ry="36" fill="#22c55e"/>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="110" y="245" width="12" height="65" rx="3" fill="#92400e"/>
+    <ellipse cx="116" cy="236" rx="30" ry="36" fill="#15803d"/>
+    <ellipse cx="116" cy="226" rx="24" ry="28" fill="#16a34a"/>
+  </g>
+
+  <!-- Barn/Silo -->
+  <g filter="url(#shadow)">
+    <!-- Barn body -->
+    <rect x="380" y="200" width="130" height="110" rx="4" fill="#dc2626"/>
+    <!-- Barn roof -->
+    <polygon points="370,200 510,200 445,150" fill="#b91c1c"/>
+    <!-- Barn door -->
+    <rect x="425" y="255" width="40" height="55" rx="3" fill="#7f1d1d"/>
+    <!-- Barn window -->
+    <rect x="392" y="220" width="30" height="26" rx="3" fill="#fef9c3"/>
+    <line x1="407" y1="220" x2="407" y2="246" stroke="#92400e" stroke-width="2"/>
+    <line x1="392" y1="233" x2="422" y2="233" stroke="#92400e" stroke-width="2"/>
+    <!-- Barn ventilation -->
+    <rect x="430" y="165" width="30" height="24" rx="3" fill="#fef9c3" opacity="0.6"/>
+    <line x1="445" y1="165" x2="445" y2="189" stroke="#b91c1c" stroke-width="2"/>
+    <line x1="430" y1="177" x2="460" y2="177" stroke="#b91c1c" stroke-width="2"/>
+  </g>
+
+  <!-- Silo -->
+  <g filter="url(#shadow)">
+    <rect x="525" y="220" width="45" height="90" rx="4" fill="#d1d5db"/>
+    <ellipse cx="547" cy="220" rx="22" ry="12" fill="#9ca3af"/>
+    <ellipse cx="547" cy="215" rx="22" ry="10" fill="#e5e7eb"/>
+    <!-- Silo bands -->
+    <line x1="525" y1="240" x2="570" y2="240" stroke="#9ca3af" stroke-width="2"/>
+    <line x1="525" y1="260" x2="570" y2="260" stroke="#9ca3af" stroke-width="2"/>
+    <line x1="525" y1="280" x2="570" y2="280" stroke="#9ca3af" stroke-width="2"/>
+  </g>
+
+  <!-- Tractor -->
+  <g filter="url(#shadow)" transform="translate(130, 270)">
+    <!-- Body -->
+    <rect x="20" y="10" width="80" height="45" rx="6" fill="#ea580c"/>
+    <!-- Cabin -->
+    <rect x="60" y="0" width="44" height="36" rx="5" fill="#f97316"/>
+    <!-- Window -->
+    <rect x="65" y="5" width="34" height="22" rx="3" fill="#bae6fd" opacity="0.8"/>
+    <!-- Wheels -->
+    <circle cx="35" cy="55" r="22" fill="#1c1917" stroke="#57534e" stroke-width="3"/>
+    <circle cx="35" cy="55" r="10" fill="#57534e"/>
+    <circle cx="100" cy="58" r="16" fill="#1c1917" stroke="#57534e" stroke-width="3"/>
+    <circle cx="100" cy="58" r="7" fill="#57534e"/>
+    <!-- Exhaust pipe -->
+    <rect x="26" y="-5" width="7" height="18" rx="3" fill="#374151"/>
+    <ellipse cx="29" cy="-5" rx="5" ry="4" fill="#6b7280" opacity="0.7"/>
+    <!-- Headlights -->
+    <circle cx="18" cy="22" r="5" fill="#fef08a" opacity="0.9"/>
+  </g>
+
+  <!-- Crops (green plants in rows) -->
+  <g opacity="0.9">
+    <!-- Row 1 -->
+    <g fill="#15803d">
+      <path d="M600,310 Q605,290 610,310 Q615,290 620,310"/>
+      <path d="M630,310 Q635,292 640,310 Q645,292 650,310"/>
+      <path d="M660,310 Q665,290 670,310 Q675,290 680,310"/>
+      <path d="M690,310 Q695,292 700,310 Q705,292 710,310"/>
+      <path d="M720,310 Q725,290 730,310 Q735,290 740,310"/>
+      <path d="M750,310 Q755,292 760,310 Q765,292 770,310"/>
+      <path d="M780,310 Q785,290 790,310 Q795,290 800,310"/>
+      <path d="M810,310 Q815,292 820,310 Q825,292 830,310"/>
+      <path d="M840,310 Q845,290 850,310 Q855,290 860,310"/>
+    </g>
+  </g>
+
+  <!-- Windmill -->
+  <g filter="url(#shadow)" transform="translate(800, 160)">
+    <!-- Pole -->
+    <rect x="-5" y="0" width="10" height="140" rx="3" fill="#d1d5db"/>
+    <!-- Blades -->
+    <g transform-origin="0 20" style="transform-origin:0 20px">
+      <line x1="0" y1="20" x2="45" y2="-5" stroke="#9ca3af" stroke-width="8" stroke-linecap="round"/>
+      <line x1="0" y1="20" x2="-45" y2="-5" stroke="#9ca3af" stroke-width="8" stroke-linecap="round"/>
+      <line x1="0" y1="20" x2="18" y2="58" stroke="#9ca3af" stroke-width="8" stroke-linecap="round"/>
+      <line x1="0" y1="20" x2="-18" y2="58" stroke="#9ca3af" stroke-width="8" stroke-linecap="round"/>
+    </g>
+    <circle cx="0" cy="20" r="8" fill="#6b7280"/>
+    <circle cx="0" cy="20" r="4" fill="#374151"/>
+  </g>
+
+  <!-- Drone (top right, flying) -->
+  <g transform="translate(350, 120)" opacity="0.9">
+    <!-- Body -->
+    <ellipse cx="0" cy="0" rx="18" ry="8" fill="#1e293b"/>
+    <!-- Arms -->
+    <line x1="-18" y1="0" x2="-32" y2="-8" stroke="#475569" stroke-width="3"/>
+    <line x1="18" y1="0" x2="32" y2="-8" stroke="#475569" stroke-width="3"/>
+    <line x1="-18" y1="0" x2="-32" y2="8" stroke="#475569" stroke-width="3"/>
+    <line x1="18" y1="0" x2="32" y2="8" stroke="#475569" stroke-width="3"/>
+    <!-- Propellers -->
+    <ellipse cx="-32" cy="-8" rx="14" ry="4" fill="#94a3b8" opacity="0.6"/>
+    <ellipse cx="32" cy="-8" rx="14" ry="4" fill="#94a3b8" opacity="0.6"/>
+    <ellipse cx="-32" cy="8" rx="14" ry="4" fill="#94a3b8" opacity="0.6"/>
+    <ellipse cx="32" cy="8" rx="14" ry="4" fill="#94a3b8" opacity="0.6"/>
+    <!-- Camera -->
+    <circle cx="0" cy="6" r="5" fill="#0ea5e9"/>
+    <circle cx="0" cy="6" r="3" fill="#0284c7"/>
+    <!-- LED light -->
+    <circle cx="0" cy="-4" r="3" fill="#4ade80" opacity="0.9"/>
+    <!-- Beam down -->
+    <line x1="0" y1="11" x2="0" y2="50" stroke="#4ade80" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+  </g>
+
+  <!-- Signal/WiFi icon (tech element) -->
+  <g transform="translate(640, 130)" opacity="0.7" fill="none" stroke="#0ea5e9" stroke-width="2.5" stroke-linecap="round">
+    <path d="M-20,-5 Q0,-22 20,-5" stroke-opacity="0.4"/>
+    <path d="M-14,2 Q0,-12 14,2" stroke-opacity="0.65"/>
+    <path d="M-8,9 Q0,-3 8,9" stroke-opacity="0.85"/>
+    <circle cx="0" cy="14" r="3" fill="#0ea5e9" stroke="none"/>
+  </g>
+
+  <!-- Fence -->
+  <g stroke="#92400e" stroke-width="2.5" opacity="0.7">
+    <line x1="0" y1="310" x2="120" y2="310"/>
+    <line x1="12" y1="295" x2="12" y2="320"/>
+    <line x1="36" y1="295" x2="36" y2="320"/>
+    <line x1="60" y1="295" x2="60" y2="320"/>
+    <line x1="84" y1="295" x2="84" y2="320"/>
+    <line x1="108" y1="295" x2="108" y2="320"/>
+  </g>
+
+  <!-- Path/road -->
+  <path d="M440,480 L460,310 L480,310 L500,480Z" fill="#d1d5db" opacity="0.5"/>
+
+  <!-- Overlay gradient (bottom fade) -->
+  <rect x="0" y="380" width="900" height="100" fill="url(#groundGrad)" opacity="0.3"/>
+</svg>
