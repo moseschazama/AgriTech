@@ -300,6 +300,7 @@ class MarketplaceController extends Controller
     {
         $validated = $request->validate([
             "delivery_district" => ["required", "string"],
+            "delivery_town" => ["nullable", "string", "max:200"],
             "delivery_address" => ["required", "string", "max:255"],
             "payment_method" => [
                 "required",
@@ -363,6 +364,7 @@ class MarketplaceController extends Controller
                 "payment_method" => $validated["payment_method"],
                 "payment_status" => "pending",
                 "delivery_district" => $validated["delivery_district"],
+                "delivery_town" => $validated["delivery_town"] ?? null,
                 "delivery_address" => $validated["delivery_address"],
             ]);
 

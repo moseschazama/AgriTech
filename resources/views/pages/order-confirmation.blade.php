@@ -134,7 +134,7 @@
         <div style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:10px;"><i class="fas fa-truck" style="color:var(--primary);"></i> Delivery Details</div>
         <div style="font-size:.85rem;color:var(--text);">
           <strong>{{ $order->delivery_address }}</strong><br>
-          {{ $order->delivery_district }}{{ $order->delivery_district ? ', '.$order->delivery_district : '' }}
+          @if($order->delivery_town){{ $order->delivery_town }}, @endif{{ $order->delivery_district }}
         </div>
         <div style="font-size:.8rem;color:var(--text-muted);margin-top:6px;">Payment method: <strong>{{ ucwords(str_replace('_',' ',$order->payment_method)) }}</strong></div>
       </div>
