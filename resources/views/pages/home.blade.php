@@ -1,103 +1,49 @@
 @extends('layouts.app')
-@section('title', 'AgriTech Pro — Empowering Farmers Through Technology')
+@section('title', 'AgriTech Pro — Weather, courses & markets for Malawian farmers')
 @section('extra_css')
 <link rel="stylesheet" href="{{ asset('css/home.css') }}"/>
 <style>
-/* ── Weather Bar ── */
-.weather-bar{background:#1e293b;color:#fff;padding:9px 0;font-size:.82rem;overflow:hidden;}
-.weather-bar-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
-.weather-items{display:flex;gap:20px;flex-wrap:wrap;}
-.weather-item{display:flex;align-items:center;gap:6px;opacity:.9;}
-.weather-alert{background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.4);border-radius:20px;padding:3px 12px;font-weight:700;font-size:.78rem;}
-.weather-alert a{color:#fca5a5;}
-/* ── Section label fix ── */
-.section-label{display:inline-flex;align-items:center;gap:7px;background:var(--green-50);color:var(--green-700);border:1px solid var(--green-200);border-radius:var(--radius-full);padding:5px 14px;font-size:.78rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-bottom:14px;}
-/* ── Course card ── */
-.course-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all var(--t-med);cursor:pointer;}
-.course-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--green-300);}
-.course-thumb{height:160px;position:relative;}
-.course-badge-wrap{position:absolute;top:10px;left:10px;display:flex;gap:6px;flex-wrap:wrap;}
-.course-premium-badge{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:var(--radius-full);}
-.course-body{padding:16px;}
-.course-category{font-size:.7rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;}
-.course-title{font-size:1.0625rem;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.3;}
-.course-meta{display:flex;gap:10px;flex-wrap:wrap;font-size:.74rem;color:var(--text-muted);margin-bottom:12px;}
-.course-meta-item{display:flex;align-items:center;gap:4px;}
-.course-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:12px;}
-.course-price{font-size:1.0625rem;font-weight:800;color:var(--primary);}
-.course-price-free{color:var(--green-600);}
-.course-instructor{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--text-muted);}
-/* ── Market card ── */
-.mkt-section{background:var(--bg-2);}
-.mkt-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all var(--t-med);}
-.mkt-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);}
-.mkt-card.hidden{display:none;}
-.mkt-card-thumb{height:160px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.mkt-card-thumb img{transition:transform var(--t-med);}
-.mkt-card:hover .mkt-card-thumb img{transform:scale(1.05);}
-.mkt-wish{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gray-400);transition:all .15s;}
-.mkt-wish:hover,.mkt-wish.active{color:#ef4444;}
-.mkt-badge{position:absolute;top:10px;left:10px;font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:var(--radius-full);}
-.mkt-card-body{padding:14px;}
-.mkt-card-cat{font-size:.7rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
-.mkt-card-name{font-size:.9375rem;font-weight:700;color:var(--text);margin-bottom:6px;}
-.mkt-card-seller{font-size:.75rem;color:var(--text-muted);margin-bottom:12px;}
-.mkt-card-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:10px;}
-.mkt-price{font-size:1.0625rem;font-weight:800;color:var(--primary);}
-.mkt-unit{font-size:.72rem;color:var(--text-muted);}
-.mkt-add-btn{width:34px;height:34px;border-radius:50%;background:var(--primary);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;text-decoration:none;}
-.mkt-add-btn:hover{background:var(--primary-dark);transform:scale(1.1);}
-/* ── Filter tabs ── */
-.mkt-cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;}
-.mkt-cat{padding:7px 16px;border-radius:var(--radius-full);font-size:.83rem;font-weight:600;background:var(--bg-card);border:1.5px solid var(--border);color:var(--text-muted);cursor:pointer;transition:all .15s;}
-.mkt-cat:hover,.mkt-cat.active{background:var(--primary);border-color:var(--primary);color:#fff;}
-/* ── Innovation Carousel ── */
-.innov-carousel{position:relative;max-width:680px;margin:0 auto;perspective:1200px;}
-.innov-carousel-track{position:relative;height:460px;}
-.innov-carousel-card{position:absolute;inset:0;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;opacity:0;transform:translateX(60px) scale(.95);transition:all .55s cubic-bezier(.4,0,.2,1);pointer-events:none;box-shadow:var(--shadow-lg);cursor:pointer;}
-.innov-carousel-card:hover{box-shadow:var(--shadow-xl);border-color:var(--green-300);}
+/* ── Innovation carousel (page-specific) ── */
+.innov-carousel{position:relative;max-width:680px;margin:0 auto;}
+.innov-carousel-track{position:relative;height:440px;}
+.innov-carousel-card{position:absolute;inset:0;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;opacity:0;transform:translateX(60px) scale(.95);transition:all .5s cubic-bezier(.4,0,.2,1);pointer-events:none;box-shadow:var(--shadow-md);cursor:pointer;}
+.innov-carousel-card:hover{box-shadow:var(--shadow-lg);border-color:var(--green-200);}
 .innov-carousel-card.active{opacity:1;transform:translateX(0) scale(1);pointer-events:auto;}
 .innov-carousel-card.exit{opacity:0;transform:translateX(-60px) scale(.95);}
-.innov-carousel-img{height:195px;display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;}
-.innov-carousel-body{padding:24px;}
+.innov-carousel-img{height:180px;display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;}
+.innov-carousel-body{padding:22px;}
 .innov-carousel-cat{font-size:.68rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
-.innov-carousel-title{font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:8px;}
+.innov-carousel-title{font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.35;}
 .innov-carousel-desc{font-size:.85rem;color:var(--text-muted);line-height:1.65;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.innov-carousel-impact{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;color:var(--green-700);font-weight:600;background:var(--green-50);border:1px solid var(--green-200);padding:5px 12px;border-radius:var(--radius-full);margin-bottom:14px;}
+.innov-carousel-impact{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;color:var(--green-700);font-weight:600;background:var(--green-50);border:1px solid var(--green-200);padding:5px 12px;border-radius:var(--radius-sm);margin-bottom:14px;}
 .innov-carousel-footer{display:flex;align-items:center;justify-content:space-between;}
 .innov-carousel-farmer{display:flex;align-items:center;gap:8px;}
 .innov-carousel-farmer .avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;flex-shrink:0;}
 .innov-carousel-farmer-name{font-weight:600;color:var(--text);font-size:.82rem;}
 .innov-carousel-farmer-loc{font-size:.72rem;color:var(--text-muted);}
-.vote-btn2{display:inline-flex;align-items:center;gap:6px;background:var(--bg-2);border:1.5px solid var(--border);border-radius:var(--radius-full);padding:6px 14px;color:var(--text);font-size:.82rem;font-weight:700;cursor:pointer;transition:all .15s;text-decoration:none;}
-.vote-btn2:hover{background:var(--primary);border-color:var(--primary);color:#fff;}
-.vote-btn2.voted{background:var(--green-50);border-color:var(--green-300);color:var(--green-700);pointer-events:none;}
 /* Arrows */
-.innov-arrow{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;z-index:10;font-size:.85rem;box-shadow:var(--shadow-md);}
-.innov-arrow:hover{background:var(--primary);border-color:var(--primary);color:#fff;transform:translateY(-50%) scale(1.08);}
-.innov-arrow.prev{left:-22px;}
-.innov-arrow.next{right:-22px;}
+.innov-arrow{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;z-index:10;font-size:.85rem;box-shadow:var(--shadow-md);}
+.innov-arrow:hover{background:var(--primary);border-color:var(--primary);color:#fff;}
+.innov-arrow.prev{left:-16px;}
+.innov-arrow.next{right:-16px;}
 /* Dots */
 .innov-dots{display:flex;justify-content:center;gap:8px;margin-top:20px;}
 .innov-dot{width:8px;height:8px;border-radius:50%;background:var(--gray-300);cursor:pointer;transition:all .3s;}
 .innov-dot.active{background:var(--primary);width:24px;border-radius:4px;}
 /* View badge */
-.innov-views-badge{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.55);color:#fff;font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:20px;backdrop-filter:blur(4px);display:flex;align-items:center;gap:5px;}
+.innov-views-badge{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.55);color:#fff;font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;}
 @media(max-width:700px){.innov-carousel-track{height:auto;min-height:420px;}.innov-carousel-card{position:relative;opacity:1;transform:none;pointer-events:auto;}.innov-carousel-card:not(.active){display:none;}.innov-arrow{display:none;}.innov-dots{display:flex;}}
-/* ── Story card ── */
-.story-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px;position:relative;transition:all var(--t-med);}
-.story-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);}
-.story-quote-icon{font-family:Georgia,serif;font-size:5rem;color:var(--green-200);line-height:.7;margin-bottom:12px;}
-.story-result{position:absolute;top:24px;right:24px;background:var(--primary);color:#fff;font-size:.8125rem;font-weight:800;padding:5px 12px;border-radius:var(--radius-full);}
-/* ── Disease CTA Responsive ── */
-.disease-cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
-.disease-feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.disease-stats-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding-top:28px;border-top:1px solid rgba(255,255,255,.12);}
+/* ── Disease CTA grid (page-specific) ── */
+.disease-cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+.disease-feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.disease-stats-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding-top:24px;border-top:1px solid rgba(255,255,255,.12);}
 @media(max-width:900px){.disease-cta-grid{grid-template-columns:1fr;gap:40px;}.disease-cta-grid > div:last-child{display:none;}.disease-feat-grid{grid-template-columns:1fr;}}
+/* ── Marketplace helpers (page-specific) ── */
+.mkt-card.hidden{display:none;}
 @media(max-width:1100px){.mkt-grid{grid-template-columns:repeat(3,1fr) !important;gap:18px !important;}}
 @media(max-width:900px){.mkt-grid{grid-template-columns:repeat(2,1fr) !important;gap:16px !important;}}
 @media(max-width:639px){.mkt-grid{grid-template-columns:1fr !important;gap:14px !important;}.mkt-card-thumb{height:170px;}.mkt-card-body{padding:14px 16px;}.mkt-card-name{font-size:.95rem;}.mkt-add-btn{width:44px;height:44px;}.mkt-wish{width:38px;height:38px;}.mkt-price{font-size:1.05rem;}.mkt-unit{font-size:.75rem;}}
-@media(max-width:600px){.disease-stats-row{gap:14px;}.disease-stats-row > div:nth-child(even){display:none;}.story-card{padding:24px 20px;}}
+@media(max-width:600px){.disease-stats-row{gap:14px;}.disease-stats-row > div:nth-child(even){display:none;}}
 </style>
 @endsection
 
@@ -133,14 +79,16 @@
 <section class="hero" id="hero">
   <div class="hero-inner">
     <div class="hero-content animate-fadeInLeft">
+      <span class="hero-tag"><span class="hero-tag-dot"></span> Made for Malawian farmers</span>
       <h1 class="hero-title">
-        Empowering Farmers<br/>
-        Through <span class="highlight">Smart</span><br/>
-        <span class="underline-word">Technology</span>
+        Better farming<br/>
+        starts with <span class="highlight">better</span><br/>
+        <span class="underline-word">decisions</span>
       </h1>
       <p class="hero-desc">
-        The all-in-one platform for Malawan farmers — learn modern techniques,
-        buy and sell produce, track deliveries in real-time, and showcase your farming innovations.
+        AgriTech Pro brings district-level weather forecasts, practical farming courses,
+        a marketplace without middlemen and crop disease detection into one place.
+        Ask less, act more — with the right information, at the right time.
       </p>
       <div class="hero-cta">
         @guest
@@ -154,33 +102,33 @@
       <div class="hero-trust">
         <div class="hero-trust-item"><i class="fas fa-check-circle"></i> Free to join</div>
         <div class="hero-trust-divider"></div>
-        <div class="hero-trust-item"><i class="fas fa-check-circle"></i> No credit card needed</div>
+        <div class="hero-trust-item"><i class="fas fa-check-circle"></i> Direct farmer sales</div>
         <div class="hero-trust-divider"></div>
-        <div class="hero-trust-item"><i class="fas fa-check-circle"></i> Works fast</div>
+        <div class="hero-trust-item"><i class="fas fa-check-circle"></i> Weather by district</div>
       </div>
     </div>
     <div class="hero-visual animate-fadeInUp delay-2">
       <div class="hero-image-wrap">
-        <img src="{{ asset('assets/img/agri/farm-aerial.jpg') }}" alt="Smart Agriculture" class="hero-farm-svg"/>
+        <img src="{{ asset('assets/img/agri/farm-aerial.jpg') }}" alt="Aerial view of farmland" class="hero-farm-svg"/>
       </div>
-      <div class="hero-float-card hero-float-card-1 glass">
+      <div class="hero-float-card hero-float-card-1">
         <div class="hero-float-icon" style="background:var(--green-100);color:var(--green-700);"><i class="fas fa-users"></i></div>
         <div>
-          <div class="hero-float-val" style="color:var(--green-700);">{{ isset($stats) ? number_format($stats['total_farmers']) : '12,450' }}</div>
-          <div class="hero-float-lbl">Active Farmers</div>
+          <div class="hero-float-val" style="color:var(--green-700);">{{ number_format($stats['total_farmers']) }}</div>
+          <div class="hero-float-lbl">Registered Farmers</div>
         </div>
       </div>
-      <div class="hero-float-card hero-float-card-2 glass">
+      <div class="hero-float-card hero-float-card-2">
         <div class="hero-float-icon" style="background:#fff7ed;color:#c2410c;"><i class="fas fa-shopping-cart"></i></div>
         <div>
-          <div class="hero-float-val" style="color:#c2410c;">{{ isset($stats) ? number_format($stats['products_sold']) : '48,920' }}</div>
+          <div class="hero-float-val" style="color:#c2410c;">{{ number_format($stats['products_sold']) }}</div>
           <div class="hero-float-lbl">Products Sold</div>
         </div>
       </div>
-      <div class="hero-float-card hero-float-card-3 glass">
+      <div class="hero-float-card hero-float-card-3">
         <div class="hero-float-icon" style="background:#e0f2fe;color:#0284c7;"><i class="fas fa-graduation-cap"></i></div>
         <div>
-          <div class="hero-float-val" style="color:#0284c7;">{{ isset($stats) ? number_format($stats['active_courses']) : '342' }}</div>
+          <div class="hero-float-val" style="color:#0284c7;">{{ number_format($stats['active_courses']) }}</div>
           <div class="hero-float-lbl">Active Courses</div>
         </div>
       </div>
@@ -194,10 +142,10 @@
     <div class="stats-grid">
       @php
         $statsDisplay = [
-          ['icon'=>'fas fa-users',       'color'=>'var(--green-700)', 'bg'=>'var(--green-100)', 'val'=> isset($stats) ? $stats['total_farmers']  : 12450, 'label'=>'Registered Farmers'],
-          ['icon'=>'fas fa-shopping-cart','color'=>'#c2410c',         'bg'=>'#fff7ed',          'val'=> isset($stats) ? $stats['products_sold']  : 48920, 'label'=>'Products Sold'],
-          ['icon'=>'fas fa-graduation-cap','color'=>'var(--sky-600)', 'bg'=>'#e0f2fe',          'val'=> isset($stats) ? $stats['active_courses'] : 342,   'label'=>'Active Courses'],
-          ['icon'=>'fas fa-truck',        'color'=>'var(--green-700)', 'bg'=>'#f0fdf4',          'val'=> isset($stats) ? $stats['deliveries']     : 9800,  'label'=>'Successful Deliveries'],
+          ['icon'=>'fas fa-users',       'color'=>'var(--green-700)', 'bg'=>'var(--green-100)', 'val'=> $stats['total_farmers'],  'label'=>'Registered Farmers'],
+          ['icon'=>'fas fa-shopping-cart','color'=>'#c2410c',         'bg'=>'#fff7ed',          'val'=> $stats['products_sold'],  'label'=>'Products Sold'],
+          ['icon'=>'fas fa-graduation-cap','color'=>'var(--sky-600)', 'bg'=>'#e0f2fe',          'val'=> $stats['active_courses'], 'label'=>'Active Courses'],
+          ['icon'=>'fas fa-truck',        'color'=>'var(--green-700)', 'bg'=>'#f0fdf4',          'val'=> $stats['deliveries'],     'label'=>'Successful Deliveries'],
         ];
       @endphp
       @foreach($statsDisplay as $i => $s)
@@ -366,12 +314,12 @@
     </div>
 
     {{-- Seller CTA --}}
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:28px 36px;margin-top:36px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;box-shadow:var(--shadow-md);">
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px 36px;margin-top:36px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;box-shadow:var(--shadow-xs);">
       <div style="display:flex;align-items:center;gap:18px;">
         <div style="width:52px;height:52px;border-radius:14px;background:var(--green-100);color:var(--green-700);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🛒</div>
         <div>
           <div style="font-size:1.0625rem;font-weight:800;color:var(--text);margin-bottom:4px;">Are you a farmer or agri-business?</div>
-          <div style="font-size:.86rem;color:var(--text-muted);">List your products for free and reach {{ isset($stats) ? number_format($stats['total_farmers']) : '12,000' }}+ buyers across Malawi.</div>
+          <div style="font-size:.86rem;color:var(--text-muted);">List your products for free and reach {{ number_format($stats['total_farmers']) }} registered farmers across Malawi.</div>
         </div>
       </div>
       <div style="display:flex;gap:12px;flex-wrap:wrap;">
@@ -503,29 +451,29 @@
 })();
 </script>
 
-<section class="section" style="background:#1e293b;">
+<section class="section disease-cta-section">
   <div class="container">
     <div class="disease-cta-grid">
       {{-- Left --}}
       <div>
         <span class="section-label" style="background:#3f1010;color:#fca5a5;border-color:#7f1d1d;"><i class="fas fa-microscope"></i> Crop Health Analysis</span>
-        <h2 style="font-size:clamp(2rem,4vw,3.2rem);font-weight:800;color:#fff;line-height:1.12;letter-spacing:-.02em;margin-bottom:20px;">
+        <h2 class="disease-cta-title">
           Stop Crop Diseases<br/>
-          <span style="color:#f87171;">Before They Destroy</span><br/>
+          <span class="disease-cta-highlight">Before They Destroy</span><br/>
           Your Harvest
         </h2>
-        <p style="font-size:1rem;color:rgba(255,255,255,.75);line-height:1.78;margin-bottom:32px;">
-          Upload a photo of your sick plant and our analyzer identifies the disease in seconds —
-          then gives you the exact treatment steps, recommended chemicals and prevention guide.
+        <p class="disease-cta-desc">
+          Upload a photo of your sick plant and the analyzer identifies the disease in minutes —
+          then gives you the treatment steps, recommended chemicals and prevention guide.
         </p>
-        <div class="disease-feat-grid" style="margin-bottom:36px;">
+        <div class="disease-feat-grid" style="margin-bottom:32px;">
           @foreach([
-            ['bg'=>'#fef2f2','color'=>'#ef4444','icon'=>'fas fa-camera','title'=>'Photo Detection','desc'=>'Take a photo — get results in 2 seconds'],
-            ['bg'=>'var(--green-50)','color'=>'var(--green-700)','icon'=>'fas fa-book-open','title'=>'200+ Disease Library','desc'=>'Full treatment & prevention guides'],
-            ['bg'=>'#fff7ed','color'=>'#c2410c','icon'=>'fas fa-bell','title'=>'SMS Outbreak Alerts','desc'=>'Know before it reaches your farm'],
-            ['bg'=>'#e0f2fe','color'=>'var(--sky-600)','icon'=>'fas fa-flask','title'=>'Chemical Recommendations','desc'=>'Right product, right dose, right time'],
+            ['bg'=>'#fef2f2','color'=>'#ef4444','icon'=>'fas fa-camera','title'=>'Photo Detection','desc'=>'Upload a photo of the affected leaf'],
+            ['bg'=>'var(--green-50)','color'=>'var(--green-700)','icon'=>'fas fa-book-open','title'=>'Disease Library','desc'=>'Treatment & prevention guides'],
+            ['bg'=>'#fff7ed','color'=>'#c2410c','icon'=>'fas fa-bell','title'=>'Outbreak Alerts','desc'=>'Get notified before it spreads to your farm'],
+            ['bg'=>'#e0f2fe','color'=>'var(--sky-600)','icon'=>'fas fa-flask','title'=>'Chemical Advice','desc'=>'Recommended products & application guidance'],
           ] as $feat)
-            <div style="display:flex;align-items:flex-start;gap:12px;background:#273449;border:1px solid #3d4f6e;border-radius:var(--radius-md);padding:14px;">
+            <div style="display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-md);padding:14px;">
               <div style="width:38px;height:38px;border-radius:10px;background:{{ $feat['bg'] }};color:{{ $feat['color'] }};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                 <i class="{{ $feat['icon'] }}"></i>
               </div>
