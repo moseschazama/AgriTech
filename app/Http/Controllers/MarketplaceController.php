@@ -3,6 +3,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderPlaced;
+use App\Events\ProductCreated;
+use App\Jobs\BroadcastNotification;
 use App\Models\District;
 use App\Models\Product;
 use App\Models\Order;
@@ -22,8 +25,11 @@ class MarketplaceController extends Controller
      */
     public function index(Request $request)
     {
-        $query = \App\Models\Product::with("seller")
-            ->where("status", "active") // ← only admin-approved listings
+        $query = \App\Models\Product::with([
+            "seller",
+            "wishlistedBy" => fn($q) => $q->where("user_id", auth()->id()),
+        ])
+            ->where("status", "active")
             ->where("in_stock", true);
 
         if ($request->q) {
@@ -103,7 +109,7 @@ class MarketplaceController extends Controller
             "name" => ["required", "string", "max:150"],
             "category" => [
                 "required",
-                "in:seeds,fertilizer,fresh_produce,livestock,tools,equipment,chemicals,other",
+                "in:seeds,fertilizer,produce,livestock,tools,equipment,chemicals,other",
             ],
             "description" => ["required", "string"],
             "price" => ["required", "numeric", "min:0"],
@@ -127,7 +133,8 @@ class MarketplaceController extends Controller
             ...$validated,
             "seller_id" => Auth::id(),
             "status" => "pending_review", // ← always starts pending
-            "photos" => $photoPaths,
+            "images" => $photoPaths,
+            "thumbnail" => $photoPaths[0] ?? null,
             "currency" => "MWK",
             "delivery_available" => $request->boolean(
                 "delivery_available",
@@ -139,19 +146,15 @@ class MarketplaceController extends Controller
 
         // ── Notify the seller ──────────────────────────────────────────
         try {
-            \App\Models\Notification::create([
-                "user_id" => Auth::id(),
-                "title" => "📋 Listing Submitted — " . $product->name,
-                "message" =>
-                    "Your product \"{$product->name}\" has been submitted and is now under review. " .
-                    "You'll receive a notification once it's approved and live to buyers. " .
-                    "This usually takes less than 24 hours.",
-                "type" => "marketplace",
-                "icon" => "fas fa-clock",
-                "icon_color" => "#f59e0b",
-                "action_url" => route("marketplace.my-listings"),
-                "is_read" => false,
-            ]);
+            BroadcastNotification::dispatch(
+                Auth::id(),
+                "📋 Listing Submitted — " . $product->name,
+                "Your product \"{$product->name}\" has been submitted for review.",
+                "marketplace",
+                "fas fa-clock",
+                "#f59e0b",
+                route("marketplace.my-listings"),
+            );
         } catch (\Throwable $e) {
         }
 
@@ -159,25 +162,21 @@ class MarketplaceController extends Controller
         try {
             $admins = \App\Models\User::where("role", "admin")->get();
             foreach ($admins as $admin) {
-                \App\Models\Notification::create([
-                    "user_id" => $admin->id,
-                    "title" => "🆕 New Product Listing for Review",
-                    "message" =>
-                        Auth::user()->full_name .
-                        " has submitted a new product listing: \"{$product->name}\" " .
-                        "priced at MWK " .
-                        number_format($product->price) .
-                        "/{$product->unit}. " .
-                        "Please review and approve or reject it in the Admin Panel.",
-                    "type" => "marketplace",
-                    "icon" => "fas fa-box",
-                    "icon_color" => "var(--primary)",
-                    "action_url" => route("admin.products"),
-                    "is_read" => false,
-                ]);
+                BroadcastNotification::dispatch(
+                    $admin->id,
+                    "🆕 New Product Listing for Review",
+                    Auth::user()->full_name . " submitted \"{$product->name}\" for review.",
+                    "marketplace",
+                    "fas fa-box",
+                    "var(--primary)",
+                    route("admin.products"),
+                );
             }
         } catch (\Throwable $e) {
         }
+
+        // ── Broadcast product created event ────────────────────────────
+        event(new ProductCreated($product));
 
         return back()->with(
             "success",
@@ -271,6 +270,7 @@ class MarketplaceController extends Controller
     {
         $cart = session()->get("cart", []);
         $products = Product::whereIn("id", array_keys($cart))
+            ->with("seller")
             ->get()
             ->keyBy("id");
 
@@ -289,7 +289,24 @@ class MarketplaceController extends Controller
 
         $districts = District::with("tradingCentres")->orderBy("name")->get();
 
-        return view("pages.cart", compact("items", "total", "districts"));
+        $defaultDistrict = old("delivery_district", Auth::user()->district);
+        $deliveryFee = \App\Models\Order::calculateDeliveryFee(
+            $total,
+            $defaultDistrict,
+        );
+        $grandTotal = $total + $deliveryFee;
+
+        return view(
+            "pages.cart",
+            compact(
+                "items",
+                "total",
+                "districts",
+                "deliveryFee",
+                "grandTotal",
+                "defaultDistrict",
+            ),
+        );
     }
 
     /**
@@ -304,7 +321,7 @@ class MarketplaceController extends Controller
             "delivery_address" => ["required", "string", "max:255"],
             "payment_method" => [
                 "required",
-                "in:airtel_money,tnm_mpamba,mtn_momo,cash_on_delivery",
+                "in:airtel_money,tnm_mpamba,mtn_momo",
             ],
             "phone" => ["nullable", "string", "max:20"],
         ]);
@@ -319,8 +336,15 @@ class MarketplaceController extends Controller
         $subtotal = 0;
         $sellerId = null;
 
+        $cartProducts = \App\Models\Product::whereIn(
+            "id",
+            array_keys($cartItems),
+        )
+            ->get()
+            ->keyBy("id");
+
         foreach ($cartItems as $productId => $qty) {
-            $product = \App\Models\Product::find($productId);
+            $product = $cartProducts->get($productId);
             if (!$product) {
                 continue;
             }
@@ -368,6 +392,10 @@ class MarketplaceController extends Controller
                 "delivery_address" => $validated["delivery_address"],
             ]);
 
+            // Auto-resolve coordinates from district/town names
+            $order->resolveDeliveryCoordinates();
+            $order->refresh();
+
             // ── Create Order Items ──────────────────────────────────────
             foreach ($items as $item) {
                 $order->items()->create($item);
@@ -390,15 +418,22 @@ class MarketplaceController extends Controller
                 strtoupper(\Illuminate\Support\Str::random(6));
 
             try {
+                $originProduct = \App\Models\Product::find(array_key_first($cartItems));
+                $originDistrict = $originProduct?->district ?? "Lilongwe";
+                $originCoords = \App\Models\Order::resolveOriginCoordinates($originDistrict);
+
                 \App\Models\Delivery::create([
                     "order_id" => $order->id,
                     "tracking_number" => $tracking,
                     "status" => "pending",
-                    "origin_district" =>
-                        \App\Models\Product::find(array_key_first($cartItems))
-                            ?->district ?? "Lilongwe",
+                    "origin_address" => \App\Models\Order::originAddressFor($originProduct?->seller, $originDistrict),
+                    "origin_district" => $originDistrict,
+                    "origin_lat" => $originCoords['origin_lat'] ?? null,
+                    "origin_lng" => $originCoords['origin_lng'] ?? null,
                     "destination_district" => $validated["delivery_district"],
                     "destination_address" => $validated["delivery_address"],
+                    "destination_lat" => $order->delivery_lat,
+                    "destination_lng" => $order->delivery_lng,
                 ]);
             } catch (\Throwable $e) {
                 // Delivery table issue — don't block the order
@@ -406,58 +441,53 @@ class MarketplaceController extends Controller
 
             // ── Notify Buyer ────────────────────────────────────────────
             try {
-                \App\Models\Notification::create([
-                    "user_id" => Auth::id(),
-                    "title" => "✅ Order Placed — " . $orderNumber,
-                    "message" =>
-                        "Your order has been received! Total: MWK " .
-                        number_format($total) .
-                        ". " .
-                        ($validated["payment_method"] !== "cash_on_delivery"
-                            ? "Please complete " .
-                                ucwords(
-                                    str_replace(
-                                        "_",
-                                        " ",
-                                        $validated["payment_method"],
-                                    ),
-                                ) .
-                                " payment of MWK " .
-                                number_format($total) .
-                                " to confirm."
-                            : "Pay MWK " .
-                                number_format($total) .
-                                " to the driver on delivery."),
-                    "type" => "order",
-                    "icon" => "fas fa-shopping-bag",
-                    "icon_color" => "var(--primary)",
-                    "action_url" => route("marketplace.my-orders"),
-                    "is_read" => false,
-                ]);
+                BroadcastNotification::dispatch(
+                    Auth::id(),
+                    "✅ Order Placed — " . $orderNumber,
+                    "Your order has been received! Total: MWK " . number_format($total) . ". Please complete " . ucwords(str_replace("_", " ", $validated["payment_method"])) . " payment of MWK " . number_format($total) . " to confirm.",
+                    "order",
+                    "fas fa-shopping-bag",
+                    "var(--primary)",
+                    route("marketplace.my-orders"),
+                );
             } catch (\Throwable $e) {
             }
 
             // ── Notify Seller ───────────────────────────────────────────
             if ($sellerId) {
                 try {
-                    \App\Models\Notification::create([
-                        "user_id" => $sellerId,
-                        "title" => "🛒 New Order Received — " . $orderNumber,
-                        "message" =>
-                            "You have a new order for MWK " .
-                            number_format($total) .
-                            " from " .
-                            Auth::user()->full_name .
-                            ". Please prepare the items for dispatch.",
-                        "type" => "order",
-                        "icon" => "fas fa-box",
-                        "icon_color" => "var(--earth-500)",
-                        "action_url" => route("marketplace.my-listings"),
-                        "is_read" => false,
-                    ]);
+                    BroadcastNotification::dispatch(
+                        $sellerId,
+                        "🛒 New Order Received — " . $orderNumber,
+                        "New order for MWK " . number_format($total) . " from " . Auth::user()->full_name,
+                        "order",
+                        "fas fa-box",
+                        "var(--earth-500)",
+                        route("marketplace.my-listings"),
+                    );
                 } catch (\Throwable $e) {
                 }
             }
+
+            // ── Notify All Admins ──────────────────────────────────────
+            try {
+                $admins = \App\Models\User::where("role", "admin")->get();
+                foreach ($admins as $admin) {
+                    BroadcastNotification::dispatch(
+                        $admin->id,
+                        "📋 New Order — " . $orderNumber,
+                        "Order #" . $orderNumber . " for MWK " . number_format($total) . " placed by " . Auth::user()->full_name . ".",
+                        "order",
+                        "fas fa-clipboard-check",
+                        "var(--primary)",
+                        route("admin.orders"),
+                    );
+                }
+            } catch (\Throwable $e) {
+            }
+
+            // ── Broadcast OrderPlaced event ────────────────────────────
+            event(new OrderPlaced($order));
 
             // ── Clear Cart ──────────────────────────────────────────────
             session()->forget("cart");
@@ -491,6 +521,42 @@ class MarketplaceController extends Controller
         $districts = District::with("tradingCentres")->orderBy("name")->get();
         return view("pages.my-orders", compact("orders", "districts"));
     }
+
+    public function reportIssue(Request $request, \App\Models\Order $order)
+    {
+        abort_unless($order->buyer_id === Auth::id(), 403);
+
+        $validated = $request->validate([
+            "subject" => ["required", "string", "max:200"],
+            "message" => ["required", "string", "max:1000"],
+        ]);
+
+        try {
+            $admins = \App\Models\User::where("role", "admin")->get();
+            foreach ($admins as $admin) {
+                BroadcastNotification::dispatch(
+                    $admin->id,
+                    "⚠️ Issue Reported — Order #" . $order->order_number,
+                    Auth::user()->full_name . " reported: \"{$validated['subject']}\"",
+                    "order",
+                    "fas fa-exclamation-triangle",
+                    "#ef4444",
+                    route("admin.orders"),
+                );
+            }
+
+            return back()->with(
+                "success",
+                "Your issue has been reported. An admin will contact you shortly.",
+            );
+        } catch (\Throwable $e) {
+            return back()->with(
+                "error",
+                "Failed to report issue. Please try again or call support.",
+            );
+        }
+    }
+
     public function myListings()
     {
         $products = \App\Models\Product::where("seller_id", Auth::id())

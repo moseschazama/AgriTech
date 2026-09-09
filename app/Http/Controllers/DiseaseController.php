@@ -16,7 +16,7 @@ class DiseaseController extends Controller
     public function __construct(protected DiseaseDetectionService $detectionService) {}
 
     /**
-     * Disease library + AI scanner landing page.
+     * Disease library + crop photo scanner landing page.
      */
     public function index(Request $request)
     {
@@ -51,7 +51,7 @@ class DiseaseController extends Controller
     }
 
     /**
-     * Handle AI photo upload + analysis. Returns JSON for the
+     * Handle photo upload + analysis. Returns JSON for the
      * frontend's "Scanning..." → result-card UX.
      */
     public function detect(Request $request)
@@ -61,11 +61,23 @@ class DiseaseController extends Controller
             'farm_location'=> ['nullable', 'string', 'max:150'],
         ]);
 
-        $detection = $this->detectionService->analyze(
-            user: Auth::user(),
-            photo: $request->file('photo'),
-            farmLocation: $validated['farm_location'] ?? null
-        );
+        try {
+            $detection = $this->detectionService->analyze(
+                user: Auth::user(),
+                photo: $request->file('photo'),
+                farmLocation: $validated['farm_location'] ?? null
+            );
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 422);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'We could not analyze that image. Please try again with a clear, well-lit photo.',
+            ], 422);
+        }
 
         if ($detection->status === 'failed') {
             return response()->json([
@@ -82,6 +94,13 @@ class DiseaseController extends Controller
                 'crop'        => $detection->affected_crop,
                 'confidence'  => $detection->confidence_score,
                 'severity'    => $detection->severity,
+                'symptoms'    => $detection->detection_report['symptoms'] ?? [],
+                'cause'       => $detection->detection_report['cause'] ?? null,
+                'spread'      => $detection->detection_report['spread'] ?? null,
+                'seasonal_info'=> $detection->detection_report['seasonal_info'] ?? null,
+                'recommended_action' => $detection->detection_report['recommended_action'] ?? [],
+                'prevention'  => $detection->detection_report['prevention'] ?? [],
+                'treatment'   => $detection->detection_report['treatment'] ?? [],
                 'disease_url' => $detection->disease ? route('diseases.show', $detection->disease) : null,
                 'image_url'   => $detection->image_url,
             ],
@@ -89,7 +108,7 @@ class DiseaseController extends Controller
     }
 
     /**
-     * Farmer confirms whether the AI diagnosis was accurate — used to
+     * Farmer confirms whether the diagnosis was accurate — used to
      * monitor and improve model accuracy over time.
      */
     public function feedback(Request $request, DiseaseDetection $detection)
@@ -105,7 +124,7 @@ class DiseaseController extends Controller
             $detection, $validated['was_correct'], $validated['notes'] ?? null
         );
 
-        return back()->with('success', 'Thanks for the feedback — this helps improve our AI!');
+        return back()->with('success', 'Thanks for the feedback — this helps us keep our diagnosis guide accurate.');
     }
 
     public function myDetections()

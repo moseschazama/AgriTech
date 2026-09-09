@@ -4,17 +4,20 @@
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>
 <link rel="stylesheet" href="{{ asset('css/home.css') }}"/>
 <style>
-.market-hero{background:linear-gradient(135deg,#052e0f,#0d4a1e,#166534);padding:48px 0 36px;color:#fff;}
+.market-hero{--hero-glow-1:rgba(22,163,74,0.07);--hero-glow-2:rgba(22,163,74,0.04);--hero-orb:rgba(22,163,74,0.06);--hero-badge-bg:var(--green-100);--hero-badge-fg:var(--green-700);--hero-badge-border:var(--green-200);--hero-accent-color:var(--green-600);--hero-overlay-start:rgba(12,22,8,0.78);--hero-overlay-mid:rgba(15,28,10,0.58);--hero-overlay-end:rgba(8,18,5,0.72);--hero-overlay-accent:rgba(74,222,128,0.15);}
+.market-hero.page-hero-image{background-image:url('https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1920&q=80');}
+.market-hero.page-hero-image .page-hero-cta input,.market-hero.page-hero-image .page-hero-cta select{background:rgba(255,255,255,.95)!important;color:#333!important;border-color:rgba(255,255,255,.3)!important;}
+.market-hero .page-hero-cta form{flex-wrap:wrap;}
 .market-layout{display:grid;grid-template-columns:260px 1fr;gap:28px;align-items:start;}
 .market-sidebar{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;position:sticky;top:90px;}
-.market-sidebar h4{font-family:var(--font-display);font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.market-sidebar h4{font-size:.875rem;font-weight:700;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
 .filter-check-group{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
 .filter-check{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--text-muted);cursor:pointer;}
 .filter-check input{accent-color:var(--primary);width:15px;height:15px;}
 .filter-check:hover{color:var(--text);}
 .filter-check.selected{color:var(--primary);font-weight:600;}
 .price-range{display:flex;gap:8px;margin-bottom:20px;}
-.price-range input{flex:1;padding:7px 10px;border:1.5px solid var(--border);border-radius:var(--radius-md);font-size:.8rem;font-family:var(--font-body);background:var(--bg-2);color:var(--text);}
+.price-range input{flex:1;padding:7px 10px;border:1.5px solid var(--border);border-radius:var(--radius-md);font-size:.8rem;background:var(--bg-2);color:var(--text);}
 .star-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;}
 .star-btn{padding:5px 10px;border:1.5px solid var(--border);border-radius:var(--radius-full);font-size:.78rem;cursor:pointer;transition:all .15s;background:var(--bg-2);color:var(--text-muted);}
 .star-btn.active,.star-btn:hover{border-color:var(--primary);background:var(--green-50);color:var(--primary);}
@@ -28,11 +31,11 @@
 .product-badge{position:absolute;top:10px;left:10px;font-size:.67rem;font-weight:700;padding:3px 8px;border-radius:var(--radius-full);z-index:2;}
 .product-body{padding:14px;}
 .product-cat{font-size:.69rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
-.product-name{font-family:var(--font-display);font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word;}
+.product-name{font-size:.9375rem;font-weight:700;color:var(--text);margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word;}
 .product-stars{color:#f59e0b;font-size:.78rem;letter-spacing:1px;}
 .product-seller{font-size:.73rem;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
 .product-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:10px;gap:8px;}
-.product-price{font-family:var(--font-display);font-size:1rem;font-weight:800;color:var(--primary);}
+.product-price{font-size:1rem;font-weight:800;color:var(--primary);}
 .product-unit{font-size:.71rem;color:var(--text-muted);}
 .add-cart-btn{width:34px;height:34px;border-radius:50%;background:var(--primary);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:.85rem;text-decoration:none;flex-shrink:0;}
 .add-cart-btn:hover{background:var(--primary-dark);transform:scale(1.1);}
@@ -51,7 +54,7 @@
 .sell-form-section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;margin-top:28px;}
 @media(max-width:1100px){.product-grid{grid-template-columns:repeat(3,1fr);}}
 @media(max-width:900px){.market-layout{grid-template-columns:1fr;}.market-sidebar{position:static;}.product-grid{grid-template-columns:repeat(2,1fr);gap:14px;}}
-@media(max-width:768px){.market-sidebar{display:none;position:fixed;top:var(--nav-h);left:0;right:0;bottom:0;z-index:500;overflow-y:auto;padding:20px;background:var(--bg-card);}.market-sidebar.open{display:block;}.product-grid{grid-template-columns:repeat(2,1fr);gap:12px;}.cart-drawer{width:100%;}.market-hero{padding:32px 0 24px;}.product-body{padding:12px;}.product-name{font-size:.85rem;}.add-cart-btn{width:38px;height:38px;}}
+@media(max-width:768px){.market-sidebar{display:none;position:fixed;top:var(--nav-h);left:0;right:0;bottom:0;z-index:500;overflow-y:auto;padding:20px;background:var(--bg-card);}.market-sidebar.open{display:block;}.product-grid{grid-template-columns:repeat(2,1fr);gap:12px;}.cart-drawer{width:100%;}.product-body{padding:12px;}.product-name{font-size:.85rem;}.add-cart-btn{width:38px;height:38px;}}
 @media(max-width:639px){.product-grid{grid-template-columns:1fr;gap:14px;}.product-thumb{height:180px;}.product-body{padding:14px 16px;}.product-name{font-size:.95rem;}.product-cat{font-size:.73rem;}.product-price{font-size:1.05rem;}.product-seller{font-size:.8rem;}.product-emoji{font-size:3rem;}.product-stars{font-size:.85rem;}.add-cart-btn{width:44px;height:44px;font-size:1.05rem;}.product-wishlist{width:36px;height:36px;font-size:.95rem;}.toolbar{flex-direction:column;align-items:stretch;gap:10px;}.toolbar-left{font-size:.82rem;text-align:center;}.toolbar .btn{width:100%;justify-content:center;}.toolbar select{width:100%;}.sell-form-section{padding:20px 16px;}}
 @media(max-width:380px){.product-thumb{height:160px;}}
 .sell-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
@@ -62,34 +65,34 @@
 @section('content')
 
 {{-- Hero --}}
-<section class="market-hero">
+<section class="page-hero market-hero page-hero-image">
   <div class="container">
-    <div style="text-align:center;margin-bottom:24px;">
-      <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);border-radius:var(--radius-full);padding:5px 14px;font-size:.78rem;font-weight:700;color:#4ade80;margin-bottom:14px;">
+    <div class="page-hero-content">
+      <span class="page-hero-badge">
         <i class="fas fa-store"></i> Agri Marketplace
       </span>
-      <h1 style="font-family:var(--font-display);font-size:clamp(1.4rem,5vw,2.8rem);font-weight:800;margin-bottom:10px;word-break:break-word;">Fresh From the <span style="color:#4ade80;">Farm</span></h1>
-      <p style="opacity:.8;max-width:500px;margin:0 auto 24px;">Buy directly from verified farmers — no middlemen. Paid via Airtel Money, TNM Mpamba or cash on delivery.</p>
-    </div>
-    <form method="GET" action="{{ route('marketplace') }}" style="display:flex;gap:0;max-width:560px;margin:0 auto 20px;">
-      <input type="text" name="q" value="{{ request('q') }}" placeholder="Search seeds, fertilizer, livestock, produce..."
-             style="flex:1;padding:13px 18px;border:none;border-radius:var(--radius-md) 0 0 var(--radius-md);font-family:var(--font-body);font-size:.9rem;background:rgba(255,255,255,.95);color:var(--text);"/>
-      <select name="category" style="padding:13px;border:none;border-left:1px solid #e5e7eb;font-family:var(--font-body);font-size:.85rem;background:rgba(255,255,255,.95);color:var(--text);">
-        <option value="">All Categories</option>
-        @foreach(['seeds'=>'Seeds','fertilizer'=>'Fertilizer','produce'=>'Fresh Produce','livestock'=>'Livestock','tools'=>'Tools','equipment'=>'Equipment','chemicals'=>'Chemicals'] as $v=>$l)
-          <option value="{{ $v }}" @selected(request('category')===$v)>{{ $l }}</option>
+      <h1 class="page-hero-title">Fresh From the <span class="accent">Farm</span></h1>
+      <p class="page-hero-desc">Buy directly from verified farmers — no middlemen. Paid via Airtel Money, TNM Mpamba or MTN MoMo.</p>
+      <div class="page-hero-cta">
+        <form method="GET" action="{{ route('marketplace') }}" style="display:flex;gap:0;max-width:560px;margin:0 auto;">
+          <input type="text" name="q" value="{{ request('q') }}" placeholder="Search seeds, fertilizer, livestock, produce..."
+                 style="flex:1;padding:14px 20px;border:none;border-radius:var(--radius-md) 0 0 var(--radius-md);font-size:.9375rem;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-right:none;"/>
+          <select name="category" style="padding:14px;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);font-size:.85rem;background:var(--bg-card);color:var(--text);">
+            <option value="">All Categories</option>
+            @foreach(['seeds'=>'Seeds','fertilizer'=>'Fertilizer','produce'=>'Fresh Produce','livestock'=>'Livestock','tools'=>'Tools','equipment'=>'Equipment','chemicals'=>'Chemicals'] as $v=>$l)
+              <option value="{{ $v }}" @selected(request('category')===$v)>{{ $l }}</option>
+            @endforeach
+          </select>
+          <button type="submit" class="btn btn-primary" style="border-radius:0 var(--radius-md) var(--radius-md) 0;padding:14px 24px;">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
+      </div>
+      <div class="page-hero-pills">
+        @foreach(['fas fa-shield-alt'=>'Verified Sellers','fas fa-truck'=>'Fast Delivery','fas fa-mobile-alt'=>'Mobile Money','fas fa-undo'=>'Easy Returns'] as $icon=>$label)
+          <span class="page-hero-pill"><i class="{{ $icon }}"></i> {{ $label }}</span>
         @endforeach
-      </select>
-      <button type="submit" style="padding:13px 20px;background:var(--primary);color:#fff;border:none;border-radius:0 var(--radius-md) var(--radius-md) 0;cursor:pointer;font-size:.9rem;">
-        <i class="fas fa-search"></i>
-      </button>
-    </form>
-    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-      @foreach(['fas fa-shield-alt'=>'Verified Sellers','fas fa-truck'=>'Fast Delivery','fas fa-mobile-alt'=>'Mobile Money','fas fa-undo'=>'Easy Returns'] as $icon=>$label)
-        <span style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:var(--radius-full);padding:5px 12px;font-size:.78rem;">
-          <i class="{{ $icon }}" style="color:#4ade80;"></i> {{ $label }}
-        </span>
-      @endforeach
+      </div>
     </div>
   </div>
 </section>
@@ -116,6 +119,11 @@
 
       {{-- Sidebar Filters --}}
       <aside class="market-sidebar">
+        <div class="sidebar-close-mobile" onclick="document.querySelector('.market-sidebar').classList.remove('open')" style="display:none;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);">
+          <span style="font-size:.9rem;font-weight:700;color:var(--text);"><i class="fas fa-filter" style="color:var(--primary);margin-right:6px;"></i> Filters</span>
+          <button style="background:var(--bg-2);border:1px solid var(--border);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;color:var(--text-muted);display:flex;align-items:center;justify-content:center;">&times;</button>
+        </div>
+        <style>@media(max-width:768px){.sidebar-close-mobile{display:flex !important;}}</style>
         <form method="GET" action="{{ route('marketplace') }}" id="filterForm">
           @if(request('q'))<input type="hidden" name="q" value="{{ request('q') }}"/>@endif
 
@@ -200,16 +208,18 @@
             @php
               $pEmojis=['seeds'=>'🌽','fertilizer'=>'🧪','produce'=>'🍅','livestock'=>'🐐','tools'=>'💧','equipment'=>'⚙️','chemicals'=>'⚗️','other'=>'📦'];
               $pColors=['seeds'=>'#dcfce7,#bbf7d0','fertilizer'=>'#e0f2fe,#bae6fd','produce'=>'#fef2f2,#fecaca','livestock'=>'#fef9c3,#fef08a','tools'=>'#f0fdf4,#dcfce7','equipment'=>'#f5f3ff,#ede9fe','chemicals'=>'#fff7ed,#fed7aa'];
+              $pImgs=['seeds'=>'seedling.jpg','fertilizer'=>'spraying2.jpg','produce'=>'tomato.jpg','livestock'=>'cows.jpg','tools'=>'irrigation.jpg','equipment'=>'agritech-drone.jpg','chemicals'=>'spraying2.jpg','other'=>'market-stall.jpg'];
               $pEmoji=$pEmojis[$product->category]??'📦';
               $pColor=$pColors[$product->category]??'#dcfce7,#bbf7d0';
-              $wishlisted=auth()->check()&&Auth::user()->hasWishlisted($product);
+              $pCover=asset('assets/img/agri/'.($pImgs[$product->category]??'leaf-healthy.jpg'));
+              $wishlisted=auth()->check()&&$product->wishlistedBy->isNotEmpty();
             @endphp
             <div class="product-card">
               <div class="product-thumb" style="background:linear-gradient(135deg,{{ $pColor }});">
                 @if($product->thumbnail)
                   <img src="{{ asset('storage/'.$product->thumbnail) }}" alt="{{ $product->name }}" style="width:100%;height:100%;object-fit:cover;"/>
                 @else
-                  <div class="product-emoji">{{ $pEmoji }}</div>
+                  <img src="{{ $pCover }}" alt="{{ $product->name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
                 @endif
                 @auth
                   <button class="product-wishlist {{ $wishlisted?'active':'' }}" onclick="toggleWishlist(this,{{ $product->id }})" title="Wishlist">
@@ -280,8 +290,8 @@
         {{-- Sell a Product Form --}}
         @auth
         <div class="sell-form-section content-end" id="sell">
-          <h3 style="font-family:var(--font-display);font-size:clamp(1rem,4vw,1.2rem);font-weight:800;color:var(--text);margin-bottom:6px;word-break:break-word;">🌾 List Your Product — Free</h3>
-          <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:22px;">Reach 12,000+ buyers across Malawi and Zambia. Your listing goes live once approved (usually within 24 hours).</p>
+          <h3 style="font-size:clamp(1rem,4vw,1.2rem);font-weight:800;color:var(--text);margin-bottom:6px;word-break:break-word;">🌾 List Your Product — Free</h3>
+          <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:22px;">Reach 12,000+ buyers across Malawi. Your listing goes live once approved (usually within 24 hours).</p>
           <form method="POST" action="{{ route('marketplace.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="sell-form-grid">
@@ -361,7 +371,7 @@
         @else
         <div style="background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--radius-lg);padding:32px;text-align:center;margin-top:28px;">
           <i class="fas fa-store" style="font-size:2.5rem;color:var(--primary);margin-bottom:14px;display:block;"></i>
-          <h3 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:8px;">Start Selling Your Farm Products</h3>
+          <h3 style="font-size:1.2rem;margin-bottom:8px;">Start Selling Your Farm Products</h3>
           <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:20px;">Join 12,000+ farmers already selling on AgriTech Pro — completely free.</p>
           <a href="{{ route('register') }}" class="btn btn-primary btn-lg"><i class="fas fa-seedling"></i> Create Free Account</a>
         </div>
@@ -375,7 +385,7 @@
 <div class="overlay" id="cartOverlay" onclick="closeCart()"></div>
 <div class="cart-drawer" id="cartDrawer">
   <div class="cart-drawer-header">
-    <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;">🛒 Your Cart ({{ $cartCount }})</h3>
+    <h3 style="font-size:1rem;font-weight:700;">🛒 Your Cart ({{ $cartCount }})</h3>
     <button onclick="closeCart()" style="background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--text-muted);">✕</button>
   </div>
   <div class="cart-drawer-body">
@@ -426,7 +436,7 @@
   <div class="cart-drawer-footer">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
       <span style="font-size:.9rem;font-weight:600;color:var(--text);">Subtotal</span>
-      <span style="font-family:var(--font-display);font-size:1.2rem;font-weight:800;color:var(--primary);">MWK {{ number_format($cartTotal) }}</span>
+      <span style="font-size:1.2rem;font-weight:800;color:var(--primary);">MWK {{ number_format($cartTotal) }}</span>
     </div>
     <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:14px;">Delivery fee calculated at checkout based on your location.</div>
     <a href="{{ route('cart') }}" class="btn btn-primary btn-md" style="width:100%;justify-content:center;margin-bottom:8px;">
@@ -453,6 +463,34 @@ function toggleWishlist(btn,productId){
     const icon=btn.querySelector('i');
     if(data.added){icon.className='fas fa-heart';icon.style.color='#ef4444';btn.classList.add('active');showToast('❤️ Added to wishlist!','success');}
     else{icon.className='far fa-heart';icon.style.color='';btn.classList.remove('active');showToast('Removed from wishlist','info');}
+  });
+}
+
+// Auto-select unit when category changes
+const categoryUnitMap = {
+  seeds: 'kg',
+  fertilizer: 'bag',
+  produce: 'kg',
+  livestock: 'head',
+  tools: 'piece',
+  equipment: 'unit',
+  chemicals: 'litre',
+  other: 'unit'
+};
+
+const categorySelect = document.querySelector('select[name="category"]');
+const unitSelect = document.querySelector('select[name="unit"]');
+
+if (categorySelect && unitSelect) {
+  categorySelect.addEventListener('change', function() {
+    const unit = categoryUnitMap[this.value];
+    if (unit) {
+      unitSelect.value = unit;
+      // Brief highlight so user notices the change
+      unitSelect.style.transition = 'box-shadow .2s';
+      unitSelect.style.boxShadow = '0 0 0 2px var(--primary)';
+      setTimeout(() => { unitSelect.style.boxShadow = ''; }, 800);
+    }
   });
 }
 

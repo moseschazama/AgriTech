@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserRegistered;
 use App\Models\District;
 use App\Models\User;
 use App\Models\Farm;
@@ -22,7 +23,10 @@ class AuthController extends Controller
         if (Auth::check()) {
             return redirect()->route("dashboard");
         }
-        return view("pages.auth", ["activeTab" => "login"]);
+        return view("pages.auth", [
+            "activeTab" => "login",
+            "districts" => District::with("tradingCentres")->orderBy("name")->get(),
+        ]);
     }
 
     public function showRegister()
@@ -96,7 +100,7 @@ class AuthController extends Controller
             $validated = $request->validate([
                 "first_name" => ["required", "string", "max:100"],
                 "last_name" => ["required", "string", "max:100"],
-                "email" => ["required", "email", "unique:users,email"],
+                "email" => ["nullable", "email", "unique:users,email"],
                 "phone" => [
                     "required",
                     "string",
@@ -137,6 +141,25 @@ class AuthController extends Controller
             ]);
 
             Auth::login($user);
+
+            // Broadcast new user registration to admins
+            event(new UserRegistered($user));
+
+            // Notify all admins about new registration
+            try {
+                $admins = User::where('role', 'admin')->get();
+                foreach ($admins as $admin) {
+                    \App\Jobs\BroadcastNotification::dispatch(
+                        $admin->id,
+                        '👤 New Farmer Registered',
+                        "{$user->full_name} from {$user->district} just joined.",
+                        'system',
+                        'fas fa-user-plus',
+                        'var(--primary)',
+                        route('admin.farmers'),
+                    );
+                }
+            } catch (\Throwable $e) {}
 
             try {
                 $this->sms->send(

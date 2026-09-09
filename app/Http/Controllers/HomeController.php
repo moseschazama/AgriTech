@@ -34,7 +34,10 @@ class HomeController extends Controller
 
         $featuredProducts = Product::active()
             ->featured()
-            ->with('seller')
+            ->with([
+                "seller",
+                "wishlistedBy" => fn($q) => $q->where("user_id", auth()->id()),
+            ])
             ->limit(8)
             ->get();
 

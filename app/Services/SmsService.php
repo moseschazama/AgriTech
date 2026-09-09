@@ -39,12 +39,12 @@ class SmsService
     public function sendOrderStatusUpdate(Order $order): void
     {
         $messages = [
-            "confirmed" => "Order #{$order->order_number} confirmed! Payment received. We're preparing your items.",
-            "processing" => "Order #{$order->order_number} is being prepared at the warehouse.",
-            "dispatched" => "Your order #{$order->order_number} has been dispatched. Track at agritechpro.zm/track",
-            "in_transit" => "Order #{$order->order_number} is on its way to you now!",
-            "delivered" => "Order #{$order->order_number} has been delivered. Thank you for using AgriTech Pro!",
-            "cancelled" => "Order #{$order->order_number} has been cancelled. Refund processing if applicable.",
+            "confirmed"  => "Order #{$order->order_number} confirmed! Payment received. We're preparing your items.",
+            "packing"    => "Order #{$order->order_number} is being packed at the warehouse. Tracking sticker assigned.",
+            "dispatched" => "Your order #{$order->order_number} has been dispatched. Tracking: agritechpro.zm/track",
+            "on_the_way" => "🚛 Order #{$order->order_number} is on the way! Driver is heading to {$order->delivery_district}. Track live: agritechpro.zm/track",
+            "delivered"  => "✅ Order #{$order->order_number} has been delivered. Thank you for using AgriTech Pro!",
+            "cancelled"  => "Order #{$order->order_number} has been cancelled. Refund processing if applicable.",
         ];
 
         if (!isset($messages[$order->status])) {
@@ -86,9 +86,14 @@ class SmsService
 
     public function sendNearDestinationAlert(Delivery $delivery): void
     {
+        $dist = $delivery->distance_remaining_km ?? 2;
+        $town = $delivery->destination_district;
+        $driverName = $delivery->driver?->user?->name ?? 'your driver';
+        $driverPhone = $delivery->driver?->user?->phone ?? '';
+
         $this->send(
             phone: $delivery->order->buyer->phone,
-            message: "Your order #{$delivery->order->order_number} is almost there! Driver is within 2km of your location.",
+            message: "📍 Your order #{$delivery->order->order_number} is {$dist}km from {$town}! {$driverName} is arriving soon. Driver contact: {$driverPhone}. Track: agritechpro.zm/track",
             type: "order_arrived",
             recipient: $delivery->order->buyer,
             related: $delivery->order,

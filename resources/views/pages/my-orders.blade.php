@@ -11,9 +11,12 @@
 .status-dot{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);background:var(--bg-card);display:flex;align-items:center;justify-content:center;font-size:.75rem;z-index:2;}
 .status-dot.done{background:var(--primary);border-color:var(--primary);color:#fff;}
 .status-dot.active{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 0 0 5px rgba(22,163,74,.2);}
-.status-lbl{font-size:.62rem;font-weight:600;color:var(--text-muted);text-align:center;line-height:1.3;}
+.status-lbl{font-size:.75rem;font-weight:600;color:var(--text-muted);text-align:center;line-height:1.3;}
 .status-lbl.done,.status-lbl.active{color:var(--primary);}
-@media(max-width:600px){.order-card{padding:16px 12px;}.status-dot{width:26px;height:26px;font-size:.65rem;}.status-step{min-width:50px;}.status-lbl{font-size:.55rem;}}
+.badge-purple{background:#f5f3ff;color:#6d28d9;border:1px solid #d8b4fe;}
+.badge-earth{background:#fffbeb;color:#b45309;border:1px solid #fcd34d;}
+.blue-50{background:#f0f9ff;}
+@media(max-width:600px){.order-card{padding:16px 12px;}.status-dot{width:26px;height:26px;font-size:.65rem;}.status-step{min-width:50px;}.status-lbl{font-size:.75rem;}}
 </style>
 @endsection
 
@@ -22,7 +25,7 @@
   <div class="container">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
       <div>
-        <h1 style="font-family:var(--font-display);font-size:1.5rem;font-weight:800;color:var(--text);">📦 My Orders</h1>
+        <h1 class="heading-md" style="color:var(--text);">📦 My Orders</h1>
         <p style="color:var(--text-muted);">Track all your purchases</p>
       </div>
       <a href="{{ route('marketplace') }}" class="btn btn-primary btn-sm"><i class="fas fa-store"></i> Browse More</a>
@@ -36,22 +39,23 @@
 
     @forelse(isset($orders) ? $orders : [] as $order)
       @php
-        $steps=['pending','confirmed','processing','dispatched','in_transit','delivered'];
+        $steps=['pending','confirmed','packing','dispatched','on_the_way','delivered'];
         $currentIdx=array_search($order->status,$steps);
         if($currentIdx===false) $currentIdx=0;
-        $sc=['pending'=>'badge-gray','confirmed'=>'badge-sky','processing'=>'badge-earth','dispatched'=>'badge-sky','in_transit'=>'badge-earth','delivered'=>'badge-green','cancelled'=>'badge-coral','refunded'=>'badge-gray'];
-        $icons=['pending'=>'fas fa-clock','confirmed'=>'fas fa-check','processing'=>'fas fa-box','dispatched'=>'fas fa-truck','in_transit'=>'fas fa-map-marker-alt','delivered'=>'fas fa-home'];
-        $labels=['pending'=>'Ordered','confirmed'=>'Confirmed','processing'=>'Packing','dispatched'=>'Dispatched','in_transit'=>'On the Way','delivered'=>'Delivered'];
+        $sl=\App\Models\Order::STATUS_LABELS;
+        $sc=['pending'=>'badge-gray','confirmed'=>'badge-sky','packing'=>'badge-earth','dispatched'=>'badge-sky','on_the_way'=>'badge-purple','delivered'=>'badge-green','cancelled'=>'badge-coral','refunded'=>'badge-gray'];
+        $icons=['pending'=>'fas fa-clock','confirmed'=>'fas fa-check','packing'=>'fas fa-box','dispatched'=>'fas fa-truck','on_the_way'=>'fas fa-map-marker-alt','delivered'=>'fas fa-home'];
+        $sticker=$order->trackingStickers()->first();
       @endphp
-      <div class="order-card {{ $order->status==='cancelled'?'opacity-60':'' }}">
+      <div class="order-card {{ $order->status==='cancelled'?'opacity-60':'' }}" data-order-number="{{ $order->order_number }}">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
           <div>
-            <div style="font-family:var(--font-mono);font-size:.85rem;font-weight:700;color:var(--primary);">{{ $order->order_number }}</div>
-            <div style="font-size:.78rem;color:var(--text-muted);">Placed {{ $order->created_at->format('M j, Y g:i A') }}</div>
+            <div class="code" style="font-weight:700;color:var(--primary);">{{ $order->order_number }}</div>
+            <div class="body-sm" style="color:var(--text-muted);">Placed {{ $order->created_at->format('M j, Y g:i A') }}</div>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-            <span class="badge {{ $sc[$order->status]??'badge-gray' }}">{{ ucfirst($order->status) }}</span>
-            <span class="badge {{ $order->payment_status==='paid'?'badge-green':'badge-gray' }}" style="font-size:.68rem;">
+            <span class="badge {{ $sc[$order->status]??'badge-gray' }}">{{ $sl[$order->status]??ucfirst($order->status) }}</span>
+            <span class="badge {{ $order->payment_status==='paid'?'badge-green':'badge-gray' }}" style="font-size:.75rem;">
               <i class="fas fa-{{ $order->payment_status==='paid'?'check-circle':'clock' }}"></i>
               Payment {{ ucfirst($order->payment_status) }}
             </span>
@@ -67,12 +71,12 @@
                 <div class="status-dot {{ $done?'done':($active?'active':'') }}">
                   <i class="{{ $icons[$step] }}" style="font-size:.7rem;"></i>
                 </div>
-                <div class="status-lbl {{ $done?'done':($active?'active':'') }}">{{ $labels[$step] }}</div>
+                <div class="status-lbl {{ $done?'done':($active?'active':'') }}">{{ $sl[$step]??ucfirst($step) }}</div>
               </div>
             @endforeach
           </div>
         @else
-          <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:var(--radius-md);padding:10px 14px;margin-bottom:12px;font-size:.82rem;color:#dc2626;">
+          <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:var(--radius-md);padding:10px 14px;margin-bottom:12px;color:#dc2626;" class="body-sm">
             <i class="fas fa-times-circle"></i> This order was {{ $order->status }}
             @if($order->cancellation_reason) — {{ $order->cancellation_reason }} @endif
           </div>
@@ -81,42 +85,91 @@
         {{-- Items --}}
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin:14px 0;">
           @foreach($order->items->take(3) as $item)
-            <div style="background:var(--bg-2);border-radius:var(--radius-md);padding:7px 12px;font-size:.8rem;">
+            <div style="background:var(--bg-2);border-radius:var(--radius-md);padding:7px 12px;" class="body-sm">
               <span style="font-weight:600;">{{ $item->quantity }}×</span> {{ $item->product_name }}
             </div>
           @endforeach
           @if($order->items->count()>3)
-            <div style="background:var(--bg-2);border-radius:var(--radius-md);padding:7px 12px;font-size:.8rem;color:var(--text-muted);">+{{ $order->items->count()-3 }} more</div>
+            <div style="background:var(--bg-2);border-radius:var(--radius-md);padding:7px 12px;color:var(--text-muted);" class="body-sm">+{{ $order->items->count()-3 }} more</div>
           @endif
         </div>
 
         {{-- Delivery info --}}
-        @if($order->delivery)
-          <div style="background:var(--green-50);border:1px solid var(--green-200);border-radius:var(--radius-md);padding:10px 14px;margin-bottom:12px;font-size:.82rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-            <span style="color:var(--green-700);"><i class="fas fa-truck"></i> Tracking: <strong style="font-family:var(--font-mono);">{{ $order->delivery->tracking_number }}</strong></span>
-            <a href="{{ route('delivery.track',$order->delivery->tracking_number) }}" class="btn btn-primary btn-sm" style="font-size:.74rem;"><i class="fas fa-map-marker-alt"></i> Track Live</a>
+        @php $del=$order->delivery; @endphp
+        @if($del && $del->driver_name)
+          <div style="background:var(--green-50);border:1px solid var(--green-200);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:12px;" class="body-sm">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+              <span style="color:var(--green-700);"><i class="fas fa-truck"></i> Tracking: <strong class="code">{{ $del->tracking_number }}</strong></span>
+              <a href="{{ route('delivery.track',$del->tracking_number) }}" class="btn btn-primary btn-sm" style="font-size:.75rem;"><i class="fas fa-map-marker-alt"></i> Track Live</a>
+            </div>
+            @if($sticker)
+              <div style="margin-top:6px;color:var(--text-muted);" class="body-xs">
+                <i class="fas fa-tag"></i> Sticker: <span class="code" style="background:#f5f3ff;color:#6d28d9;padding:1px 6px;border-radius:4px;">{{ $sticker->sticker_code }}</span>
+              </div>
+            @endif
+            <div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(0,0,0,.06);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+              <span class="body-sm" style="color:var(--text);">
+                <i class="fas fa-user"></i> Driver: <strong>{{ $del->driver_name }}</strong>
+                @if($del->driver_phone)
+                  <span class="code" style="color:var(--text-muted);margin-left:8px;">{{ $del->driver_phone }}</span>
+                @endif
+              </span>
+              @if($del->driver_phone)
+                <a href="tel:{{ $del->driver_phone }}" class="btn btn-sm" style="background:#e0f2fe;color:#0369a1;font-size:.75rem;padding:3px 10px;"><i class="fas fa-phone"></i> Call</a>
+              @endif
+            </div>
+            @if($del->driver_vehicle_plate)
+              <div style="margin-top:4px;color:var(--text-muted);font-size:.72rem;">
+                <i class="fas fa-car"></i> Vehicle: {{ $del->driver_vehicle_type ? $del->driver_vehicle_type.' · ' : '' }}{{ $del->driver_vehicle_plate }}
+              </div>
+            @endif
+          </div>
+        @elseif($del && $del->tracking_number)
+          <div style="background:var(--blue-50);border:1px solid #bae6fd;border-radius:var(--radius-md);padding:10px 14px;margin-bottom:12px;" class="body-sm">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+              <span style="color:#0369a1;"><i class="fas fa-truck"></i> Tracking: <strong class="code">{{ $del->tracking_number }}</strong></span>
+              <a href="{{ route('delivery.track',$del->tracking_number) }}" class="btn btn-sm" style="background:#e0f2fe;color:#0369a1;font-size:.75rem;"><i class="fas fa-map-marker-alt"></i> Track</a>
+            </div>
+            @if($sticker)
+              <div style="margin-top:4px;color:var(--text-muted);">
+                <i class="fas fa-tag"></i> Sticker: <span class="code" style="background:#f5f3ff;color:#6d28d9;padding:1px 6px;border-radius:4px;">{{ $sticker->sticker_code }}</span>
+              </div>
+            @endif
+            <div style="margin-top:4px;color:var(--text-muted);" class="body-xs">
+              <i class="fas fa-clock"></i> 
+              @if($order->status === 'on_the_way')
+                Driver assigned — heading to pick up your order
+              @else
+                Assigning driver...
+              @endif
+            </div>
+          </div>
+        @elseif($order->status === 'on_the_way' || $order->status === 'dispatched')
+          <div style="background:var(--blue-50);border:1px solid #bae6fd;border-radius:var(--radius-md);padding:10px 14px;margin-bottom:12px;color:#0369a1;" class="body-sm">
+            <i class="fas fa-spinner fa-spin"></i> Preparing your delivery — tracking details will appear shortly
           </div>
         @else
-          <div style="background:var(--bg-2);border-radius:var(--radius-md);padding:10px 14px;margin-bottom:12px;font-size:.8rem;color:var(--text-muted);">
+          <div style="background:var(--bg-2);border-radius:var(--radius-md);padding:10px 14px;margin-bottom:12px;color:var(--text-muted);" class="body-sm">
             <i class="fas fa-clock"></i> Delivery will be assigned once order is confirmed by seller
           </div>
         @endif
 
         {{-- Footer --}}
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-top:12px;border-top:1px solid var(--border);">
-          <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:800;color:var(--primary);">{{ $order->currency }} {{ number_format($order->total) }}</div>
+          <div class="heading-xs" style="color:var(--primary);">{{ $order->currency }} {{ number_format($order->total) }}</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
             <button onclick="showToast('📄 Invoice downloading...','success')" class="btn btn-outline btn-sm"><i class="fas fa-file-invoice"></i> Invoice</button>
             @if($order->status==='delivered')
               <a href="{{ route('marketplace') }}" class="btn btn-primary btn-sm"><i class="fas fa-redo"></i> Reorder</a>
             @endif
+            <button onclick="reportIssue({{ $order->id }},'{{ $order->order_number }}')" class="btn btn-sm" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca;font-size:.75rem;"><i class="fas fa-flag"></i> Need Help?</button>
           </div>
         </div>
       </div>
     @empty
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:60px;text-align:center;">
         <i class="fas fa-shopping-bag" style="font-size:3rem;color:var(--text-muted);margin-bottom:16px;display:block;opacity:.25;"></i>
-        <h3 style="font-family:var(--font-display);margin-bottom:8px;">No orders yet</h3>
+        <h3 class="heading-md" style="margin-bottom:8px;">No orders yet</h3>
         <p style="color:var(--text-muted);margin-bottom:20px;">Browse our marketplace and place your first order.</p>
         <a href="{{ route('marketplace') }}" class="btn btn-primary btn-lg"><i class="fas fa-store"></i> Browse Marketplace</a>
       </div>

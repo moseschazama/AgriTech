@@ -42,7 +42,7 @@
           {{-- Notification Dropdown --}}
           <div class="notif-dropdown" id="notifDropdown" style="display:none;position:absolute;top:48px;right:0;width:340px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);z-index:1000;overflow:hidden;">
             <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);">
-              <strong style="font-family:var(--font-display);font-size:.95rem;">Notifications</strong>
+              <strong style="font-size:.95rem;">Notifications</strong>
               @if($unreadCount > 0)
                 <button onclick="markAllRead()" style="font-size:.75rem;color:var(--primary);font-weight:600;background:none;border:none;cursor:pointer;">Mark all read</button>
               @endif

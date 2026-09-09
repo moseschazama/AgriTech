@@ -27,7 +27,7 @@
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;flex-wrap:wrap;gap:12px;">
       <a href="{{ route('profile').'#tab-certs' }}" class="btn btn-outline btn-sm"><i class="fas fa-arrow-left"></i> Back to Certificates</a>
       <div style="display:flex;gap:8px;">
-        <button onclick="window.print()" class="btn btn-primary btn-sm"><i class="fas fa-print"></i> Print / Save PDF</button>
+        <a href="{{ route('learn.certificate.pdf', $enrollment) }}" class="btn btn-primary btn-sm"><i class="fas fa-download"></i> Download PDF</a>
         <button onclick="shareToLinkedIn()" class="btn btn-outline btn-sm"><i class="fab fa-linkedin"></i> Share on LinkedIn</button>
       </div>
     </div>
@@ -39,7 +39,7 @@
     <div class="cert-inner">
       <div class="cert-logo">🌱</div>
       <div class="cert-org">AgriTech Pro</div>
-      <div class="cert-tagline">Smart Agriculture Platform · Malawi & Zambia</div>
+      <div class="cert-tagline">Smart Agriculture Platform · Malawi</div>
       <div class="cert-body-text">This is to certify that</div>
       <div class="cert-name">{{ isset($enrollment) ? $enrollment->user->full_name : Auth::user()->full_name }}</div>
       <div class="cert-body-text">has successfully completed the course</div>

@@ -4,13 +4,30 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="csrf-token" content="{{ csrf_token() }}"/>
+  @auth
+    <meta name="user-id" content="{{ Auth::id() }}"/>
+    <meta name="is-admin" content="{{ Auth::user()->isAdmin() ? 'true' : 'false' }}"/>
+    <meta name="reverb-app-id" content="{{ env('REVERB_APP_ID', 'agritech') }}"/>
+    <meta name="reverb-key" content="{{ env('REVERB_APP_KEY', 'agritech_key') }}"/>
+    <meta name="reverb-host" content="{{ env('REVERB_HOST', 'localhost') }}"/>
+    <meta name="reverb-port" content="{{ env('REVERB_PORT', '8080') }}"/>
+    <meta name="reverb-scheme" content="{{ env('REVERB_SCHEME', 'http') }}"/>
+  @endauth
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+  <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}"/>
+  <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+  <meta name="theme-color" content="#16a34a"/>
   <title>@yield('title', 'AgriTech Pro — Smart Agriculture Platform')</title>
+  <link rel="stylesheet" href="{{ asset('css/app.min.css') }}"/>
   <link rel="stylesheet" href="{{ asset('css/global.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('css/navbar.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('css/design-system.css') }}"/>
+  <link rel="stylesheet" href="{{ asset('css/premium.css') }}"/>
   @yield('extra_css')
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" media="print" onload="this.media='all'"/>
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/></noscript>
   <style>
     /* ── Flash Messages ── */
     .flash-success,.flash-error,.flash-info,.flash-warning{
@@ -34,17 +51,68 @@
     .pagination .page-item.active .page-link{background:var(--primary);border-color:var(--primary);color:#fff;}
     .pagination .page-item.disabled .page-link{opacity:.4;pointer-events:none;}
     .pagination .page-item .page-link:hover:not(.disabled){border-color:var(--primary);color:var(--primary);}
+    /* ── Toast System ── */
+    #toast-container{position:fixed;bottom:24px;right:24px;z-index:99999;display:flex;flex-direction:column-reverse;gap:10px;max-width:380px;width:100%;pointer-events:none;}
+    #toast-container .toast{pointer-events:auto;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.15);transform:translateX(120%);opacity:0;transition:all .35s cubic-bezier(.4,0,.2,1);position:relative;}
+    #toast-container .toast.toast-visible{transform:translateX(0);opacity:1;}
+    #toast-container .toast-dismissing{transform:translateX(40px);opacity:0;}
+    #toast-container .toast-icon{font-size:1.1rem;flex-shrink:0;}
+    #toast-container .toast-msg{flex:1;font-size:.88rem;font-weight:600;color:var(--text);line-height:1.3;margin:0;}
+    #toast-container .toast-dismiss{background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--text-muted);padding:0 2px;flex-shrink:0;line-height:1;opacity:.6;}
+    #toast-container .toast-dismiss:hover{opacity:1;}
+    #toast-container .toast.toast-success{border-left:4px solid var(--success);}
+    #toast-container .toast.toast-success .toast-icon{color:var(--success);}
+    #toast-container .toast.toast-error{border-left:4px solid var(--danger);}
+    #toast-container .toast.toast-error .toast-icon{color:var(--danger);}
+    #toast-container .toast.toast-warning{border-left:4px solid var(--warning);}
+    #toast-container .toast.toast-warning .toast-icon{color:var(--warning);}
+    #toast-container .toast.toast-info{border-left:4px solid var(--info);}
+    #toast-container .toast.toast-info .toast-icon{color:var(--info);}
+    @media(max-width:480px){#toast-container{right:12px;left:12px;max-width:100%;bottom:16px;}#toast-container .toast{padding:12px 14px;}}
+    /* ── Button Loading States ── */
+    .btn-spinner{animation:fa-spin 1s linear infinite;margin-right:6px;}
+    button:disabled,.btn:disabled{opacity:.6;cursor:not-allowed;pointer-events:auto;}
+    /* ── Upload Progress ── */
+    .upload-progress{display:none;margin:12px 0;padding:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);gap:10px;align-items:center;}
+    .upload-progress.upload-progress-active{display:flex;flex-wrap:wrap;}
+    .upload-progress-bar{flex:1;min-width:120px;height:6px;background:var(--gray-200);border-radius:20px;overflow:hidden;}
+    .upload-progress-fill{height:100%;width:0%;background:var(--primary);border-radius:20px;transition:width .2s ease;}
+    .upload-progress-info{display:flex;align-items:center;gap:8px;}
+    .upload-progress-text{font-size:.78rem;color:var(--text-muted);font-weight:600;}
+    .upload-progress-pct{font-size:.72rem;color:var(--primary);font-weight:700;min-width:32px;text-align:right;}
+    .upload-cancel-btn{background:none;border:1px solid var(--border);border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);font-size:.85rem;padding:0;line-height:1;margin-left:auto;transition:all .15s;}
+    .upload-cancel-btn:hover{background:#fef2f2;border-color:#fca5a5;color:#dc2626;}
+    /* ── Skeleton Loader ── */
+    @keyframes skeleton-shimmer{0%{background-position:-200px 0}100%{background-position:calc(200px + 100%) 0}}
+    .skeleton-loader{display:flex;flex-direction:column;gap:16px;padding:12px 0;}
+    .skeleton-row{display:flex;flex-direction:column;gap:8px;}
+    .skeleton-line{height:14px;border-radius:8px;background:linear-gradient(90deg,var(--gray-200) 25%,var(--gray-100) 50%,var(--gray-200) 75%);background-size:200px 100%;animation:skeleton-shimmer 1.5s ease-in-out infinite;}
+    .skeleton-line.w-25{width:25%;}.skeleton-line.w-50{width:50%;}.skeleton-line.w-60{width:60%;}.skeleton-line.w-75{width:75%;}.skeleton-line.w-80{width:80%;}.skeleton-line.w-100{width:100%;}
+    [data-theme="dark"] .skeleton-line{background:linear-gradient(90deg,var(--gray-700) 25%,var(--gray-600) 50%,var(--gray-700) 75%);}
+    /* ── Form Input Error ── */
+    .form-input-error{border-color:#ef4444!important;background:#fef2f2!important;}
+    .ajax-error{display:block;color:#ef4444;font-size:.73rem;font-weight:600;margin-top:4px;}
+    /* ── Inline Loader ── */
+    .inline-loader{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;color:var(--text-muted);}
+    .inline-loader i{font-size:.85rem;}
+    /* ── Page Loader ── */
+    #page-loader{position:fixed;inset:0;z-index:99998;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .4s ease;}
+    #page-loader.done{opacity:0;pointer-events:none;}
+    .loader-logo{font-size:1.5rem;font-weight:800;color:var(--primary);margin-bottom:16px;}
+    .loader-bar{width:200px;height:3px;background:var(--gray-200);border-radius:20px;overflow:hidden;}
+    .loader-fill{height:100%;width:30%;background:var(--primary);border-radius:20px;animation:loaderProgress 1.2s ease-in-out infinite;}
+    @keyframes loaderProgress{0%{transform:translateX(-100%)}100%{transform:translateX(400%)}}
   </style>
 </head>
 <body>
 
-{{-- Page Loader --}}
+{{-- Page Loader — removed by global.js after initial load --}}
 <div id="page-loader">
   <div class="loader-logo">🌱 AgriTech Pro</div>
   <div class="loader-bar"><div class="loader-fill"></div></div>
 </div>
 
-{{-- Flash Messages --}}
+{{-- Flash Messages — converted to toasts by JS --}}
 @if(session('success'))
   <div class="flash-success" id="flashMsg">
     <i class="fas fa-check-circle"></i> {{ session('success') }}
@@ -79,15 +147,43 @@
 
 <div id="toast-container"></div>
 
-<script src="{{ asset('js/global.js') }}"></script>
+@auth
+<script>
+  window.Laravel = window.Laravel || {};
+  window.Laravel.userId = {{ Auth::id() }};
+  window.Laravel.isAdmin = {{ Auth::user()->isAdmin() ? 'true' : 'false' }};
+  window.Laravel.reverbKey = '{{ env("REVERB_APP_KEY", "agritech_key") }}';
+  window.Laravel.reverbHost = '{{ env("REVERB_HOST", "localhost") }}';
+  window.Laravel.reverbPort = '{{ env("REVERB_PORT", "8080") }}';
+  window.Laravel.reverbScheme = '{{ env("REVERB_SCHEME", "http") }}';
+</script>
+@endauth
+
+<script src="{{ asset('js/global.min.js') }}" defer></script>
+@vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/realtime.js'])
 @yield('extra_js')
 <script>
-  // Auto-dismiss flash messages after 5 seconds
-  setTimeout(() => {
-    const flash = document.getElementById('flashMsg');
-    if (flash) flash.style.animation = 'slideInRight .3s ease reverse';
-    setTimeout(() => flash?.remove(), 300);
-  }, 5000);
+  // Convert flash messages to toast notifications
+  (function(){
+    var flash = document.getElementById('flashMsg');
+    if (flash) {
+      var type = 'success';
+      if (flash.classList.contains('flash-error')) type = 'error';
+      else if (flash.classList.contains('flash-warning')) type = 'warning';
+      else if (flash.classList.contains('flash-info')) type = 'info';
+      var msg = flash.textContent.trim().replace('✕','').trim();
+      // Wait for toast system to be ready
+      var check = function() {
+        if (typeof showToast === 'function') {
+          flash.remove();
+          showToast(msg, type);
+        } else {
+          setTimeout(check, 100);
+        }
+      };
+      setTimeout(check, 300);
+    }
+  })();
 </script>
 </body>
 </html>

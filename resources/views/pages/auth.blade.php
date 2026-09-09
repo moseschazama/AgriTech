@@ -16,7 +16,7 @@
       min-height: calc(100vh - var(--nav-h));
     }
     .auth-left {
-      background: linear-gradient(145deg, #052e0f, #0d4a1e, #166534);
+      background: linear-gradient(145deg, #1e293b, #334155, #1e293b);
       display: flex; flex-direction: column;
       justify-content: center; padding: 60px 64px;
       position: relative; overflow: hidden;
@@ -39,9 +39,8 @@
       border-radius: 12px; display: flex; align-items: center; justify-content: center;
       font-size: 1.3rem; color: #fff;
     }
-    .auth-logo strong { font-family: var(--font-display); font-size: 1.3rem; color: #fff; font-weight: 800; }
+    .auth-logo strong { font-size: 1.3rem; color: #fff; font-weight: 800; }
     .auth-hero-title {
-      font-family: var(--font-display);
       font-size: clamp(1.8rem, 3vw, 2.6rem);
       font-weight: 800; color: #fff; line-height: 1.2;
       margin-bottom: 18px; letter-spacing: -0.02em;
@@ -63,7 +62,7 @@
       padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.15);
     }
     .auth-stat { text-align: left; }
-    .auth-stat-val { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; color: #fff; }
+    .auth-stat-val { font-size: 1.5rem; font-weight: 800; color: #fff; }
     .auth-stat-lbl { font-size: 0.75rem; color: rgba(255,255,255,0.65); }
 
     .auth-right {
@@ -87,7 +86,7 @@
     }
     .auth-form { display: none; flex-direction: column; gap: 20px; }
     .auth-form.active { display: flex; }
-    .auth-heading { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .auth-heading { font-size: 1.5rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
     .auth-subheading { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 8px; }
     .auth-divider {
       display: flex; align-items: center; gap: 12px; color: var(--text-muted); font-size: 0.8rem;
@@ -163,7 +162,7 @@
         </div>
         <div class="auth-feature">
           <div class="auth-feature-icon"><i class="fas fa-robot"></i></div>
-          <span>AI farming assistant available 24/7</span>
+          <span>Farming assistant available 24/7</span>
         </div>
         <div class="auth-feature">
           <div class="auth-feature-icon"><i class="fas fa-cloud-sun"></i></div>
@@ -232,7 +231,7 @@
           <label style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--text-muted);cursor:pointer;">
             <input type="checkbox" name="remember" value="1" style="width:auto;accent-color:var(--primary);"/> Remember me
           </label>
-          <a href="#" class="forgot-link" onclick="showToast('Password reset via SMS coming soon!','info')">Forgot password?</a>
+          <a href="#" class="forgot-link" onclick="showForgotPassword()">Forgot password?</a>
         </div>
 
         <button type="submit" class="btn btn-primary btn-md" style="width:100%;justify-content:center;">
@@ -242,6 +241,42 @@
           Don't have an account? <a href="#" style="color:var(--primary);font-weight:700;" onclick="switchTab('register')">Create one free →</a>
         </p>
       </form>
+
+      {{-- ── Forgot Password Overlay ── --}}
+      <div id="forgotPasswordOverlay" style="display:none;flex-direction:column;gap:16px;">
+        <div>
+          <div class="auth-heading">Reset Password 🔑</div>
+          <div class="auth-subheading">Enter your phone number to receive a reset code via SMS</div>
+        </div>
+        <form method="POST" action="{{ route('password.send-otp') }}" id="forgotPhoneForm">
+          @csrf
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-phone"></i> Phone Number</label>
+            <input type="tel" name="phone" class="form-input" placeholder="+265 99 123 4567" required/>
+          </div>
+          <button type="submit" class="btn btn-primary btn-md" style="width:100%;justify-content:center;"><i class="fas fa-paper-plane"></i> Send Reset Code</button>
+        </form>
+        <form method="POST" action="{{ route('password.verify-otp') }}" id="forgotVerifyForm" style="display:none;flex-direction:column;gap:12px;margin-top:8px;">
+          @csrf
+          <input type="hidden" name="phone" id="forgotPhoneHidden"/>
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-key"></i> SMS Code</label>
+            <input type="text" name="code" class="form-input" placeholder="6-digit code" maxlength="6" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-lock"></i> New Password</label>
+            <input type="password" name="password" class="form-input" placeholder="At least 8 characters" minlength="8" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-lock"></i> Confirm Password</label>
+            <input type="password" name="password_confirmation" class="form-input" placeholder="Repeat password" minlength="8" required/>
+          </div>
+          <button type="submit" class="btn btn-primary btn-md" style="width:100%;justify-content:center;"><i class="fas fa-check"></i> Reset Password</button>
+        </form>
+        <div style="text-align:center;">
+          <a href="#" style="color:var(--primary);font-size:.85rem;font-weight:600;" onclick="showLoginForm()"><i class="fas fa-arrow-left"></i> Back to Sign In</a>
+        </div>
+      </div>
 
       <form class="auth-form {{ $tab === 'register' ? 'active' : '' }}" id="registerForm" data-form="register"
             action="{{ route('register.submit') }}" method="POST" novalidate>
@@ -273,9 +308,9 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label"><i class="fas fa-envelope"></i> Email Address</label>
+          <label class="form-label"><i class="fas fa-envelope"></i> Email Address <span style="color:var(--text-muted);font-size:.75rem;">(optional — alternative login)</span></label>
           <input type="email" name="email" class="form-input" placeholder="john@example.com"
-                 value="{{ old('email') }}" required/>
+                 value="{{ old('email') }}"/>
           @error('email') <span class="field-error">{{ $message }}</span> @enderror
         </div>
 
@@ -368,8 +403,42 @@ function togglePass(id, btn) {
 function switchTab(tab) {
   document.querySelectorAll('.auth-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
   document.querySelectorAll('.auth-form').forEach(f => f.classList.toggle('active', f.dataset.form === tab));
+  document.getElementById('forgotPasswordOverlay').style.display = 'none';
   history.replaceState(null, '', tab === 'register' ? '#register' : '#');
 }
+
+function showForgotPassword() {
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('forgotPasswordOverlay').style.display = 'flex';
+}
+
+function showLoginForm() {
+  document.getElementById('forgotPasswordOverlay').style.display = 'none';
+  document.getElementById('loginForm').style.display = 'flex';
+}
+
+// Handle OTP send — show verify form on success
+document.addEventListener('DOMContentLoaded', function() {
+  @if(session('success') && str_contains(session('success'), 'code'))
+    showForgotPassword();
+    document.getElementById('forgotPhoneForm').style.display = 'none';
+    document.getElementById('forgotVerifyForm').style.display = 'flex';
+    document.getElementById('forgotPhoneHidden').value = '{{ old("phone") }}';
+  @endif
+});
+
+document.getElementById('forgotPhoneForm')?.addEventListener('submit', function(e) {
+  const phone = this.querySelector('[name=phone]').value.trim();
+  if (phone.length < 5) { e.preventDefault(); showToast('Please enter a valid phone number','error'); return; }
+  document.getElementById('forgotPhoneHidden').value = phone;
+});
+
+document.getElementById('forgotVerifyForm')?.addEventListener('submit', function(e) {
+  const pass = this.querySelector('[name=password]').value;
+  const confirm = this.querySelector('[name=password_confirmation]').value;
+  if (pass !== confirm) { e.preventDefault(); showToast('Passwords do not match','error'); return; }
+  if (pass.length < 8) { e.preventDefault(); showToast('Password must be at least 8 characters','error'); return; }
+});
 
 document.querySelectorAll('.auth-tab').forEach(tab => {
   tab.addEventListener('click', () => switchTab(tab.dataset.tab));

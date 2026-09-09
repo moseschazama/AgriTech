@@ -5,6 +5,12 @@
 
     RewriteEngine On
 
+    # Allow large file uploads (up to 512 MB)
+    php_value post_max_size 512M
+    php_value upload_max_filesize 512M
+    php_value max_execution_time 300
+    php_value memory_limit 512M
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

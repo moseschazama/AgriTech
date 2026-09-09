@@ -4,24 +4,24 @@
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>
 <link rel="stylesheet" href="{{ asset('css/home.css') }}"/>
 <style>
-.profile-hero{background:linear-gradient(135deg,#052e0f,#0d4a1e,#166534);padding:48px 0 80px;color:#fff;position:relative;}
+.profile-hero{background:linear-gradient(135deg,#f8fafc,#f0fdf4,#f8fafc);padding:48px 0 80px;color:var(--text);position:relative;}
 .profile-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:32px;margin-top:-60px;position:relative;z-index:2;margin-bottom:24px;}
 .profile-hero-inner{display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap;}
 .profile-avatar-wrap{position:relative;flex-shrink:0;}
 .profile-avatar-edit{position:absolute;bottom:4px;right:4px;width:28px;height:28px;border-radius:50%;background:var(--primary);color:#fff;border:2px solid #fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem;}
 .profile-stats-row{display:flex;gap:24px;flex-wrap:wrap;margin-top:16px;}
 .profile-stat{text-align:center;}
-.profile-stat-val{font-family:var(--font-display);font-size:1.4rem;font-weight:800;color:var(--text);}
+.profile-stat-val{font-size:1.4rem;font-weight:800;color:var(--text);}
 .profile-stat-lbl{font-size:.72rem;color:var(--text-muted);}
 .profile-tabs{display:flex;gap:4px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:5px;margin-bottom:24px;flex-wrap:wrap;}
-.profile-tab{padding:9px 18px;border-radius:var(--radius-md);font-size:.84rem;font-weight:600;color:var(--text-muted);cursor:pointer;border:none;background:transparent;transition:all .15s;font-family:var(--font-body);}
+.profile-tab{padding:9px 18px;border-radius:var(--radius-md);font-size:.84rem;font-weight:600;color:var(--text-muted);cursor:pointer;border:none;background:transparent;transition:all .15s;}
 .profile-tab.active{background:var(--primary);color:#fff;}
 .profile-panel{display:none;}.profile-panel.active{display:block;}
 .form-section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:20px;}
-.form-section-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
-.cert-card{background:linear-gradient(135deg,#052e0f,#0d4a1e,#166534);border-radius:var(--radius-lg);padding:24px;color:#fff;position:relative;overflow:hidden;}
+.form-section-title{font-size:.9375rem;font-weight:700;color:var(--text);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.cert-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;color:var(--text);position:relative;overflow:hidden;}
 .cert-card::before{content:'🎓';position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:4rem;opacity:.15;}
-.cert-number{font-family:var(--font-mono);font-size:.78rem;background:rgba(255,255,255,.15);border-radius:var(--radius-full);padding:3px 10px;display:inline-block;margin-bottom:10px;}
+.cert-number{font-size:.8125rem;background:rgba(255,255,255,.15);border-radius:var(--radius-full);padding:3px 10px;display:inline-block;margin-bottom:10px;}
 .production-table{width:100%;border-collapse:collapse;}
 .production-table th{font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);}
 .production-table td{padding:10px 12px;font-size:.82rem;border-bottom:1px solid var(--border);color:var(--text);}
@@ -70,8 +70,8 @@
         </form>
       </div>
       <div style="flex:1;">
-        <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:800;margin-bottom:6px;">{{ Auth::user()->full_name }}</div>
-        <div style="opacity:.8;margin-bottom:12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+        <div style="font-size:1.8rem;font-weight:800;margin-bottom:6px;">{{ Auth::user()->full_name }}</div>
+        <div style="color:var(--text-muted);margin-bottom:12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
           <i class="fas fa-map-marker-alt"></i> {{ Auth::user()->district??'Malawi' }}
           <span style="opacity:.4;">·</span>
           {{ ucwords(str_replace('_','-', isset($farm)&&$farm ? $farm->farm_type : 'Farmer')) }}
@@ -83,7 +83,7 @@
           @if(isset($farm)&&$farm?->is_verified)
             <span class="badge badge-green"><i class="fas fa-check-circle"></i> Verified Farmer</span>
           @endif
-          <span class="badge" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2);">{{ ucfirst(Auth::user()->role) }}</span>
+          <span class="badge" style="background:var(--bg-card);color:var(--text);border:1px solid var(--border);">{{ ucfirst(Auth::user()->role) }}</span>
           @if(Auth::user()->farm?->is_organic_certified)
             <span class="badge" style="background:rgba(74,222,128,.2);color:#4ade80;border:1px solid rgba(74,222,128,.3);"><i class="fas fa-leaf"></i> Organic Certified</span>
           @endif
@@ -263,7 +263,10 @@
         </div>
 
         <div class="form-section">
-          <div class="form-section-title"><i class="fas fa-chart-bar" style="color:var(--primary);"></i> Production Records</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+            <div class="form-section-title" style="margin-bottom:0;"><i class="fas fa-chart-bar" style="color:var(--primary);"></i> Production Records</div>
+            <a href="{{ route('farm-records') }}" class="btn btn-outline btn-sm"><i class="fas fa-tractor"></i> View Farm Records</a>
+          </div>
           @if(isset($farm)&&$farm&&$farm->productions->count()>0)
             <div style="overflow-x:auto;margin-bottom:18px;">
               <table class="production-table">
@@ -271,7 +274,7 @@
                 <tbody>
                   @foreach($farm->productions->take(5) as $prod)
                     <tr>
-                      <td style="font-family:var(--font-mono);font-size:.78rem;">{{ $prod->season }}</td>
+                      <td class="code">{{ $prod->season }}</td>
                       <td style="font-weight:600;">{{ $prod->crop }}</td>
                       <td>{{ $prod->yield_per_hectare ? number_format($prod->yield_per_hectare,1).' t/ha' : '—' }}</td>
                       <td style="color:var(--primary);font-weight:700;">{{ $prod->revenue ? 'K '.number_format($prod->revenue) : '—' }}</td>
@@ -328,14 +331,14 @@
           @foreach($certificates as $enrollment)
             <div class="cert-card">
               <div class="cert-number">{{ $enrollment->certificate_number }}</div>
-              <div style="font-family:var(--font-display);font-size:1rem;font-weight:800;margin-bottom:6px;line-height:1.3;">{{ $enrollment->course->title }}</div>
+              <div style="font-size:1rem;font-weight:800;margin-bottom:6px;line-height:1.3;">{{ $enrollment->course->title }}</div>
               <div style="font-size:.78rem;opacity:.75;margin-bottom:4px;">{{ ucwords(str_replace('_',' ',$enrollment->course->category)) }}</div>
               <div style="font-size:.75rem;opacity:.65;margin-bottom:18px;">
                 Completed: {{ $enrollment->completed_at?->format('M j, Y') }}<br>
                 Issued: {{ $enrollment->certificate_issued_at?->format('M j, Y') }}
               </div>
               <div style="display:flex;gap:8px;">
-                <a href="{{ route('learn.certificate',$enrollment) }}" class="btn btn-white btn-sm"><i class="fas fa-download"></i> Download</a>
+                <a href="{{ route('learn.certificate.pdf',$enrollment) }}" class="btn btn-white btn-sm"><i class="fas fa-download"></i> Download PDF</a>
                 <button onclick="shareToLinkedIn('{{ $enrollment->certificate_number }}','{{ addslashes($enrollment->course->title) }}')" class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);">
                   <i class="fab fa-linkedin"></i> Share
                 </button>
@@ -346,7 +349,7 @@
       @else
         <div class="form-section" style="text-align:center;padding:60px;">
           <i class="fas fa-certificate" style="font-size:3rem;color:var(--text-muted);margin-bottom:16px;display:block;opacity:.3;"></i>
-          <h3 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:8px;">No Certificates Yet</h3>
+          <h3 style="font-size:1.2rem;margin-bottom:8px;">No Certificates Yet</h3>
           <p style="color:var(--text-muted);margin-bottom:20px;">Complete a course with a certificate to earn your first credential.</p>
           <a href="{{ route('learn') }}" class="btn btn-primary btn-lg"><i class="fas fa-graduation-cap"></i> Browse Courses</a>
         </div>
@@ -357,7 +360,7 @@
     <div class="profile-panel" id="tab-listings">
       <div class="form-section" style="padding:0;overflow:hidden;">
         <div style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-          <div style="font-family:var(--font-display);font-size:.95rem;font-weight:700;">My Product Listings</div>
+          <div style="font-size:.9375rem;font-weight:700;">My Product Listings</div>
           <a href="{{ route('marketplace') }}#sell" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add New Listing</a>
         </div>
         <div style="overflow-x:auto;">
@@ -457,7 +460,7 @@
             </div>
             <div class="security-info-row">
               <span style="color:var(--text-muted);">Login IP</span>
-              <span style="font-family:var(--font-mono);font-size:.78rem;">{{ Auth::user()->last_login_ip??'—' }}</span>
+              <span class="code">{{ Auth::user()->last_login_ip??'—' }}</span>
             </div>
             <div class="security-info-row">
               <span style="color:var(--text-muted);">Account created</span>

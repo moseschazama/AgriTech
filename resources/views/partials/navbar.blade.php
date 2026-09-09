@@ -29,26 +29,28 @@
       <button class="dark-toggle" id="darkToggle" title="Toggle dark mode"><i class="fas fa-moon"></i></button>
 
       @auth
+        @php
+          $recentNotifs = Auth::user()->notifications()->limit(8)->get();
+          $unreadCount = $recentNotifs->where('is_read', false)->count();
+        @endphp
+
         {{-- Notification Bell --}}
         <div class="nav-notif-wrap" style="position:relative;">
           <button class="nav-notif" id="notifBell" onclick="toggleNotifDropdown()" title="Notifications">
             <i class="fas fa-bell"></i>
-            @php $unreadCount = Auth::user()->unreadNotifications()->count(); @endphp
-            @if($unreadCount > 0)
-              <span class="badge-dot" id="notifBadge">{{ $unreadCount > 9 ? '9+' : $unreadCount }}</span>
-            @endif
+            <span class="badge-dot" id="notifBadge" style="{{ $unreadCount > 0 ? '' : 'display:none' }}">{{ $unreadCount > 9 ? '9+' : $unreadCount }}</span>
           </button>
 
           {{-- Notification Dropdown --}}
           <div class="notif-dropdown" id="notifDropdown" style="display:none;position:absolute;top:48px;right:0;width:340px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);z-index:1000;overflow:hidden;">
             <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);">
-              <strong style="font-family:var(--font-display);font-size:.95rem;">Notifications</strong>
+              <strong style="font-size:1.0625rem;letter-spacing:-0.01em;">Notifications</strong>
               @if($unreadCount > 0)
                 <button onclick="markAllRead()" style="font-size:.75rem;color:var(--primary);font-weight:600;background:none;border:none;cursor:pointer;">Mark all read</button>
               @endif
             </div>
             <div id="notifList" style="max-height:320px;overflow-y:auto;">
-              @forelse(Auth::user()->notifications()->limit(8)->get() as $notif)
+              @forelse($recentNotifs as $notif)
                 <a href="{{ $notif->action_url ?? '#' }}"
                    onclick="markNotifRead({{ $notif->id }}, this)"
                    style="display:flex;gap:12px;padding:12px 18px;text-decoration:none;border-bottom:1px solid var(--border);background:{{ !$notif->is_read ? 'var(--green-50)' : 'transparent' }};transition:background .15s;"
@@ -57,9 +59,9 @@
                     <i class="{{ $notif->icon }}" style="color:{{ $notif->icon_color }};font-size:.85rem;"></i>
                   </div>
                   <div style="flex:1;min-width:0;">
-                    <div style="font-size:.82rem;font-weight:{{ $notif->is_read ? '500' : '700' }};color:var(--text);margin-bottom:2px;">{{ $notif->title }}</div>
+                    <div style="font-size:.8125rem;font-weight:{{ $notif->is_read ? '500' : '700' }};color:var(--text);margin-bottom:2px;">{{ $notif->title }}</div>
                     <div style="font-size:.75rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ Str::limit($notif->message, 60) }}</div>
-                    <div style="font-size:.7rem;color:var(--text-muted);margin-top:3px;">{{ $notif->created_at->diffForHumans() }}</div>
+                    <div style="font-size:.75rem;color:var(--text-muted);margin-top:3px;">{{ $notif->created_at->diffForHumans() }}</div>
                   </div>
                   @if(!$notif->is_read)
                     <div style="width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:4px;"></div>
@@ -73,7 +75,7 @@
               @endforelse
             </div>
             <div style="padding:10px 18px;border-top:1px solid var(--border);text-align:center;">
-              <a href="{{ route('notifications') }}" style="font-size:.8rem;color:var(--primary);font-weight:600;">View all notifications</a>
+              <a href="{{ route('notifications') }}" style="font-size:.8125rem;color:var(--primary);font-weight:600;">View all notifications</a>
             </div>
           </div>
         </div>
@@ -96,7 +98,7 @@
             <a href="{{ route('notifications') }}" class="nav-user-menu-item">
               <i class="fas fa-bell"></i> Notifications
               @if(Auth::user()->unreadNotifications()->count() > 0)
-                <span class="badge badge-green" style="margin-left:auto;font-size:.65rem;padding:2px 7px;">{{ Auth::user()->unreadNotifications()->count() }}</span>
+                <span class="badge badge-green" style="margin-left:auto;font-size:.75rem;padding:2px 7px;">{{ Auth::user()->unreadNotifications()->count() }}</span>
               @endif
             </a>
             @if(Auth::user()->isAdmin())
@@ -151,23 +153,4 @@ document.addEventListener('click', e => {
     if (d) d.style.display = 'none';
   }
 });
-function markNotifRead(id, el) {
-  fetch(`/notifications/${id}/read`, {
-    method:'POST',
-    headers:{'X-CSRF-TOKEN':document.querySelector('meta[name=csrf-token]').content,'Accept':'application/json'}
-  });
-  el.style.background = 'transparent';
-  const dot = el.querySelector('[style*="border-radius:50%"][style*="#16a34a"]');
-  if (dot) dot.remove();
-}
-function markAllRead() {
-  fetch('/notifications/mark-all-read', {
-    method:'POST',
-    headers:{'X-CSRF-TOKEN':document.querySelector('meta[name=csrf-token]').content}
-  }).then(() => {
-    document.querySelectorAll('#notifList a').forEach(a => a.style.background='transparent');
-    document.getElementById('notifBadge')?.remove();
-    showToast('All notifications marked as read','success');
-  });
-}
 </script>

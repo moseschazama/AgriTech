@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Farm extends Model
 {
@@ -41,6 +42,31 @@ class Farm extends Model
     public function productions(): HasMany
     {
         return $this->hasMany(FarmProduction::class);
+    }
+
+    public function seasons(): HasMany
+    {
+        return $this->hasMany(FarmSeason::class);
+    }
+
+    public function costs(): HasManyThrough
+    {
+        return $this->hasManyThrough(FarmCost::class, FarmSeason::class, 'farm_id', 'season_id');
+    }
+
+    public function sales(): HasManyThrough
+    {
+        return $this->hasManyThrough(FarmSale::class, FarmSeason::class, 'farm_id', 'season_id');
+    }
+
+    public function events(): HasManyThrough
+    {
+        return $this->hasManyThrough(FarmEvent::class, FarmSeason::class, 'farm_id', 'season_id');
+    }
+
+    public function alerts(): HasMany
+    {
+        return $this->hasMany(FarmAlert::class);
     }
 
     public function verifier(): BelongsTo

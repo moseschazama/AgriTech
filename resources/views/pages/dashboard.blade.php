@@ -8,7 +8,7 @@
 .sidebar{width:260px;background:var(--bg-card);border-right:1px solid var(--border);position:fixed;top:var(--nav-h);left:0;height:calc(100vh - var(--nav-h));overflow-y:auto;z-index:100;transition:transform .3s ease;display:flex;flex-direction:column;}
 .sidebar-header{padding:20px 20px 16px;border-bottom:1px solid var(--border);}
 .sidebar-user{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
-.sidebar-user-info strong{display:block;font-size:.9rem;color:var(--text);font-family:var(--font-display);}
+.sidebar-user-info strong{display:block;font-size:.9rem;color:var(--text);}
 .sidebar-user-info span{font-size:.75rem;color:var(--text-muted);}
 .sidebar-farm-badge{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--primary);font-weight:600;background:var(--green-50);border-radius:var(--radius-full);padding:4px 12px;}
 .sidebar-nav{padding:12px 0;flex:1;}
@@ -21,20 +21,20 @@
 .sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);}
 .dash-main{margin-left:260px;flex:1;padding:32px;background:var(--bg-2);min-height:calc(100vh - 70px);}
 .dash-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:16px;}
-.page-title{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--text);margin-bottom:4px;}
+.page-title{font-size:1.5rem;font-weight:800;color:var(--text);margin-bottom:4px;}
 .page-subtitle{font-size:.85rem;color:var(--text-muted);}
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:28px;}
 .stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;transition:all .2s;}
 .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
 .stat-card-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:14px;}
-.stat-card-val{font-family:var(--font-display);font-size:1.8rem;font-weight:800;color:var(--text);line-height:1;}
+.stat-card-val{font-size:1.5rem;font-weight:800;color:var(--text);line-height:1;}
 .stat-card-label{font-size:.78rem;color:var(--text-muted);margin-top:4px;}
 .stat-card-change{font-size:.74rem;font-weight:700;margin-top:8px;display:flex;align-items:center;gap:4px;}
 .change-up{color:#22c55e;} .change-down{color:#ef4444;}
 .dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
 .widget{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
 .widget-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);}
-.widget-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text);}
+.widget-title{font-size:.9375rem;font-weight:700;color:var(--text);}
 .widget-body{padding:18px 20px;}
 .activity-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
 .activity-item:last-child{border-bottom:none;}
@@ -96,6 +96,7 @@
     <div class="sidebar-section-label">Main</div>
     <a href="{{ route('dashboard') }}" class="sidebar-link active"><i class="fas fa-th-large"></i> Dashboard</a>
     <a href="{{ route('profile') }}"   class="sidebar-link"><i class="fas fa-user"></i> My Profile</a>
+    <a href="{{ route('farm-records') }}" class="sidebar-link"><i class="fas fa-tractor"></i> Farm Records</a>
     <a href="#weather"                 class="sidebar-link"><i class="fas fa-cloud-sun"></i> Weather</a>
 
     <div class="sidebar-section-label">Learning</div>
@@ -158,6 +159,7 @@
       <div class="page-subtitle">{{ now()->format('l, F j, Y') }} · Your farm is looking great today</div>
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <a href="{{ route('farm-records') }}" class="btn btn-outline btn-sm"><i class="fas fa-tractor"></i> Farm Records</a>
       <a href="{{ route('diseases') }}" class="btn btn-outline btn-sm"><i class="fas fa-bug"></i> Scan Disease</a>
       <a href="{{ route('marketplace') }}" class="btn btn-primary btn-sm"><i class="fas fa-shopping-cart"></i> Browse Market</a>
     </div>
@@ -169,7 +171,7 @@
       <div style="display:flex;align-items:center;gap:16px;">
         <i class="fas fa-sun" style="font-size:2.5rem;color:#facc15;"></i>
         <div>
-          <div style="font-family:var(--font-display);font-size:2rem;font-weight:800;">28°C</div>
+          <div style="font-size:2rem;font-weight:800;">28°C</div>
           <div style="font-size:.82rem;opacity:.8;">{{ Auth::user()->district ?? 'Lilongwe' }} — Sunny</div>
         </div>
       </div>
@@ -386,7 +388,7 @@ if (chartLabels.length > 0 && document.getElementById('salesChart')) {
     ctx.beginPath(); ctx.strokeStyle = gridColor; ctx.lineWidth = 1; ctx.setLineDash([4,4]);
     ctx.moveTo(pad, y); ctx.lineTo(w - pad, y); ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle = textColor; ctx.font = '11px DM Sans,sans-serif'; ctx.textAlign = 'right';
+    ctx.fillStyle = textColor; ctx.font = '11px Inter,sans-serif'; ctx.textAlign = 'right';
     ctx.fillText('K ' + Math.round(maxVal * (1 - i/4) / 1000) + 'k', pad - 4, y + 4);
   }
 
@@ -404,7 +406,7 @@ if (chartLabels.length > 0 && document.getElementById('salesChart')) {
     ctx.roundRect(x, y, barW, bH, [4, 4, 0, 0]);
     ctx.fill();
 
-    ctx.fillStyle = textColor; ctx.font = 'bold 11px DM Sans,sans-serif'; ctx.textAlign = 'center';
+    ctx.fillStyle = textColor; ctx.font = 'bold 11px Inter,sans-serif'; ctx.textAlign = 'center';
     ctx.fillText(label, x + barW/2, h - 8);
   });
 }

@@ -33,7 +33,9 @@ class Order extends Model
         "delivery_lat",
         "delivery_lng",
         "confirmed_at",
+        "packed_at",
         "dispatched_at",
+        "on_the_way_at",
         "delivered_at",
         "cancelled_at",
         "cancellation_reason",
@@ -46,21 +48,37 @@ class Order extends Model
         "total" => "decimal:2",
         "paid_at" => "datetime",
         "confirmed_at" => "datetime",
+        "packed_at" => "datetime",
         "dispatched_at" => "datetime",
+        "on_the_way_at" => "datetime",
         "delivered_at" => "datetime",
         "cancelled_at" => "datetime",
     ];
 
+    /** User-facing status labels mapped to internal statuses. */
+    public const STATUS_LABELS = [
+        "pending"     => "Ordered",
+        "confirmed"   => "Confirmed",
+        "packing"     => "Packing",
+        "dispatched"  => "Dispatched",
+        "on_the_way"  => "On the Way",
+        "delivered"   => "Delivered",
+        "cancelled"   => "Cancelled",
+        "refunded"    => "Refunded",
+    ];
+
     /** Valid forward-only status transitions (state machine). */
     public const STATUS_FLOW = [
-        "pending" => ["confirmed", "cancelled"],
-        "confirmed" => ["processing", "cancelled"],
-        "processing" => ["dispatched", "cancelled"],
-        "dispatched" => ["in_transit"],
-        "in_transit" => ["delivered"],
-        "delivered" => ["refunded"],
-        "cancelled" => [],
-        "refunded" => [],
+        "pending"    => ["confirmed", "cancelled"],
+        "confirmed"  => ["packing", "processing", "cancelled"],
+        "packing"    => ["dispatched", "cancelled"],
+        "processing" => ["packing", "dispatched", "cancelled"],
+        "dispatched" => ["on_the_way", "in_transit"],
+        "on_the_way" => ["delivered"],
+        "in_transit" => ["on_the_way", "delivered"],
+        "delivered"  => ["refunded"],
+        "cancelled"  => [],
+        "refunded"   => [],
     ];
 
     protected static function boot()
@@ -96,6 +114,11 @@ class Order extends Model
     public function delivery(): HasOne
     {
         return $this->hasOne(Delivery::class);
+    }
+
+    public function trackingStickers(): HasMany
+    {
+        return $this->hasMany(TrackingSticker::class);
     }
 
     public function smsLogs(): HasMany
@@ -147,6 +170,14 @@ class Order extends Model
     }
 
     /**
+     * Return the list of valid next statuses this order can transition to.
+     */
+    public function nextStatuses(): array
+    {
+        return self::STATUS_FLOW[$this->status] ?? [];
+    }
+
+    /**
      * Transition the order to a new status — validates the state machine,
      * stamps the relevant timestamp, fires the SMS notification and
      * applies side-effects (stock restore on cancel, etc).
@@ -164,10 +195,12 @@ class Order extends Model
         }
 
         $timestampField = match ($newStatus) {
-            "confirmed" => "confirmed_at",
+            "confirmed"  => "confirmed_at",
+            "packing"    => "packed_at",
             "dispatched" => "dispatched_at",
-            "delivered" => "delivered_at",
-            "cancelled" => "cancelled_at",
+            "on_the_way" => "on_the_way_at",
+            "delivered"  => "delivered_at",
+            "cancelled"  => "cancelled_at",
             default => null,
         };
 
@@ -184,12 +217,111 @@ class Order extends Model
         // Side-effects per transition
         match ($newStatus) {
             "cancelled" => $this->restoreStockForItems(),
+            "on_the_way" => $this->onTheWay(),
             "delivered" => $this->onDelivered(),
             default => null,
         };
 
         // Dispatch SMS notification via the SmsService
         app(\App\Services\SmsService::class)->sendOrderStatusUpdate($this);
+    }
+
+    /** Auto-assign an available driver and generate tracking sticker when order goes on the way. */
+    protected function onTheWay(): void
+    {
+        // Ensure coordinates are resolved
+        $this->resolveDeliveryCoordinates();
+        $this->refresh();
+
+        $delivery = $this->delivery()->first();
+        if (!$delivery) {
+            $originDistrict = $this->seller?->district ?? "Lilongwe";
+            $originCoords = self::resolveOriginCoordinates($originDistrict);
+
+            $delivery = \App\Models\Delivery::create([
+                "order_id" => $this->id,
+                "tracking_number" => "TRK-" . now()->format("Ymd") . "-" . strtoupper(\Illuminate\Support\Str::random(6)),
+                "status" => "pending",
+                "origin_address" => self::originAddressFor($this->seller, $originDistrict),
+                "origin_district" => $originDistrict,
+                "origin_lat" => $originCoords['origin_lat'] ?? null,
+                "origin_lng" => $originCoords['origin_lng'] ?? null,
+                "destination_district" => $this->delivery_district,
+                "destination_address" => $this->delivery_address,
+                "destination_lat" => $this->delivery_lat,
+                "destination_lng" => $this->delivery_lng,
+            ]);
+            $this->setRelation("delivery", $delivery);
+        } else {
+            // Ensure existing delivery has coordinates resolved
+            $updates = [];
+            if (!$delivery->destination_lat && $this->delivery_lat) {
+                $updates['destination_lat'] = $this->delivery_lat;
+            }
+            if (!$delivery->destination_lng && $this->delivery_lng) {
+                $updates['destination_lng'] = $this->delivery_lng;
+            }
+            if (!$delivery->origin_lat) {
+                $originCoords = self::resolveOriginCoordinates($delivery->origin_district ?? $this->seller?->district);
+                if ($originCoords) {
+                    $updates['origin_lat'] = $originCoords['origin_lat'];
+                    $updates['origin_lng'] = $originCoords['origin_lng'];
+                }
+            }
+            if (!empty($updates)) {
+                $delivery->update($updates);
+            }
+        }
+
+        // Auto-assign the first available driver (if not already assigned)
+        if (!$delivery->driver_id) {
+            $driver = Driver::available()->first();
+            if ($driver) {
+                $driver->assignTo($delivery);
+            }
+        }
+
+        // Refresh delivery to get the driver relationship loaded
+        $delivery->load("driver.user");
+
+        // Notify buyer, seller, and admins (always, whether newly assigned or pre-assigned)
+        if ($delivery->driver && $delivery->driver->user) {
+            $driver = $delivery->driver;
+            $driverPhone = $driver->user->phone;
+            $driverName = $driver->user->name ?? "Driver";
+
+            Notification::create([
+                "user_id" => $this->buyer_id,
+                "title" => "Driver Assigned! 🚛",
+                "message" => "Your order #{$this->order_number} is on the way! Driver: {$driverName} — Phone: {$driverPhone}",
+                "type" => "order",
+                "icon" => "fas fa-truck",
+                "icon_color" => "var(--primary)",
+            ]);
+            Notification::create([
+                "user_id" => $this->seller_id,
+                "title" => "Driver on the Way 🚛",
+                "message" => "Order #{$this->order_number} is out for delivery. Driver: {$driverName} — Phone: {$driverPhone}",
+                "type" => "order",
+                "icon" => "fas fa-truck",
+                "icon_color" => "var(--primary)",
+            ]);
+
+            $admins = \App\Models\User::whereHas('roles', fn($q) => $q->where('name', 'admin'))->get();
+            foreach ($admins as $admin) {
+                Notification::create([
+                    "user_id" => $admin->id,
+                    "title" => "Delivery in Progress 🚛",
+                    "message" => "Order #{$this->order_number} — Driver {$driverName} ({$driverPhone}) is on the way to {$this->delivery_district}.",
+                    "type" => "order",
+                    "icon" => "fas fa-truck",
+                    "icon_color" => "var(--primary)",
+                ]);
+            }
+        }
+
+        // Generate tracking sticker for the package
+        TrackingSticker::generateFor($delivery);
     }
 
     /** Restore product stock for every item when an order is cancelled. */
@@ -305,6 +437,86 @@ class Order extends Model
 
             return $order->fresh("items");
         });
+    }
+
+    /**
+     * Auto-resolve delivery_lat/delivery_lng from delivery_district + delivery_town
+     * by looking up the nearest TradingCentre. Call this after creating/updating an order
+     * when lat/lng are not provided by the user.
+     */
+    public function resolveDeliveryCoordinates(): void
+    {
+        if ($this->delivery_lat && $this->delivery_lng) {
+            return; // already set
+        }
+
+        if (!$this->delivery_district) {
+            return; // no district to look up
+        }
+
+        // Try exact match by town name first
+        if ($this->delivery_town) {
+            $exact = TradingCentre::whereHas('district', fn ($q) => $q->where('name', $this->delivery_district))
+                ->where('name', 'like', '%' . $this->delivery_town . '%')
+                ->whereNotNull('latitude')
+                ->whereNotNull('longitude')
+                ->first();
+
+            if ($exact) {
+                $this->updateQuietly([
+                    'delivery_lat' => $exact->latitude,
+                    'delivery_lng' => $exact->longitude,
+                ]);
+                return;
+            }
+        }
+
+        // Fall back to the first trading centre (main boma) in the district
+        $fallback = TradingCentre::whereHas('district', fn ($q) => $q->where('name', $this->delivery_district))
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->first();
+
+        if ($fallback) {
+            $this->updateQuietly([
+                'delivery_lat' => $fallback->latitude,
+                'delivery_lng' => $fallback->longitude,
+            ]);
+        }
+    }
+
+    /**
+     * Auto-resolve origin coordinates for a Delivery based on the seller's district.
+     */
+    public static function resolveOriginCoordinates(string $district): ?array
+    {
+        if (!$district) return null;
+
+        $centre = TradingCentre::whereHas('district', fn ($q) => $q->where('name', $district))
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->first();
+
+        if ($centre) {
+            return ['origin_lat' => $centre->latitude, 'origin_lng' => $centre->longitude];
+        }
+
+        return null;
+    }
+
+    /**
+     * Build a human-readable origin address for a Delivery from the seller's
+     * recorded trading centre / village / district.
+     */
+    public static function originAddressFor($seller, string $fallback): string
+    {
+        $parts = array_filter([
+            $seller?->trading_centre ?? null,
+            $seller?->village ?? null,
+            $seller?->district ?? null,
+        ]);
+
+        return $parts ? implode(', ', $parts) : $fallback;
     }
 
     /**

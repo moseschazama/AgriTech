@@ -1,119 +1,87 @@
-<footer class="footer">
-  <div class="container">
-    <div class="footer-top">
+<footer class="footer" style="position:relative;overflow:hidden;">
+  {{-- Subtle top glow --}}
+  <div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:400px;height:2px;background:linear-gradient(90deg,transparent,var(--primary),transparent);opacity:.4;"></div>
+
+  <div class="container" style="padding:48px 20px 28px;">
+    {{-- Main grid --}}
+    <div class="footer-grid" style="display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:40px;align-items:start;margin-bottom:40px;">
 
       {{-- Brand --}}
       <div>
-        <div class="footer-logo-wrap">
-          <a href="{{ route('home') }}" class="nav-logo footer-logo-text">
-            <div class="nav-logo-icon"><i class="fas fa-seedling"></i></div>
-            <div class="nav-logo-text">
-              <strong>AgriTech Pro</strong>
-              <span>Smart Farming Platform</span>
-            </div>
-          </a>
-        </div>
-        <p class="footer-tagline">Empowering Malawian farmers through education, technology, trade, and innovation. Your growth is our mission.</p>
-        <div class="footer-social">
-          <a href="#" class="footer-social-btn" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-          <a href="#" class="footer-social-btn" title="Twitter/X"><i class="fab fa-twitter"></i></a>
-          <a href="#" class="footer-social-btn" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-          <a href="#" class="footer-social-btn" title="YouTube"><i class="fab fa-youtube"></i></a>
-          <a href="#" class="footer-social-btn" title="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="{{ route('home') }}" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:14px;">
+          <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--green-500),var(--green-700));color:#fff;display:flex;align-items:center;justify-content:center;font-size:.95rem;box-shadow:0 4px 12px rgba(22,163,74,.3);">
+            <i class="fas fa-seedling"></i>
+          </div>
+          <div>
+            <span style="font-weight:800;font-size:1.05rem;color:#fff;letter-spacing:-.01em;">AgriTech Pro</span>
+            <span style="display:block;font-size:.68rem;color:var(--gray-400);font-weight:500;letter-spacing:.04em;text-transform:uppercase;">Smart Farming Platform</span>
+          </div>
+        </a>
+        <p style="font-size:.82rem;color:var(--gray-400);line-height:1.6;max-width:280px;margin-bottom:18px;">Empowering Malawian farmers with practical tools, real-time markets, and hands-on learning.</p>
+        <div style="display:flex;gap:6px;">
+          <a href="#" title="WhatsApp" style="width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:var(--gray-400);text-decoration:none;font-size:.82rem;transition:all .2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.color='var(--primary)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)';this.style.color='var(--gray-400)';this.style.transform='none'"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" title="Facebook" style="width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:var(--gray-400);text-decoration:none;font-size:.82rem;transition:all .2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.color='var(--primary)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)';this.style.color='var(--gray-400)';this.style.transform='none'"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" title="X" style="width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:var(--gray-400);text-decoration:none;font-size:.82rem;transition:all .2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.color='var(--primary)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)';this.style.color='var(--gray-400)';this.style.transform='none'"><i class="fab fa-x-twitter"></i></a>
+          <a href="#" title="YouTube" style="width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:var(--gray-400);text-decoration:none;font-size:.82rem;transition:all .2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.color='var(--primary)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)';this.style.color='var(--gray-400)';this.style.transform='none'"><i class="fab fa-youtube"></i></a>
         </div>
       </div>
 
       {{-- Platform --}}
-      <div class="footer-col">
-        <h4>Platform</h4>
-        <div class="footer-links">
-          <a href="{{ route('learn') }}"       class="footer-link"><i class="fas fa-chevron-right"></i> Learning Center</a>
-          <a href="{{ route('marketplace') }}" class="footer-link"><i class="fas fa-chevron-right"></i> Marketplace</a>
-          <a href="{{ route('innovation') }}"  class="footer-link"><i class="fas fa-chevron-right"></i> Innovation Hub</a>
-          <a href="{{ route('delivery') }}"    class="footer-link"><i class="fas fa-chevron-right"></i> Delivery Tracking</a>
-          <a href="{{ route('diseases') }}"    class="footer-link"><i class="fas fa-chevron-right"></i> Disease Detection</a>
+      <div>
+        <h4 style="font-size:.68rem;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px;">Platform</h4>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <a href="{{ route('learn') }}" style="color:var(--gray-300);text-decoration:none;font-size:.82rem;font-weight:500;transition:color .2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--gray-300)'">Courses</a>
+          <a href="{{ route('marketplace') }}" style="color:var(--gray-300);text-decoration:none;font-size:.82rem;font-weight:500;transition:color .2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--gray-300)'">Marketplace</a>
+          <a href="{{ route('innovation') }}" style="color:var(--gray-300);text-decoration:none;font-size:.82rem;font-weight:500;transition:color .2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--gray-300)'">Innovation Hub</a>
+          <a href="{{ route('diseases') }}" style="color:var(--gray-300);text-decoration:none;font-size:.82rem;font-weight:500;transition:color .2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--gray-300)'">Disease Detection</a>
+          <a href="{{ route('delivery') }}" style="color:var(--gray-300);text-decoration:none;font-size:.82rem;font-weight:500;transition:color .2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--gray-300)'">Delivery Tracking</a>
+        </div>
+      </div>
+
+      {{-- Account --}}
+      <div>
+        <h4 style="font-size:.68rem;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px;">Account</h4>
+        <div style="display:flex;flex-direction:column;gap:10px;">
           @auth
-            <a href="{{ route('dashboard') }}" class="footer-link"><i class="fas fa-chevron-right"></i> Farmer Dashboard</a>
+            <a href="{{ route('dashboard') }}" style="color:var(--gray-300);text-decoration:none;font-size:.82rem;font-weight:500;transition:color .2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--gray-300)'">Dashboard</a>
             @if(Auth::user()->isAdmin())
-              <a href="{{ route('admin.index') }}" class="footer-link"><i class="fas fa-chevron-right"></i> Admin Panel</a>
+              <a href="{{ route('admin.index') }}" style="color:var(--gray-300);text-decoration:none;font-size:.82rem;font-weight:500;transition:color .2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--gray-300)'">Admin Panel</a>
             @endif
           @else
-            <a href="{{ route('login') }}"    class="footer-link"><i class="fas fa-chevron-right"></i> Sign In</a>
-            <a href="{{ route('register') }}" class="footer-link"><i class="fas fa-chevron-right"></i> Create Account</a>
+            <a href="{{ route('login') }}" style="color:var(--gray-300);text-decoration:none;font-size:.82rem;font-weight:500;transition:color .2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--gray-300)'">Sign In</a>
+            <a href="{{ route('register') }}" style="display:inline-flex;align-items:center;gap:5px;padding:7px 16px;border-radius:8px;background:var(--primary);color:#fff;text-decoration:none;font-size:.78rem;font-weight:600;width:fit-content;transition:all .2s;" onmouseover="this.style.opacity='.9';this.style.transform='translateY(-1px)'" onmouseout="this.style.opacity='1';this.style.transform='none'"><i class="fas fa-arrow-right" style="font-size:.65rem;"></i> Get Started</a>
           @endauth
         </div>
       </div>
 
-      {{-- Resources --}}
-      <div class="footer-col">
-        <h4>Resources</h4>
-        <div class="footer-links">
-          <a href="{{ route('diseases') }}"   class="footer-link"><i class="fas fa-chevron-right"></i> Crop Calendar</a>
-          <a href="{{ route('diseases') }}"   class="footer-link"><i class="fas fa-chevron-right"></i> Weather Forecasts</a>
-          <a href="{{ route('diseases') }}"   class="footer-link"><i class="fas fa-chevron-right"></i> Disease Library</a>
-          <a href="{{ route('marketplace') }}" class="footer-link"><i class="fas fa-chevron-right"></i> Market Prices</a>
-          <a href="{{ route('innovation') }}" class="footer-link"><i class="fas fa-chevron-right"></i> Farmer Community</a>
-          <a href="{{ route('learn') }}"      class="footer-link"><i class="fas fa-chevron-right"></i> Blog & News</a>
-        </div>
-      </div>
-
-      {{-- Company --}}
-      <div class="footer-col">
-        <h4>Company</h4>
-        <div class="footer-links">
-          <a href="#" class="footer-link"><i class="fas fa-chevron-right"></i> About Us</a>
-          <a href="#" class="footer-link"><i class="fas fa-chevron-right"></i> Careers</a>
-          <a href="#" class="footer-link"><i class="fas fa-chevron-right"></i> Partners</a>
-          <a href="#" class="footer-link"><i class="fas fa-chevron-right"></i> Press Kit</a>
-          <a href="#" class="footer-link"><i class="fas fa-chevron-right"></i> Privacy Policy</a>
-          <a href="#" class="footer-link"><i class="fas fa-chevron-right"></i> Terms of Service</a>
-        </div>
-      </div>
-
-      {{-- Newsletter --}}
-      <div class="footer-col footer-newsletter">
-        <h4>Stay Updated</h4>
-        <p>Get farming tips, alerts and market prices via SMS & email.</p>
-        <form method="POST" action="{{ route('diseases.subscribe') }}" id="footerNewsletterForm">
-          @csrf
-          <div class="footer-newsletter-form">
-            <input type="email" name="email" placeholder="your@email.com" id="newsletterEmail" required/>
-            <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-paper-plane"></i></button>
-          </div>
-        </form>
-        <div class="footer-sms-note">
-          <i class="fas fa-sms"></i>
-          <span>Text <strong>JOIN</strong> to <strong>1212</strong> to receive SMS farming alerts</span>
-        </div>
-        <div style="margin-top:20px;">
-          <h4 style="margin-bottom:10px;">Contact</h4>
-          <div class="footer-links">
-            <a href="tel:+26599450275" class="footer-link"><i class="fas fa-phone"></i> +265 999 450 275</a>
-            <a href="mailto:hello@agritechpro.mw" class="footer-link"><i class="fas fa-envelope"></i> hello@agritechpro.mw</a>
-            <span class="footer-link"><i class="fas fa-map-marker-alt"></i> Dowa, Malawi</span>
-          </div>
+      {{-- Contact --}}
+      <div>
+        <h4 style="font-size:.68rem;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px;">Contact</h4>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <a href="tel:+26599450275" style="color:var(--gray-300);text-decoration:none;font-size:.82rem;font-weight:500;display:flex;align-items:center;gap:6px;transition:color .2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--gray-300)'"><i class="fas fa-phone" style="font-size:.7rem;color:var(--green-500);"></i> +265 999 450 275</a>
+          <a href="mailto:hello@agritechpro.mw" style="color:var(--gray-300);text-decoration:none;font-size:.82rem;font-weight:500;display:flex;align-items:center;gap:6px;transition:color .2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--gray-300)'"><i class="fas fa-envelope" style="font-size:.7rem;color:var(--green-500);"></i> hello@agritechpro.mw</a>
+          <span style="color:var(--gray-300);font-size:.82rem;font-weight:500;display:flex;align-items:center;gap:6px;"><i class="fas fa-location-dot" style="font-size:.7rem;color:var(--green-500);"></i> Dowa, Malawi</span>
         </div>
       </div>
 
     </div>
-    <div class="footer-bottom">
-      <span>© {{ date('Y') }} AgriTech Pro. All rights reserved. Built for Malawian farmers.</span>
-      <div class="footer-bottom-links">
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
-        <a href="#">Cookies</a>
-        <a href="#">Accessibility</a>
+
+    {{-- Bottom --}}
+    <div style="border-top:1px solid rgba(255,255,255,.06);padding-top:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <span style="font-size:.72rem;color:var(--gray-500);">&copy; {{ date('Y') }} AgriTech Pro. Built for Malawian farmers.</span>
+      <div style="display:flex;gap:16px;">
+        <a href="#" style="font-size:.72rem;color:var(--gray-500);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='var(--gray-300)'" onmouseout="this.style.color='var(--gray-500)'">Privacy</a>
+        <a href="#" style="font-size:.72rem;color:var(--gray-500);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='var(--gray-300)'" onmouseout="this.style.color='var(--gray-500)'">Terms</a>
       </div>
     </div>
   </div>
 </footer>
 
-<script>
-document.getElementById('footerNewsletterForm')?.addEventListener('submit', function(e) {
-  e.preventDefault();
-  const email = document.getElementById('newsletterEmail').value.trim();
-  if (!email) return;
-  showToast('✅ You\'re subscribed! Check your email.', 'success');
-  this.reset();
-});
-</script>
+<style>
+@media(max-width:768px){
+  .footer-grid{grid-template-columns:1fr 1fr!important;gap:28px!important;}
+}
+@media(max-width:520px){
+  .footer-grid{grid-template-columns:1fr!important;gap:24px!important;}
+}
+</style>

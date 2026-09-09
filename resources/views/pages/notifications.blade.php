@@ -9,7 +9,7 @@
   <div class="container" style="max-width:760px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
       <div>
-        <h1 style="font-family:var(--font-display);font-size:1.5rem;font-weight:800;color:var(--text);">🔔 Notifications</h1>
+        <h1 class="heading-md" style="color:var(--text);">🔔 Notifications</h1>
         <p style="color:var(--text-muted);">{{ Auth::user()->unreadNotifications()->count() }} unread</p>
       </div>
       @if(Auth::user()->unreadNotifications()->count()>0)
@@ -20,7 +20,7 @@
       @endif
     </div>
 
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;">
+    <div id="notifications-list" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;">
       @forelse(isset($notifications)?$notifications:Auth::user()->notifications()->paginate(20) as $notif)
         <a href="{{ $notif->action_url??route('dashboard') }}"
            style="display:flex;gap:14px;padding:18px 20px;text-decoration:none;border-bottom:1px solid var(--border);background:{{ !$notif->is_read?'var(--green-50)':'var(--bg-card)' }};transition:background .15s;"
@@ -29,9 +29,9 @@
             <i class="{{ $notif->icon }}" style="color:{{ $notif->icon_color }};font-size:1rem;"></i>
           </div>
           <div style="flex:1;">
-            <div style="font-weight:{{ $notif->is_read?'500':'700' }};color:var(--text);font-size:.88rem;margin-bottom:3px;">{{ $notif->title }}</div>
-            <div style="font-size:.82rem;color:var(--text-muted);line-height:1.5;margin-bottom:5px;">{{ $notif->message }}</div>
-            <div style="font-size:.74rem;color:var(--text-muted);">{{ $notif->created_at->diffForHumans() }}</div>
+            <div style="font-weight:{{ $notif->is_read?'500':'700' }};color:var(--text);margin-bottom:3px;" class="body-sm">{{ $notif->title }}</div>
+            <div style="color:var(--text-muted);line-height:1.5;margin-bottom:5px;" class="body-sm">{{ $notif->message }}</div>
+            <div style="color:var(--text-muted);" class="body-xs">{{ $notif->created_at->diffForHumans() }}</div>
           </div>
           @if(!$notif->is_read)
             <div style="width:10px;height:10px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:6px;"></div>
@@ -40,7 +40,7 @@
       @empty
         <div style="padding:60px;text-align:center;color:var(--text-muted);">
           <i class="fas fa-bell-slash" style="font-size:3rem;margin-bottom:16px;display:block;opacity:.3;"></i>
-          <h3 style="font-family:var(--font-display);margin-bottom:8px;">No notifications yet</h3>
+          <h3 class="heading-md" style="margin-bottom:8px;">No notifications yet</h3>
           <p>When you get orders, course updates or alerts, they'll appear here.</p>
         </div>
       @endforelse

@@ -14,11 +14,11 @@
 .cart-qty-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
 .order-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:24px;position:sticky;top:90px;}
 .tc-suggestions{position:absolute;top:100%;left:0;right:0;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);max-height:200px;overflow-y:auto;z-index:100;display:none;}
-.tc-suggestions div{padding:10px 14px;font-size:.85rem;cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s;}
+.tc-suggestions div{padding:10px 14px;font-size:.8125rem;cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s;}
 .tc-suggestions div:hover{background:var(--green-50);color:var(--primary);}
-.summary-row{display:flex;justify-content:space-between;padding:10px 0;font-size:.85rem;}
-.summary-row.total{border-top:2px solid var(--border);margin-top:6px;padding-top:14px;font-family:var(--font-display);font-size:1.1rem;font-weight:800;}
-.payment-method-btn{border:2px solid var(--border);border-radius:var(--radius-md);padding:14px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:10px;width:100%;background:var(--bg-2);margin-bottom:10px;font-family:var(--font-body);}
+.summary-row{display:flex;justify-content:space-between;padding:10px 0;font-size:.8125rem;}
+.summary-row.total{border-top:2px solid var(--border);margin-top:6px;padding-top:14px;font-size:1.0625rem;font-weight:800;}
+.payment-method-btn{border:2px solid var(--border);border-radius:var(--radius-md);padding:14px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:10px;width:100%;background:var(--bg-2);margin-bottom:10px;}
 .payment-method-btn:hover,.payment-method-btn.selected{border-color:var(--primary);background:var(--green-50);}
 .payment-method-btn input[type=radio]{accent-color:var(--primary);}
 @media(max-width:900px){.cart-layout{grid-template-columns:1fr;}}
@@ -32,14 +32,14 @@
 <div class="section" style="background:var(--bg-2);">
   <div class="container">
     <div style="margin-bottom:24px;">
-      <h1 style="font-family:var(--font-display);font-size:clamp(1.3rem,4vw,1.6rem);font-weight:800;color:var(--text);word-break:break-word;">🛒 Your Cart</h1>
+      <h1 class="heading-lg" style="font-size:clamp(1.3rem,4vw,1.6rem);color:var(--text);word-break:break-word;">🛒 Your Cart</h1>
       <p style="color:var(--text-muted);">Review your items before checkout</p>
     </div>
 
     @if(count($items)===0)
       <div class="cart-empty-state" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:60px;text-align:center;">
         <i class="fas fa-shopping-cart" style="font-size:3rem;color:var(--text-muted);margin-bottom:16px;display:block;opacity:.3;"></i>
-        <h3 style="font-family:var(--font-display);margin-bottom:8px;">Your cart is empty</h3>
+        <h3 class="heading-sm" style="margin-bottom:8px;">Your cart is empty</h3>
         <p style="color:var(--text-muted);margin-bottom:20px;">Browse our marketplace to find quality farm products.</p>
         <a href="{{ route('marketplace') }}" class="btn btn-primary btn-lg"><i class="fas fa-store"></i> Browse Marketplace</a>
       </div>
@@ -59,16 +59,16 @@
           <div class="cart-item-row">
             <div class="cart-item-thumb">{{ $emojis[$p->category]??'📦' }}</div>
             <div style="flex:1;">
-              <div style="font-weight:700;color:var(--text);margin-bottom:3px;">{{ $p->name }}</div>
-              <div style="font-size:.78rem;color:var(--text-muted);">{{ ucfirst($p->category) }} · Sold by {{ $p->seller->full_name??'Verified Seller' }}</div>
-              <div style="font-size:.82rem;color:var(--text-muted);">{{ $p->currency }} {{ number_format($p->price) }}/{{ $p->unit }}</div>
+              <div class="body-base font-700" style="color:var(--text);margin-bottom:3px;">{{ $p->name }}</div>
+              <div class="body-xs" style="color:var(--text-muted);">{{ ucfirst($p->category) }} · Sold by {{ $p->seller->full_name??'Verified Seller' }}</div>
+              <div class="body-sm" style="color:var(--text-muted);">{{ $p->currency }} {{ number_format($p->price) }}/{{ $p->unit }}</div>
               <div class="cart-qty-ctrl">
                 <form method="POST" action="{{ route('cart.update',$p) }}" style="display:inline;">
                   @csrf @method('PATCH')
                   <input type="hidden" name="quantity" value="{{ max(0,$item['quantity']-1) }}"/>
                   <button type="submit" class="cart-qty-btn">−</button>
                 </form>
-                <span style="font-weight:700;font-size:.9rem;min-width:24px;text-align:center;">{{ $item['quantity'] }}</span>
+                <span class="body-base font-700" style="min-width:24px;text-align:center;">{{ $item['quantity'] }}</span>
                 <form method="POST" action="{{ route('cart.update',$p) }}" style="display:inline;">
                   @csrf @method('PATCH')
                   <input type="hidden" name="quantity" value="{{ $item['quantity']+1 }}"/>
@@ -77,35 +77,35 @@
                 <form method="POST" action="{{ route('cart.update',$p) }}" style="display:inline;margin-left:8px;">
                   @csrf @method('PATCH')
                   <input type="hidden" name="quantity" value="0"/>
-                  <button type="submit" style="background:none;border:none;color:#ef4444;font-size:.78rem;cursor:pointer;font-family:var(--font-body);">Remove</button>
+                  <button type="submit" style="background:none;border:none;color:#ef4444;cursor:pointer;" class="body-xs">Remove</button>
                 </form>
               </div>
             </div>
             <div style="text-align:right;">
-              <div style="font-family:var(--font-display);font-size:1.05rem;font-weight:800;color:var(--primary);">{{ $p->currency }} {{ number_format($item['subtotal']) }}</div>
+              <div class="text-base font-800" style="color:var(--primary);">{{ $p->currency }} {{ number_format($item['subtotal']) }}</div>
               @if($p->stock_quantity<=$item['quantity']&&$p->stock_quantity>0)
-                <div style="font-size:.72rem;color:#f59e0b;margin-top:4px;">⚠️ Limited stock</div>
+                <div class="body-xs" style="color:#f59e0b;margin-top:4px;">⚠️ Limited stock</div>
               @endif
             </div>
           </div>
           @endif
         @endforeach
         <div style="padding:14px 20px;display:flex;justify-content:space-between;align-items:center;">
-          <a href="{{ route('marketplace') }}" style="font-size:.83rem;color:var(--primary);font-weight:600;"><i class="fas fa-arrow-left"></i> Continue Shopping</a>
-          <span style="font-size:.8rem;color:var(--text-muted);">Prices in MWK · Delivery fee calculated at checkout</span>
+          <a class="body-sm font-600" href="{{ route('marketplace') }}" style="color:var(--primary);"><i class="fas fa-arrow-left"></i> Continue Shopping</a>
+          <span class="body-sm" style="color:var(--text-muted);">Prices in MWK · Delivery fee calculated at checkout</span>
         </div>
       </div>
 
       {{-- Order Summary + Checkout --}}
       <div class="order-summary">
-        <div style="font-family:var(--font-display);font-size:1rem;font-weight:800;margin-bottom:18px;">Order Summary</div>
+        <div class="heading-sm font-800" style="margin-bottom:18px;">Order Summary</div>
         <div class="summary-row"><span>Subtotal ({{ count($items) }} items)</span><span>MWK {{ number_format($total) }}</span></div>
-        <div class="summary-row"><span>Delivery fee</span><span style="color:var(--text-muted);">Calculated below</span></div>
-        <div class="summary-row total"><span>Total</span><span style="color:var(--primary);">MWK {{ number_format($total) }}+</span></div>
+        <div class="summary-row" id="deliveryFeeRow"><span>Delivery fee</span><span id="deliveryFeeDisplay" style="font-weight:600;">{{ $deliveryFee > 0 ? 'MWK '.number_format($deliveryFee) : 'Free' }}</span></div>
+        <div class="summary-row total"><span>Total</span><span id="grandTotalDisplay" style="color:var(--primary);">MWK {{ number_format($grandTotal) }}</span></div>
 
         <form method="POST" action="{{ route('checkout') }}" id="checkoutForm" style="margin-top:20px;">
           @csrf
-          <div style="font-weight:700;font-size:.85rem;margin-bottom:12px;">Delivery Address</div>
+          <div class="body-base font-700" style="margin-bottom:12px;">Delivery Address</div>
           <div class="form-group">
             <label class="form-label">Delivery District *</label>
             <select name="delivery_district" id="deliveryDistrict" class="form-input form-select" required onchange="updateTradingCentres()">
@@ -125,11 +125,11 @@
             <input type="text" name="delivery_address" class="form-input" placeholder="e.g. Area 47, Behind Shoprite" required/>
           </div>
 
-          <div style="font-weight:700;font-size:.85rem;margin:16px 0 12px;">Payment Method</div>
-          @foreach(['airtel_money'=>['📱 Airtel Money','Pay with your Airtel Money account'],'mtn_momo'=>['🟡 MTN MoMo','Pay with MTN Mobile Money'],'tnm_mpamba'=>['🔵 TNM Mpamba','Pay with TNM Mpamba'],'cash_on_delivery'=>['💵 Cash on Delivery','Pay when order arrives']] as $val=>[$name,$desc])
+          <div class="body-base font-700" style="margin:16px 0 12px;">Payment Method</div>
+          @foreach(['airtel_money'=>['📱 Airtel Money','Pay with your Airtel Money account'],'mtn_momo'=>['🟡 MTN MoMo','Pay with MTN Mobile Money'],'tnm_mpamba'=>['🔵 TNM Mpamba','Pay with TNM Mpamba']] as $val=>[$name,$desc])
             <label class="payment-method-btn" onclick="selectPayment('{{ $val }}',this)">
               <input type="radio" name="payment_method" value="{{ $val }}" {{ $val==='airtel_money'?'checked':'' }} style="margin:0;"/>
-              <div><div style="font-weight:700;font-size:.85rem;">{{ $name }}</div><div style="font-size:.74rem;color:var(--text-muted);">{{ $desc }}</div></div>
+              <div><div class="body-base font-700">{{ $name }}</div><div class="body-xs" style="color:var(--text-muted);">{{ $desc }}</div></div>
             </label>
           @endforeach
           <div class="form-group" id="phoneField">
@@ -137,15 +137,15 @@
             <input type="tel" name="phone" class="form-input" placeholder="+265 99 123 4567" value="{{ Auth::user()->phone }}"/>
           </div>
           @if($errors->any())
-            <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:var(--radius-md);padding:12px;margin-bottom:14px;font-size:.82rem;color:#dc2626;">
+            <div class="body-sm" style="background:#fef2f2;border:1px solid #fecaca;border-radius:var(--radius-md);padding:12px;margin-bottom:14px;color:#dc2626;">
               @foreach($errors->all() as $e)<div>• {{ $e }}</div>@endforeach
             </div>
           @endif
           <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:6px;">
-            <i class="fas fa-lock"></i> Place Order — MWK {{ number_format($total) }}
+            <i class="fas fa-lock"></i> Place Order — MWK {{ number_format($grandTotal) }}
           </button>
-          <div style="text-align:center;font-size:.74rem;color:var(--text-muted);margin-top:10px;">
-            🔒 Secure checkout · SMS confirmation sent
+          <div class="body-xs" style="text-align:center;color:var(--text-muted);margin-top:10px;">
+            🔒 Secure checkout · SMS confirmation sent after order is placed
           </div>
         </form>
       </div>
@@ -161,7 +161,7 @@
 function selectPayment(val, el) {
   document.querySelectorAll('.payment-method-btn').forEach(b => b.classList.remove('selected'));
   el.classList.add('selected');
-  document.getElementById('phoneField').style.display = val === 'cash_on_delivery' ? 'none' : 'block';
+  document.getElementById('phoneField').style.display = 'block';
 }
 document.addEventListener('DOMContentLoaded', () => {
   const selected = document.querySelector('input[name=payment_method]:checked');
@@ -173,11 +173,37 @@ const districtMap = @json($districts->mapWithKeys(fn($d) => [$d->name => $d->tra
 const townInput = document.getElementById('deliveryTown');
 const townBox = document.getElementById('townSuggestions');
 
+const subtotal = {{ $total }};
+const feeSchedule = { lilongwe: 50, blantyre: 50, mzuzu: 50 };
+const defaultFee = 120;
+
+function calcDeliveryFee(district) {
+  if (subtotal >= 5000) return 0;
+  const key = district?.toLowerCase().trim();
+  return feeSchedule[key] ?? defaultFee;
+}
+
+function updateDeliveryFee() {
+  const district = document.getElementById('deliveryDistrict').value;
+  const fee = calcDeliveryFee(district);
+  const total = subtotal + fee;
+  const feeEl = document.getElementById('deliveryFeeDisplay');
+  const totalEl = document.getElementById('grandTotalDisplay');
+  const btn = document.querySelector('.btn-primary.btn-lg');
+  feeEl.textContent = fee > 0 ? 'MWK ' + fee.toLocaleString() : 'Free';
+  totalEl.textContent = 'MWK ' + total.toLocaleString();
+  if (btn) btn.innerHTML = '<i class="fas fa-lock"></i> Place Order — MWK ' + total.toLocaleString();
+}
+
 function updateTradingCentres() {
   const dist = document.getElementById('deliveryDistrict').value;
   townInput.value = '';
   townBox.style.display = 'none';
+  updateDeliveryFee();
 }
+
+// Recalculate fee on district change
+document.getElementById('deliveryDistrict').addEventListener('change', updateDeliveryFee);
 
 townInput?.addEventListener('input', function() {
   const dist = document.getElementById('deliveryDistrict').value;

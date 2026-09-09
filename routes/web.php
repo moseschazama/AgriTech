@@ -15,6 +15,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\GuideController;
+use App\Http\Controllers\FarmRecordsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +72,10 @@ Route::get("/innovation/{innovation:slug}", [
     InnovationController::class,
     "show",
 ])->name("innovation.show");
+Route::get("/innovation/competition/{competition}/results", [
+    InnovationController::class,
+    "results",
+])->name("innovation.results");
 
 // Disease Detection & Library
 Route::get("/diseases", [DiseaseController::class, "index"])->name("diseases");
@@ -160,6 +165,21 @@ Route::middleware("auth")->group(function () {
         "markAllRead",
     ])->name("notifications.mark-all-read");
 
+    // ── Farm Records & Decision Support ──────────────────────────────
+    Route::get("/farm-records", [FarmRecordsController::class, "index"])->name("farm-records");
+    Route::get("/farm-records/{farm}/analytics", [FarmRecordsController::class, "analytics"])->name("farm-records.analytics");
+    Route::post("/farm-records/seasons", [FarmRecordsController::class, "storeSeason"])->name("farm-records.season.store");
+    Route::put("/farm-records/seasons/{season}", [FarmRecordsController::class, "updateSeason"])->name("farm-records.season.update");
+    Route::delete("/farm-records/seasons/{season}", [FarmRecordsController::class, "destroySeason"])->name("farm-records.season.delete");
+    Route::post("/farm-records/seasons/{season}/costs", [FarmRecordsController::class, "storeCost"])->name("farm-records.cost.store");
+    Route::delete("/farm-records/costs/{cost}", [FarmRecordsController::class, "destroyCost"])->name("farm-records.cost.delete");
+    Route::post("/farm-records/seasons/{season}/sales", [FarmRecordsController::class, "storeSale"])->name("farm-records.sale.store");
+    Route::delete("/farm-records/sales/{sale}", [FarmRecordsController::class, "destroySale"])->name("farm-records.sale.delete");
+    Route::post("/farm-records/seasons/{season}/events", [FarmRecordsController::class, "storeEvent"])->name("farm-records.event.store");
+    Route::delete("/farm-records/events/{event}", [FarmRecordsController::class, "destroyEvent"])->name("farm-records.event.delete");
+    Route::post("/farm-records/alerts/{alert}/read", [FarmRecordsController::class, "markAlertRead"])->name("farm-records.alert.read");
+    Route::post("/farm-records/alerts/{alert}/dismiss", [FarmRecordsController::class, "dismissAlert"])->name("farm-records.alert.dismiss");
+
     // ── Marketplace: selling, cart, checkout ─────────────────────────
     Route::post("/marketplace/products", [
         MarketplaceController::class,
@@ -192,6 +212,10 @@ Route::middleware("auth")->group(function () {
     Route::post("/checkout", [MarketplaceController::class, "checkout"])->name(
         "checkout",
     );
+    Route::post("/orders/{order}/report-issue", [
+        MarketplaceController::class,
+        "reportIssue",
+    ])->name("marketplace.order.report-issue");
 
     Route::get("/orders/{order}/confirmation", [
         MarketplaceController::class,
@@ -229,6 +253,11 @@ Route::middleware("auth")->group(function () {
         LearnController::class,
         "certificate",
     ])->name("learn.certificate");
+
+    Route::get("/certificates/{enrollment}/pdf", [
+        LearnController::class,
+        "certificatePdf",
+    ])->name("learn.certificate.pdf");
 
     // ── Innovation Hub: submit, vote ─────────────────────────────────
     Route::post("/innovation", [InnovationController::class, "store"])->name(
@@ -288,7 +317,7 @@ Route::middleware(["auth", "role:driver"])
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(["auth", "role:admin"])
+Route::middleware(["auth", "role:admin", "ajaxify"])
     ->prefix("admin")
     ->name("admin.")
     ->group(function () {
@@ -306,6 +335,14 @@ Route::middleware(["auth", "role:admin"])
             AdminController::class,
             "activateFarmer",
         ])->name("farmers.activate");
+        Route::get("/farmers/{user}", [
+            AdminController::class,
+            "farmerDetail",
+        ])->name("farmers.detail");
+        Route::post("/farmers/{user}/reset-password", [
+            AdminController::class,
+            "resetFarmerPassword",
+        ])->name("farmers.reset-password");
 
         // ── Products tab ──────────────────────────────────────────────
         Route::get("/products", [AdminController::class, "products"])->name(
@@ -328,6 +365,10 @@ Route::middleware(["auth", "role:admin"])
             AdminController::class,
             "updateOrderStatus",
         ])->name("orders.status");
+        Route::post("/orders/{order}/dispatch", [
+            AdminController::class,
+            "dispatchOrder",
+        ])->name("orders.dispatch");
         Route::post("/deliveries/{delivery}/assign-driver", [
             DeliveryController::class,
             "assignDriver",
@@ -381,6 +422,14 @@ Route::middleware(["auth", "role:admin"])
             AdminController::class,
             "rejectInnovation",
         ])->name("innovations.reject");
+        Route::post("/competition/{competition}/select-winners", [
+            AdminController::class,
+            "selectCompetitionWinners",
+        ])->name("competition.select-winners");
+        Route::get("/competition/{competition}/entries.csv", [
+            AdminController::class,
+            "downloadCompetitionEntries",
+        ])->name("competition.entries");
 
         // ── SMS tab ───────────────────────────────────────────────────
         Route::get("/sms", [AdminController::class, "sms"])->name("sms");
@@ -414,6 +463,11 @@ Route::middleware(["auth", "role:admin"])
             GuideController::class,
             "destroy",
         ])->name("guides.destroy");
+
+        // ── Farm Alerts (admin intervention) ──────────────────────────
+        Route::get("/farm-alerts", [FarmRecordsController::class, "adminAlerts"])->name("farm-alerts");
+        Route::post("/farm-alerts/{alert}/dismiss", [FarmRecordsController::class, "adminDismissAlert"])->name("farm-alerts.dismiss");
+        Route::post("/farms/{farm}/intervene", [FarmRecordsController::class, "adminIntervene"])->name("farms.intervene");
     });
 
 /*

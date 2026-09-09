@@ -42,19 +42,27 @@ class Competition extends Model
     }
 
     /**
-     * Pick winners by vote count and notify them. Run after ends_at via scheduled job.
+     * Pick winners by vote count, persist their ranking and notify them.
+     * Run after ends_at via scheduled job or manually from admin panel.
      */
     public function selectWinners(): array
     {
         $winners = $this->innovations()
                          ->approved()
                          ->orderByDesc('vote_count')
+                         ->orderByDesc('view_count')
                          ->take(3)
                          ->get();
 
         $prizes = [$this->first_prize, $this->second_prize, $this->third_prize];
 
         foreach ($winners as $i => $innovation) {
+            $innovation->update([
+                'winner_position' => $i + 1,
+                'winner_prize'    => $prizes[$i],
+                'won_at'          => now(),
+            ]);
+
             Notification::create([
                 'user_id'    => $innovation->user_id,
                 'title'      => '🏆 You Won the Competition!',
@@ -68,5 +76,41 @@ class Competition extends Model
 
         $this->update(['status' => 'closed']);
         return $winners->toArray();
+    }
+
+    /**
+     * Competition entries with performance data — used for results lists and CSV export.
+     */
+    public function entriesWithPerformance()
+    {
+        return $this->innovations()
+            ->with('user')
+            ->get()
+            ->map(function ($innovation) {
+                return [
+                    'position'       => $innovation->winner_position,
+                    'prize'          => $innovation->winner_prize,
+                    'title'          => $innovation->title,
+                    'category'       => $innovation->category,
+                    'farmer'         => $innovation->user->full_name ?? 'Farmer',
+                    'district'       => $innovation->district ?? '-',
+                    'votes'          => $innovation->vote_count ?? 0,
+                    'views'          => $innovation->view_count ?? 0,
+                    'impact'         => $innovation->impact_summary ?? '-',
+                    'submitted_at'   => $innovation->created_at?->format('Y-m-d'),
+                ];
+            })
+            ->sortByDesc(function ($row) {
+                return $row['votes'];
+            })
+            ->values();
+    }
+
+    /**
+     * Winners of a previous round, ranked 1-3.
+     */
+    public function winners()
+    {
+        return $this->innovations()->winners()->with('user')->get();
     }
 }

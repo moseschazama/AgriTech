@@ -3,9 +3,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DeliveryStatusUpdated;
+use App\Events\DriverLocationUpdated;
+use App\Jobs\BroadcastNotification;
 use App\Models\Delivery;
 use App\Models\Driver;
 use App\Models\Order;
+use App\Models\TradingCentre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,7 +26,7 @@ class DeliveryController extends Controller
             fn($q) => $q->where("buyer_id", Auth::id()),
         )
             ->whereNotIn("status", ["delivered", "failed"])
-            ->with(["order.items", "driver.user"])
+            ->with(["order.items", "driver.user", "trackingStickers"])
             ->latest()
             ->get();
 
@@ -51,21 +55,41 @@ class DeliveryController extends Controller
             ->with(["order.items", "driver.user", "statusLogs"])
             ->firstOrFail();
 
-        return view("pages.track", compact("delivery"));
+        // Load route waypoints (trading centres along the route)
+        $waypoints = $delivery->getRouteWaypoints();
+        $nearestCentre = $delivery->distanceToNearestCentre();
+        $destCentre = $delivery->getDestinationTradingCentre();
+
+        return view("pages.track", compact("delivery", "waypoints", "nearestCentre", "destCentre"));
     }
 
     /**
-     * JSON endpoint polled every ~15s by the tracking page for live map updates.
+     * JSON endpoint polled every ~10s by the tracking page for live map updates.
      */
     public function liveStatus(Delivery $delivery)
     {
+        $nearestCentre = $delivery->distanceToNearestCentre();
+        $destCentre = $delivery->getDestinationTradingCentre();
+
         return response()->json([
-            "status" => $delivery->status,
-            "progress_percentage" => $delivery->progressPercentage(),
-            "driver_lat" => $delivery->driver_current_lat,
-            "driver_lng" => $delivery->driver_current_lng,
+            "status"                => $delivery->status,
+            "progress_percentage"   => $delivery->progressPercentage(),
+            "driver_lat"            => $delivery->driver_current_lat,
+            "driver_lng"            => $delivery->driver_current_lng,
             "distance_remaining_km" => $delivery->distance_remaining_km,
-            "estimated_arrival_at" => $delivery->estimated_arrival_at?->toIso8601String(),
+            "estimated_arrival_at"  => $delivery->estimated_arrival_at?->toIso8601String(),
+            "proximity_label"       => $delivery->getProximityLabel(),
+            "nearest_centre"        => $nearestCentre,
+            "destination_centre"    => $destCentre ? [
+                'name'     => $destCentre->name,
+                'lat'      => $destCentre->latitude,
+                'lng'      => $destCentre->longitude,
+                'district' => $destCentre->district?->name,
+            ] : null,
+            "origin_lat"            => $delivery->origin_lat,
+            "origin_lng"            => $delivery->origin_lng,
+            "destination_lat"       => $delivery->destination_lat,
+            "destination_lng"       => $delivery->destination_lng,
         ]);
     }
 
@@ -83,6 +107,11 @@ class DeliveryController extends Controller
 
         $driver = Auth::user()->driver()->firstOrFail();
         $driver->updateLocation($validated["lat"], $validated["lng"]);
+
+        // Broadcast driver location to the buyer in real-time
+        if ($activeDelivery = $driver->deliveries()->whereNotIn('status', ['delivered', 'failed'])->first()) {
+            event(new DriverLocationUpdated($activeDelivery, $validated["lat"], $validated["lng"]));
+        }
 
         return response()->json(["success" => true]);
     }
@@ -133,6 +162,9 @@ class DeliveryController extends Controller
             $this->notifyBuyer($buyer, $delivery, $nextStatus);
         }
 
+        // ── Broadcast delivery status update in real-time ───────────
+        event(new DeliveryStatusUpdated($delivery, $nextStatus));
+
         return response()->json([
             "success" => true,
             "new_status" => $nextStatus,
@@ -156,21 +188,34 @@ class DeliveryController extends Controller
 
         // ── Thank-you notification ────────────────────────────────────
         try {
-            \App\Models\Notification::create([
-                "user_id" => Auth::id(),
-                "title" => "🌾 Delivery Confirmed — Thank You!",
-                "message" =>
-                    "Thank you for confirming receipt of order {$delivery->order->order_number}! " .
-                    "We hope the products serve your farm well. " .
-                    "Keep farming smart with AgriTech Pro — Malawi's premier farming platform. " .
-                    "Wishing you a bountiful harvest! 🌱",
-                "type" => "order",
-                "icon" => "fas fa-check-circle",
-                "icon_color" => "var(--primary)",
-                "action_url" => route("marketplace.my-orders"),
-                "is_read" => false,
-            ]);
+            BroadcastNotification::dispatch(
+                Auth::id(),
+                "🌾 Delivery Confirmed — Thank You!",
+                "Thank you for confirming receipt of order {$delivery->order->order_number}!",
+                "order",
+                "fas fa-check-circle",
+                "var(--primary)",
+                route("marketplace.my-orders"),
+            );
         } catch (\Throwable $e) {
+        }
+
+        // Broadcast delivery completed
+        event(new DeliveryStatusUpdated($delivery, "delivered"));
+
+        // Notify the seller about the delivery confirmation
+        if ($sellerId = $delivery->order->seller_id) {
+            try {
+                BroadcastNotification::dispatch(
+                    $sellerId,
+                    "✅ Delivery Confirmed — " . $delivery->order->order_number,
+                    "Buyer has confirmed receipt of order {$delivery->order->order_number}.",
+                    "order",
+                    "fas fa-check-circle",
+                    "#16a34a",
+                    route("marketplace.my-listings"),
+                );
+            } catch (\Throwable $e) {}
         }
 
         return back()->with(
@@ -302,16 +347,19 @@ class DeliveryController extends Controller
         }
 
         try {
-            \App\Models\Notification::create([
-                "user_id" => $buyer->id,
-                "title" => $messages[$status]["title"],
-                "message" => $messages[$status]["message"],
-                "type" => "order",
-                "icon" => "fas fa-truck",
-                "icon_color" => "var(--primary)",
-                "action_url" => route("delivery"),
-                "is_read" => false,
-            ]);
+            $actionUrl = $delivery->tracking_number
+                ? route("delivery.track", $delivery->tracking_number)
+                : route("delivery");
+
+            BroadcastNotification::dispatch(
+                $buyer->id,
+                $messages[$status]["title"],
+                $messages[$status]["message"],
+                "order",
+                "fas fa-truck",
+                "var(--primary)",
+                $actionUrl,
+            );
         } catch (\Throwable $e) {
         }
     }

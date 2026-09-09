@@ -17,13 +17,17 @@ class Innovation extends Model
         'user_id','title','slug','description','category','status',
         'impact_summary','estimated_cost','implementation_steps',
         'district','images','video_url','in_competition',
-        'competition_id','rejection_reason','reviewed_by','reviewed_at',
+        'competition_id','winner_position','winner_prize',
+        'rejection_reason','reviewed_by','reviewed_at',
     ];
 
     protected $casts = [
-        'images'         => 'array',
-        'in_competition' => 'boolean',
-        'reviewed_at'    => 'datetime',
+        'images'          => 'array',
+        'in_competition'  => 'boolean',
+        'reviewed_at'     => 'datetime',
+        'winner_position' => 'integer',
+        'winner_prize'    => 'decimal:2',
+        'won_at'          => 'datetime',
     ];
 
     protected static function boot()
@@ -68,22 +72,30 @@ class Innovation extends Model
         return $query->where('competition_id', $competitionId)->where('in_competition', true);
     }
 
+    public function scopeWinners($query)
+    {
+        return $query->whereNotNull('winner_position')
+            ->orderByRaw('FIELD(winner_position, 1, 2, 3)');
+    }
+
     // ── Business Logic ────────────────────────────────────────────────
 
     /**
-     * Toggle a user's vote on this innovation. Returns true if vote added.
+     * Cast a user's vote for this innovation. One vote per user per
+     * innovation per competition round — already-voted users cannot
+     * remove or re-cast. Returns true if the vote was newly recorded.
      */
-    public function toggleVote(User $user): bool
+    public function castVote(User $user): bool
     {
-        $existing = $this->votes()->where('user_id', $user->id)->first();
+        $vote = $this->votes()->firstOrCreate([
+            'innovation_id' => $this->id,
+            'user_id'       => $user->id,
+        ]);
 
-        if ($existing) {
-            $existing->delete();
-            $this->decrement('vote_count');
+        if (!$vote->wasRecentlyCreated) {
             return false;
         }
 
-        $this->votes()->create(['user_id' => $user->id]);
         $this->increment('vote_count');
         return true;
     }

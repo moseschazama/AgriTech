@@ -4,6 +4,9 @@
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>
 <link rel="stylesheet" href="{{ asset('css/home.css') }}"/>
 <style>
+.badge-purple{background:#f5f3ff;color:#6d28d9;border:1px solid #d8b4fe;}
+.badge-sky{background:#f0f9ff;color:#0369a1;border:1px solid #7dd3fc;}
+.badge-earth{background:#fffbeb;color:#b45309;border:1px solid #fcd34d;}
 .admin-layout{display:flex;min-height:calc(100vh - 70px);}
 .admin-sidebar{width:240px;background:#0f172a;position:fixed;top:70px;left:0;height:calc(100vh - 70px);overflow-y:auto;z-index:100;display:flex;flex-direction:column;}
 .admin-sidebar-logo{padding:20px;border-bottom:1px solid rgba(255,255,255,.08);}
@@ -19,7 +22,7 @@
 .admin-panel{display:none;}.admin-panel.active{display:block;}
 .admin-stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;transition:all .2s;}
 .admin-stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
-.admin-stat-val{font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--text);}
+.admin-stat-val{font-size:2rem;font-weight:800;color:var(--text);}
 .admin-stat-label{font-size:.78rem;color:var(--text-muted);margin-top:4px;}
 .data-table{width:100%;border-collapse:collapse;}
 .data-table th{font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:10px 14px;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap;}
@@ -51,7 +54,7 @@
   <div class="admin-sidebar-logo">
     <div style="display:flex;align-items:center;gap:10px;">
       <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#16a34a,#15803d);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;"><i class="fas fa-seedling"></i></div>
-      <div><div style="font-family:var(--font-display);font-size:.88rem;font-weight:700;color:#fff;">AgriTech Pro</div><div style="font-size:.65rem;color:rgba(255,255,255,.4);">Admin Panel</div></div>
+      <div><div style="font-size:.88rem;font-weight:700;color:#fff;">AgriTech Pro</div><div style="font-size:.65rem;color:rgba(255,255,255,.4);">Admin Panel</div></div>
     </div>
   </div>
   <nav style="flex:1;">
@@ -151,7 +154,7 @@
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;">
-        <div style="font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:18px;">📍 Farmers by District</div>
+        <div style="font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:18px;">📍 Farmers by District</div>
         @php $maxDistrict=isset($districtBreakdown)&&$districtBreakdown->count()>0?$districtBreakdown->max('total'):1; @endphp
         @forelse(isset($districtBreakdown)?$districtBreakdown->take(8):[] as $row)
           <div class="district-bar">
@@ -164,7 +167,7 @@
         @endforelse
       </div>
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;">
-        <div style="font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:18px;">📋 Recent Activity</div>
+        <div style="font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:18px;">📋 Recent Activity</div>
         <div style="overflow-y:auto;max-height:300px;">
           @forelse(isset($recentActivity)?$recentActivity:[] as $activity)
             <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);">
@@ -189,7 +192,7 @@
   <div class="admin-panel" id="tab-farmers">
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
       <div style="padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-        <div style="font-family:var(--font-display);font-size:.95rem;font-weight:700;">Registered Farmers</div>
+        <div style="font-size:.95rem;font-weight:700;">Registered Farmers</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <form method="GET" action="{{ route('admin.farmers') }}" style="display:flex;gap:6px;flex-wrap:wrap;">
             <input type="text" name="q" value="{{ request('q') }}" class="form-input" placeholder="Search name, phone..." style="font-size:.8rem;padding:7px 12px;"/>
@@ -237,6 +240,7 @@
                 <td style="font-size:.78rem;color:var(--text-muted);">{{ $farmer->created_at->format('M j, Y') }}</td>
                 <td><span class="badge {{ $farmer->status==='active'?'badge-green':'badge-coral' }}" style="font-size:.68rem;">{{ ucfirst($farmer->status) }}</span></td>
                 <td>
+                  <button type="button" class="btn btn-outline btn-sm" style="font-size:.72rem;padding:4px 10px;margin-right:4px;" onclick="viewFarmer({{ $farmer->id }})"><i class="fas fa-eye"></i> View</button>
                   @if($farmer->status==='active')
                     <form method="POST" action="{{ route('admin.farmers.suspend',$farmer) }}" style="display:inline;">
                       @csrf
@@ -269,7 +273,7 @@
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
       <div style="padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
         <div style="display:flex;align-items:center;gap:10px;">
-          <div style="font-family:var(--font-display);font-size:.95rem;font-weight:700;">Product Listings</div>
+          <div style="font-size:.95rem;font-weight:700;">Product Listings</div>
           @php $pendingCount = \App\Models\Product::where('status','pending_review')->count(); @endphp
           @if($pendingCount > 0)
             <span class="badge badge-earth" style="font-size:.72rem;animation:pulse 2s infinite;">{{ $pendingCount }} Pending Review</span>
@@ -339,7 +343,7 @@
   <div class="admin-panel" id="tab-reviews">
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
       <div style="padding:18px 20px;border-bottom:1px solid var(--border);">
-        <div style="font-family:var(--font-display);font-size:.95rem;font-weight:700;">⭐ Pending Course Reviews</div>
+        <div style="font-size:.95rem;font-weight:700;">⭐ Pending Course Reviews</div>
         <div style="font-size:.78rem;color:var(--text-muted);margin-top:2px;">Reviews appear on course pages only after you approve them here.</div>
       </div>
       <div style="overflow-x:auto;">
@@ -384,41 +388,69 @@
   <div class="admin-panel" id="tab-orders">
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
       <div style="padding:18px 20px;border-bottom:1px solid var(--border);">
-        <div style="font-family:var(--font-display);font-size:.95rem;font-weight:700;">All Orders</div>
+        <div style="font-size:.95rem;font-weight:700;">All Orders</div>
       </div>
       <div style="overflow-x:auto;">
         @php
           $orders = \App\Models\Order::with(['buyer','seller'])
-            ->when(request('order_status'), fn($q,$s) => $q->where('status',$s))
+            ->when(request('status'), fn($q,$s) => $q->where('status',$s))
             ->latest()->paginate(12);
         @endphp
         <table class="data-table">
-          <thead><tr><th>Order #</th><th>Buyer</th><th>Seller</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th><th>Update Status</th></tr></thead>
+          <thead><tr><th>Order #</th><th>Buyer</th><th>Seller</th><th>Total</th><th>Payment</th><th>Status</th><th>Sticker</th><th>Driver</th><th>Date</th><th>Update Status</th></tr></thead>
           <tbody>
             @forelse($orders as $order)
-              @php $sc=['pending'=>'badge-gray','confirmed'=>'badge-sky','processing'=>'badge-earth','dispatched'=>'badge-sky','in_transit'=>'badge-earth','delivered'=>'badge-green','cancelled'=>'badge-coral','refunded'=>'badge-gray']; @endphp
-              <tr>
+              @php
+                $sl = \App\Models\Order::STATUS_LABELS;
+                $sc = ['pending'=>'badge-gray','confirmed'=>'badge-sky','packing'=>'badge-earth','dispatched'=>'badge-sky','on_the_way'=>'badge-purple','delivered'=>'badge-green','cancelled'=>'badge-coral','refunded'=>'badge-gray'];
+                $sticker = $order->trackingStickers()->first();
+                $del = $order->delivery;
+              @endphp
+              <tr data-order-id="{{ $order->id }}">
                 <td style="font-family:var(--font-mono);font-size:.78rem;font-weight:700;color:var(--primary);">{{ $order->order_number }}</td>
                 <td style="font-size:.8rem;">{{ $order->buyer->full_name??'—' }}</td>
                 <td style="font-size:.8rem;">{{ $order->seller->full_name??'—' }}</td>
                 <td style="font-weight:700;">{{ $order->currency }} {{ number_format($order->total) }}</td>
                 <td><span class="badge {{ $order->payment_status==='paid'?'badge-green':'badge-gray' }}" style="font-size:.67rem;">{{ ucfirst($order->payment_status) }}</span></td>
-                <td><span class="badge {{ $sc[$order->status]??'badge-gray' }}" style="font-size:.67rem;">{{ ucfirst($order->status) }}</span></td>
+                <td><span class="badge {{ $sc[$order->status]??'badge-gray' }}" style="font-size:.67rem;">{{ $sl[$order->status]??ucfirst($order->status) }}</span></td>
+                <td style="font-size:.72rem;">
+                  @if($sticker)
+                    <span style="font-family:var(--font-mono);background:#f5f3ff;color:#6d28d9;padding:2px 6px;border-radius:4px;font-size:.68rem;">{{ $sticker->sticker_code }}</span>
+                    <button type="button" onclick="printSticker('{{ $sticker->sticker_code }}','{{ $sticker->qr_data }}','{{ $order->order_number }}','{{ addslashes($order->delivery_district) }}','{{ addslashes($order->delivery_town) }}')" class="btn btn-sm" style="font-size:.62rem;padding:2px 6px;margin-left:4px;" title="Print Sticker">🖨</button>
+                  @else
+                    <span style="color:var(--text-muted);font-size:.68rem;">—</span>
+                  @endif
+                </td>
+                <td style="font-size:.72rem;">
+                  @if($del && $del->driver)
+                    <span>{{ $del->driver->user?->name ?? '—' }}</span>
+                    <span style="display:block;font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);">{{ $del->driver->user?->phone }}</span>
+                  @else
+                    <span style="color:var(--text-muted);font-size:.68rem;">—</span>
+                  @endif
+                </td>
                 <td style="font-size:.78rem;color:var(--text-muted);">{{ $order->created_at->format('M j, Y') }}</td>
                 <td>
-                  <form method="POST" action="{{ route('admin.orders.status',$order) }}" style="display:flex;gap:6px;">
-                    @csrf
-                    <select name="status" class="form-input form-select" style="font-size:.76rem;padding:5px 8px;">
-                      @foreach(['confirmed','processing','dispatched','delivered','cancelled'] as $s)
-                        <option value="{{ $s }}" @selected($order->status===$s)>{{ ucfirst($s) }}</option>
-                      @endforeach
-                    </select>
-                    <button type="submit" class="btn btn-primary btn-sm" style="font-size:.72rem;padding:4px 10px;flex-shrink:0;">Update</button>
-                  </form>
+                  @php $canDispatch = $order->canTransitionTo('on_the_way') && $order->status !== 'on_the_way'; @endphp
+                  @if($canDispatch)
+                    <button type="button" onclick="openDispatchModal({{ $order->id }},'{{ $order->order_number }}','{{ $order->delivery_district }}')" class="btn btn-primary btn-sm" style="font-size:.72rem;padding:4px 10px;">
+                      <i class="fas fa-truck"></i> Dispatch
+                    </button>
+                  @else
+                    <form method="POST" action="{{ route('admin.orders.status',$order) }}" style="display:flex;gap:6px;">
+                      @csrf
+                      <select name="status" class="form-input form-select" style="font-size:.76rem;padding:5px 8px;">
+                        @foreach($order->nextStatuses() as $s)
+                          <option value="{{ $s }}">{{ $sl[$s]??ucfirst($s) }}</option>
+                        @endforeach
+                      </select>
+                      <button type="submit" class="btn btn-primary btn-sm" style="font-size:.72rem;padding:4px 10px;flex-shrink:0;">Update</button>
+                    </form>
+                  @endif
                 </td>
               </tr>
             @empty
-              <tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted);">No orders yet</td></tr>
+              <tr><td colspan="10" style="text-align:center;padding:40px;color:var(--text-muted);">No orders yet</td></tr>
             @endforelse
           </tbody>
         </table>
@@ -434,7 +466,7 @@
     <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:20px;">
       {{-- Create Course form --}}
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;">
-        <div style="font-family:var(--font-display);font-size:.95rem;font-weight:700;margin-bottom:18px;">+ Create New Course</div>
+        <div style="font-size:.95rem;font-weight:700;margin-bottom:18px;">+ Create New Course</div>
         <form method="POST" action="{{ route('admin.courses.store') }}" enctype="multipart/form-data">
           @csrf
           <div class="form-group"><label class="form-label">Course Title *</label><input type="text" name="title" class="form-input" placeholder="e.g. Modern Maize Farming" required/></div>
@@ -459,7 +491,7 @@
 
       {{-- Course list + lesson manager --}}
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
-        <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-family:var(--font-display);font-size:.9rem;font-weight:700;">All Courses</div>
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-size:.9rem;font-weight:700;">All Courses</div>
         <div style="overflow-x:auto;">
           @php $allCourses = \App\Models\Course::with(['instructor','lessons'])->latest()->paginate(8); @endphp
           <table class="data-table">
@@ -563,7 +595,7 @@
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
       <div style="width:44px;height:44px;border-radius:12px;background:#fef2f2;color:#dc2626;display:flex;align-items:center;justify-content:center;font-size:1.2rem;"><i class="fas fa-file-pdf"></i></div>
       <div>
-        <div style="font-family:var(--font-display);font-size:.95rem;font-weight:700;">Upload PDF Field Guides</div>
+        <div style="font-size:.95rem;font-weight:700;">Upload PDF Field Guides</div>
         <div style="font-size:.78rem;color:var(--text-muted);">Farmers see these on the Learning Center page, filtered by topic</div>
       </div>
     </div>
@@ -637,8 +669,107 @@
        INNOVATIONS TAB
   ══════════════════════════════════════════════════════ --}}
   <div class="admin-panel" id="tab-innovations">
+
+    @php
+      $adminComp = \App\Models\Competition::latest()->first();
+      $adminWinners = $adminComp ? $adminComp->winners() : collect();
+      $adminRanking = $adminComp
+          ? $adminComp->innovations()->with('user')->approved()->orderByDesc('vote_count')->limit(5)->get()
+          : collect();
+    @endphp
+
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:24px;">
+      <div style="padding:18px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div style="font-weight:700;font-size:.95rem">
+          @if($adminComp)
+            {{ $adminComp->title }}
+            <span class="badge {{ $adminComp->status==='active' ? 'badge-green' : 'badge-gray' }}" style="font-size:.67rem;margin-left:6px;">{{ strtoupper($adminComp->status) }}</span>
+          @else
+            No competition yet
+          @endif
+        </div>
+        @if($adminComp)
+          <div style="font-size:.76rem;color:var(--text-muted);">
+            Ends {{ $adminComp->ends_at?->format('M j, Y') }} · {{ $adminComp->entry_count }} entries
+            @if($adminComp->status==='active' && $adminComp->isOpen())
+              · <span style="color:var(--green-600);font-weight:600;">{{ $adminComp->daysRemaining() }} days left</span>
+            @else
+              · <span style="color:var(--text-muted);">round closed</span>
+            @endif
+          </div>
+        @endif
+      </div>
+
+      @if($adminComp)
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:16px 20px;border-bottom:1px solid var(--border);">
+          @foreach([['1st','#f59e0b',$adminComp->first_prize],['2nd','#9ca3af',$adminComp->second_prize],['3rd','#d97706',$adminComp->third_prize]] as [$place,$color,$amount])
+            <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px;text-align:center;">
+              <div style="font-size:.68rem;font-weight:700;color:{{ $color }};text-transform:uppercase;letter-spacing:.06em;">{{ $place }} Prize</div>
+              <div style="font-size:1.05rem;font-weight:700;">K {{ number_format($amount) }}</div>
+            </div>
+          @endforeach
+        </div>
+
+        <div style="padding:16px 20px;">
+          <div style="font-size:.82rem;font-weight:700;margin-bottom:12px;">Current Leaderboard</div>
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead><tr><th>#</th><th>Innovation</th><th>Farmer</th><th>District</th><th>Votes</th><th>Views</th><th>Impact</th><th>Status</th></tr></thead>
+              <tbody>
+                @forelse($adminRanking as $rk)
+                  <tr>
+                    <td style="font-weight:700;color:var(--primary);">{{ $loop->iteration }}</td>
+                    <td style="max-width:200px;font-weight:600;font-size:.8rem;">{{ Str::limit($rk->title,38) }}</td>
+                    <td style="font-size:.8rem;">{{ $rk->user->full_name??'—' }}</td>
+                    <td style="font-size:.78rem;color:var(--text-muted);">{{ $rk->district??'-' }}</td>
+                    <td style="text-align:center;font-weight:700;">{{ $rk->vote_count }}</td>
+                    <td style="text-align:center;">{{ $rk->view_count }}</td>
+                    <td style="font-size:.75rem;color:var(--text-muted);max-width:150px;">{{ Str::limit($rk->impact_summary,30) }}</td>
+                    <td>
+                      @if($rk->winner_position)
+                        <span class="badge badge-earth" style="font-size:.67rem;">🏆 #{{ $rk->winner_position }}</span>
+                      @elseif($rk->in_competition)
+                        <span class="badge badge-green" style="font-size:.67rem;">Entered</span>
+                      @else
+                        <span class="badge badge-gray" style="font-size:.67rem;">Standalone</span>
+                      @endif
+                    </td>
+                  </tr>
+                @empty
+                  <tr><td colspan="8" style="text-align:center;padding:26px;color:var(--text-muted);font-size:.8rem;">No approved entries yet.</td></tr>
+                @endforelse
+              </tbody>
+            </table>
+          </div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
+            <form method="POST" action="{{ route('admin.competition.select-winners',$adminComp) }}" style="display:inline;">
+              @csrf
+              <button type="submit" class="btn btn-primary btn-sm" style="font-size:.78rem;padding:8px 14px;"
+                      @if($adminWinners->count()>0 || $adminRanking->count()<1) disabled @endif>
+                <i class="fas fa-trophy"></i>
+                @if($adminWinners->count()>0) Winners Already Selected @else Select Top 3 as Winners @endif
+              </button>
+            </form>
+            <a href="{{ route('admin.competition.entries',$adminComp) }}" class="btn btn-sm" style="font-size:.78rem;padding:8px 14px;background:var(--bg-2);border:1px solid var(--border);color:var(--text);">
+              <i class="fas fa-download"></i> Download Entries (CSV)
+            </a>
+          </div>
+
+          @if($adminWinners->count()>0)
+            <div style="margin-top:16px;padding:12px 16px;background:linear-gradient(135deg,#fef9c3,#fef3c7);border:1.5px solid #fbbf24;border-radius:var(--radius-md);font-size:.8rem;">
+              <strong>🏆 Published winners:</strong> 
+              @foreach($adminWinners as $w)
+                <span style="margin-right:10px;">#{{ $w->winner_position }} — {{ $w->title }} ({{ $w->user->full_name??'Farmer' }}, {{ $w->vote_count }} votes)</span>
+              @endforeach
+            </div>
+          @endif
+        </div>
+      @endif
+    </div>
+
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
-      <div style="padding:18px 20px;border-bottom:1px solid var(--border);font-family:var(--font-display);font-size:.95rem;font-weight:700;">Innovation Submissions</div>
+      <div style="padding:18px 20px;border-bottom:1px solid var(--border);font-size:.95rem;font-weight:700;">Innovation Submissions</div>
       <div style="overflow-x:auto;">
         @php $allInnovations = \App\Models\Innovation::with('user')->latest()->paginate(10); @endphp
         <table class="data-table">
@@ -699,7 +830,7 @@
         ] as [$icon,$bg,$color,$val,$label])
           <div class="admin-stat-card" style="display:flex;align-items:center;gap:14px;padding:16px;">
             <div style="width:40px;height:40px;border-radius:10px;background:{{ $bg }};color:{{ $color }};display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="{{ $icon }}"></i></div>
-            <div><div style="font-family:var(--font-display);font-size:1.3rem;font-weight:800;color:var(--text);">{{ $val }}</div><div style="font-size:.75rem;color:var(--text-muted);">{{ $label }}</div></div>
+            <div><div style="font-size:1.3rem;font-weight:800;color:var(--text);">{{ $val }}</div><div style="font-size:.75rem;color:var(--text-muted);">{{ $label }}</div></div>
           </div>
         @endforeach
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;">
@@ -718,7 +849,7 @@
         </div>
       </div>
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;">
-        <div style="font-family:var(--font-display);font-size:.95rem;font-weight:700;margin-bottom:18px;">📤 Send SMS Broadcast</div>
+        <div style="font-size:.95rem;font-weight:700;margin-bottom:18px;">📤 Send SMS Broadcast</div>
         <form method="POST" action="{{ route('admin.sms.broadcast') }}">
           @csrf
           <div class="form-group"><label class="form-label">Campaign Name *</label><input type="text" name="name" class="form-input" placeholder="e.g. Fall Armyworm Alert - July 2026" required/></div>
@@ -752,14 +883,14 @@
       </div>
     </div>
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
-      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-family:var(--font-display);font-size:.9rem;font-weight:700;">Recent Campaigns</div>
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-size:.9rem;font-weight:700;">Recent Campaigns</div>
       @php $campaigns = \App\Models\SmsCampaign::with('creator')->latest()->limit(5)->get(); @endphp
       @forelse($campaigns as $c)
         <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;">
           <div><div style="font-weight:600;font-size:.85rem;">{{ $c->name }}</div><div style="font-size:.75rem;color:var(--text-muted);">{{ $c->sent_at?->format('M j, Y H:i')??'Scheduled' }} · {{ $c->creator->full_name??'Admin' }}</div></div>
           <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
-            <div style="text-align:center;"><div style="font-family:var(--font-display);font-weight:800;">{{ number_format($c->total_sent) }}</div><div style="font-size:.72rem;color:var(--text-muted);">Sent</div></div>
-            <div style="text-align:center;"><div style="font-family:var(--font-display);font-weight:800;color:var(--primary);">{{ number_format($c->total_delivered) }}</div><div style="font-size:.72rem;color:var(--text-muted);">Delivered</div></div>
+            <div style="text-align:center;"><div style="font-weight:800;">{{ number_format($c->total_sent) }}</div><div style="font-size:.72rem;color:var(--text-muted);">Sent</div></div>
+            <div style="text-align:center;"><div style="font-weight:800;color:var(--primary);">{{ number_format($c->total_delivered) }}</div><div style="font-size:.72rem;color:var(--text-muted);">Delivered</div></div>
             <span class="badge {{ $c->status==='sent'?'badge-green':($c->status==='scheduled'?'badge-sky':'badge-gray') }}" style="font-size:.68rem;">{{ ucfirst($c->status) }}</span>
           </div>
         </div>
@@ -769,15 +900,28 @@
     </div>
   </div>
 
-  {{-- ══════════════════════════════════════════════════════
-       SETTINGS TAB
-       FIX: array structure changed so [$title,$desc] destructuring
-       works correctly. Key is now the outer array key, not nested.
-  ══════════════════════════════════════════════════════ --}}
+{{-- ═══ FARMER DETAIL MODAL ═══ --}}
+<div id="farmerDetailModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;" onclick="if(event.target===this)closeFarmerModal()">
+  <div style="background:var(--bg-card);border-radius:var(--radius-xl);max-width:500px;width:90%;max-height:80vh;overflow-y:auto;padding:24px;box-shadow:var(--shadow-xl);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+      <div style="font-size:1rem;font-weight:800;color:var(--text);">👤 Farmer Details</div>
+      <button onclick="closeFarmerModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-muted);">&times;</button>
+    </div>
+    <div id="farmerDetailBody" style="font-size:.86rem;color:var(--text);">
+      <div style="text-align:center;padding:30px;"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;color:var(--primary);"></i><br>Loading...</div>
+    </div>
+  </div>
+</div>
+
+{{-- ══════════════════════════════════════════════════════
+     SETTINGS TAB
+     FIX: array structure changed so [$title,$desc] destructuring
+     works correctly. Key is now the outer array key, not nested.
+══════════════════════════════════════════════════════ --}}
   <div class="admin-panel" id="tab-settings">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;">
-        <div style="font-family:var(--font-display);font-size:.95rem;font-weight:700;margin-bottom:18px;">⚙️ Platform Settings</div>
+        <div style="font-size:.95rem;font-weight:700;margin-bottom:18px;">⚙️ Platform Settings</div>
         <form method="POST" action="{{ route('admin.settings.update') }}">
           @csrf
           @php
@@ -805,7 +949,7 @@
         </form>
       </div>
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;">
-        <div style="font-family:var(--font-display);font-size:.95rem;font-weight:700;margin-bottom:18px;">🔐 Security Settings</div>
+        <div style="font-size:.95rem;font-weight:700;margin-bottom:18px;">🔐 Security Settings</div>
         <form method="POST" action="{{ route('profile.password') }}">
           @csrf
           <div class="form-group"><label class="form-label">Current Password</label><input type="password" name="current_password" class="form-input" required/></div>
@@ -830,12 +974,111 @@
     </div>
   </div>
 
+{{-- Dispatch Order Modal --}}
+<div id="dispatchModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;">
+  <div style="background:var(--bg-card);border-radius:var(--radius-xl);padding:28px;max-width:520px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);max-height:90vh;overflow-y:auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <div style="font-size:1.05rem;font-weight:700;"><i class="fas fa-truck" style="color:var(--primary);"></i> Dispatch Order</div>
+      <button type="button" onclick="closeDispatchModal()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted);">&times;</button>
+    </div>
+    <form id="dispatchForm" method="POST" action="">
+      @csrf
+      <div style="margin-bottom:14px;">
+        <div style="font-size:.82rem;font-weight:600;margin-bottom:4px;">Order <span id="dispatchOrderNum" style="font-family:var(--font-mono);color:var(--primary);"></span></div>
+        <div style="font-size:.75rem;color:var(--text-muted);">Destination: <span id="dispatchDestination"></span></div>
+      </div>
+
+      <div style="background:var(--blue-50);border:1px solid #bae6fd;border-radius:var(--radius-md);padding:12px;margin-bottom:16px;font-size:.78rem;color:#0369a1;">
+        <i class="fas fa-user"></i> Enter the driver's details below. You can assign any available driver — they don't need an account.
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Driver Full Name *</label>
+        <input type="text" name="driver_name" class="form-input" placeholder="e.g. John Banda" required/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Driver Phone *</label>
+        <input type="tel" name="driver_phone" class="form-input" placeholder="e.g. 0991234567" required/>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group">
+          <label class="form-label">Vehicle Plate *</label>
+          <input type="text" name="driver_vehicle_plate" class="form-input" placeholder="e.g. ABY 4521" required style="text-transform:uppercase;"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Vehicle Type</label>
+          <select name="driver_vehicle_type" class="form-input form-select">
+            <option value="">Select...</option>
+            @foreach(['Motorcycle','Bicycle','Pickup Truck','Van','Truck','Other'] as $vt)
+              <option value="{{ $vt }}">{{ $vt }}</option>
+            @endforeach
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Delivery Notes <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+        <textarea name="delivery_notes" class="form-input" rows="2" placeholder="Special instructions for the driver..."></textarea>
+      </div>
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--radius-md);padding:12px;margin-bottom:14px;font-size:.78rem;color:var(--green-700);">
+        <i class="fas fa-info-circle"></i> Customer will receive an <strong>SMS</strong> with driver name, phone, and live tracking link.
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button type="button" onclick="closeDispatchModal()" class="btn btn-outline btn-sm">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-md"><i class="fas fa-paper-plane"></i> Dispatch Now</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 </main>
 </div>
 @endsection
 
 @section('extra_js')
 <script>
+// ── Farmer detail modal ───────────────────────────────────────────
+function viewFarmer(userId) {
+  const modal = document.getElementById('farmerDetailModal');
+  const body = document.getElementById('farmerDetailBody');
+  modal.style.display = 'flex';
+  body.innerHTML = '<div style="text-align:center;padding:30px;"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;color:var(--primary);"></i><br>Loading...</div>';
+  fetch('/admin/farmers/' + userId)
+    .then(r => r.json())
+    .then(u => {
+      body.innerHTML =
+        '<div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border);">' +
+          '<div class="avatar avatar-md" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-size:.85rem;flex-shrink:0;">' + (u.first_name?.[0]||'') + (u.last_name?.[0]||'') + '</div>' +
+          '<div><div style="font-weight:700;font-size:1rem;">' + u.full_name + '</div>' +
+          '<span class="badge ' + (u.status==='active'?'badge-green':'badge-coral') + '" style="font-size:.65rem;">' + u.status + '</span></div>' +
+        '</div>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">' +
+          '<div style="background:var(--bg-2);border-radius:var(--radius-md);padding:12px;"><div style="font-size:.7rem;text-transform:uppercase;color:var(--text-muted);font-weight:700;">Email</div><div style="margin-top:3px;">' + (u.email||'<span style="color:var(--text-muted);">Not provided</span>') + '</div></div>' +
+          '<div style="background:var(--bg-2);border-radius:var(--radius-md);padding:12px;"><div style="font-size:.7rem;text-transform:uppercase;color:var(--text-muted);font-weight:700;">Phone</div><div style="margin-top:3px;font-family:var(--font-mono);">' + (u.phone||'—') + '</div></div>' +
+          '<div style="background:var(--bg-2);border-radius:var(--radius-md);padding:12px;"><div style="font-size:.7rem;text-transform:uppercase;color:var(--text-muted);font-weight:700;">District</div><div style="margin-top:3px;">' + (u.district||'—') + '</div></div>' +
+          '<div style="background:var(--bg-2);border-radius:var(--radius-md);padding:12px;"><div style="font-size:.7rem;text-transform:uppercase;color:var(--text-muted);font-weight:700;">Trading Centre</div><div style="margin-top:3px;">' + (u.trading_centre||'<span style="color:var(--text-muted);">—</span>') + '</div></div>' +
+          '<div style="background:var(--bg-2);border-radius:var(--radius-md);padding:12px;"><div style="font-size:.7rem;text-transform:uppercase;color:var(--text-muted);font-weight:700;">Village</div><div style="margin-top:3px;">' + (u.village||'<span style="color:var(--text-muted);">—</span>') + '</div></div>' +
+          '<div style="background:var(--bg-2);border-radius:var(--radius-md);padding:12px;"><div style="font-size:.7rem;text-transform:uppercase;color:var(--text-muted);font-weight:700;">Farm Type</div><div style="margin-top:3px;">' + (u.farm_type ? u.farm_type.replace(/_/g,' ') : '<span style="color:var(--text-muted);">—</span>') + '</div></div>' +
+          '<div style="background:var(--bg-2);border-radius:var(--radius-md);padding:12px;"><div style="font-size:.7rem;text-transform:uppercase;color:var(--text-muted);font-weight:700;">Registered</div><div style="margin-top:3px;">' + u.registered_at + '</div></div>' +
+          '<div style="background:var(--bg-2);border-radius:var(--radius-md);padding:12px;"><div style="font-size:.7rem;text-transform:uppercase;color:var(--text-muted);font-weight:700;">Last Login</div><div style="margin-top:3px;">' + (u.last_login||'Never') + '</div></div>' +
+        '</div>' +
+        '<div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">' +
+          '<div style="font-weight:700;font-size:.85rem;margin-bottom:10px;">Reset Password</div>' +
+          '<form method="POST" action="/admin/farmers/' + u.id + '/reset-password" style="display:flex;gap:8px;">' +
+            '<input type="hidden" name="_token" value="' + document.querySelector('meta[name=csrf-token]')?.content + '">' +
+            '<input type="text" name="new_password" class="form-input" placeholder="Enter new password" required minlength="8" style="flex:1;font-size:.82rem;padding:8px 12px;">' +
+            '<button type="submit" class="btn btn-primary btn-sm" style="font-size:.78rem;padding:6px 14px;"><i class="fas fa-key"></i> Reset</button>' +
+          '</form>' +
+          '<div style="font-size:.74rem;color:var(--text-muted);margin-top:6px;">Password will be sent to the farmer via SMS.</div>' +
+        '</div>';
+    })
+    .catch(() => {
+      body.innerHTML = '<div style="text-align:center;padding:30px;color:#ef4444;"><i class="fas fa-exclamation-circle" style="font-size:1.5rem;"></i><br>Failed to load farmer details.</div>';
+    });
+}
+function closeFarmerModal() {
+  document.getElementById('farmerDetailModal').style.display = 'none';
+}
+
 // ── Tab switching ──────────────────────────────────────────────────
 function switchAdminTab(tabId, linkEl) {
   document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
@@ -884,6 +1127,47 @@ function toggleLessonTypeFields(select) {
   if (!videoField || !pdfField) return;
   videoField.style.display = select.value === 'video' ? 'block' : 'none';
   pdfField.style.display   = select.value === 'pdf'   ? 'block' : 'none';
+}
+
+// ── Sticker Printing ──────────────────────────────────────────
+function printSticker(code, qrUrl, order, district, town) {
+  const w = window.open('', '_blank', 'width=400,height=600');
+  w.document.write('<!DOCTYPE html><html><head><title>Sticker - ' + code + '</title>' +
+    '<style>' +
+      '*{margin:0;padding:0;box-sizing:border-box;}' +
+      'body{font-family:system-ui,sans-serif;padding:20px;display:flex;justify-content:center;}' +
+      '.sticker{width:320px;border:2px dashed #333;padding:20px;text-align:center;page-break-after:avoid;}' +
+      '.sticker .brand{font-size:1.3rem;font-weight:800;color:#16a34a;}' +
+      '.sticker .code{font-family:monospace;font-size:1.4rem;font-weight:700;margin:8px 0;}' +
+      '.sticker .qr{margin:12px 0;}' +
+      '.sticker .qr img{width:120px;height:120px;}' +
+      '.sticker .order{font-size:.85rem;color:#555;}' +
+      '.sticker .dest{font-size:.8rem;color:#888;margin-top:4px;}' +
+      '.sticker .barcode{font-family:monospace;font-size:1.8rem;letter-spacing:4px;margin:10px 0;color:#333;}' +
+      '@media print{@page{margin:0;}body{padding:0;}}' +
+    '</style></head><body>' +
+    '<div class="sticker">' +
+      '<div class="brand">🌱 AgriTech Pro</div>' +
+      '<div class="code">' + code + '</div>' +
+      '<div class="qr"><img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=' + encodeURIComponent(qrUrl) + '" alt="QR"></div>' +
+      '<div class="order">Order: ' + order + '</div>' +
+      '<div class="dest">' + district + (town ? ' - ' + town : '') + '</div>' +
+      '<div class="barcode">||||||||</div>' +
+    '</div>' +
+    '<script>window.onload=function(){setTimeout(function(){window.print();window.close();},500);};<' + '/script>' +
+    '</body></html>');
+  w.document.close();
+}
+
+// ── Dispatch Modal ────────────────────────────────────────────
+function openDispatchModal(orderId, orderNum, destination) {
+  document.getElementById('dispatchForm').action = '/admin/orders/' + orderId + '/dispatch';
+  document.getElementById('dispatchOrderNum').textContent = orderNum;
+  document.getElementById('dispatchDestination').textContent = destination || 'N/A';
+  document.getElementById('dispatchModal').style.display = 'flex';
+}
+function closeDispatchModal() {
+  document.getElementById('dispatchModal').style.display = 'none';
 }
 </script>
 @endsection

@@ -3,6 +3,8 @@
 
 namespace App\Services;
 
+use App\Events\OrderStatusChanged;
+use App\Jobs\BroadcastNotification;
 use App\Models\Order;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -30,7 +32,6 @@ class PaymentService
             'airtel_money' => $this->initiateAirtelMoney($order, $phone),
             'mtn_momo'     => $this->initiateMtnMomo($order, $phone),
             'tnm_mpamba'   => $this->initiateTnmMpamba($order, $phone),
-            'cash_on_delivery' => $this->initiateCashOnDelivery($order),
             default => throw new \Exception("Unsupported payment method: {$method}"),
         };
     }
@@ -97,20 +98,6 @@ class PaymentService
         ];
     }
 
-    protected function initiateCashOnDelivery(Order $order): array
-    {
-        $order->update([
-            'payment_method' => 'cash_on_delivery',
-            'payment_status' => 'pending',
-        ]);
-
-        return [
-            'reference'    => 'COD-' . $order->order_number,
-            'status'       => 'pending',
-            'instructions' => "Pay {$order->total} {$order->currency} in cash when your order arrives.",
-        ];
-    }
-
     /**
      * Handle an inbound payment-confirmation webhook from any provider.
      * Call this from a dedicated PaymentWebhookController route.
@@ -133,9 +120,52 @@ class PaymentService
         }
 
         if ($isSuccessful) {
+            $oldStatus = $order->status;
             $order->markAsPaid($reference);
+
+            // Broadcast payment confirmed to buyer
+            try {
+                BroadcastNotification::dispatch(
+                    $order->buyer_id,
+                    "💰 Payment Confirmed — " . $order->order_number,
+                    "Your payment of MWK " . number_format($order->total) . " has been confirmed. Your order is being processed!",
+                    "order",
+                    "fas fa-check-circle",
+                    "#16a34a",
+                    route("marketplace.my-orders"),
+                );
+            } catch (\Throwable $e) {}
+
+            // Broadcast payment confirmed to seller
+            try {
+                BroadcastNotification::dispatch(
+                    $order->seller_id,
+                    "💰 Payment Received — " . $order->order_number,
+                    "Payment of MWK " . number_format($order->total) . " received for order " . $order->order_number . ". Prepare items for dispatch.",
+                    "order",
+                    "fas fa-money-bill-wave",
+                    "#16a34a",
+                    route("marketplace.my-listings"),
+                );
+            } catch (\Throwable $e) {}
+
+            // Broadcast order status change event
+            event(new OrderStatusChanged($order->refresh(), $oldStatus));
         } else {
             $order->update(['payment_status' => 'failed']);
+
+            // Notify buyer of payment failure
+            try {
+                BroadcastNotification::dispatch(
+                    $order->buyer_id,
+                    "❌ Payment Failed — " . $order->order_number,
+                    "Your payment for order " . $order->order_number . " was not successful. Please try again.",
+                    "order",
+                    "fas fa-times-circle",
+                    "#ef4444",
+                    route("marketplace.my-orders"),
+                );
+            } catch (\Throwable $e) {}
         }
     }
 }

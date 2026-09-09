@@ -4,25 +4,25 @@
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>
 <link rel="stylesheet" href="{{ asset('css/home.css') }}"/>
 <style>
-.course-hero{background:linear-gradient(135deg,#052e0f,#0d4a1e,#166534);padding:52px 0 40px;color:#fff;}
+.course-hero{background:linear-gradient(135deg,#f8fafc,#f0fdf4,#f8fafc);padding:52px 0 40px;color:var(--text);}
 .cd-layout{display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:start;}
 .cd-sidebar{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;position:sticky;top:90px;}
 .cd-sidebar-thumb{height:200px;display:flex;align-items:center;justify-content:center;font-size:6rem;}
 .cd-sidebar-body{padding:22px;}
-.cd-price{font-family:var(--font-display);font-size:2.2rem;font-weight:800;color:var(--primary);margin-bottom:16px;}
+.cd-price{font-size:2.2rem;font-weight:800;color:var(--primary);margin-bottom:16px;}
 .lesson-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
 .lesson-row:last-child{border-bottom:none;}
-.lesson-num{width:30px;height:30px;border-radius:50%;background:var(--bg-2);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--text-muted);flex-shrink:0;}
+.lesson-num{width:30px;height:30px;border-radius:50%;background:var(--bg-2);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--text-muted);flex-shrink:0;}
 .lesson-num.done{background:var(--primary);border-color:var(--primary);color:#fff;}
 .lesson-num.free-preview{background:var(--green-50);border-color:var(--green-200);color:var(--green-700);}
-.lesson-title{font-size:.84rem;font-weight:500;color:var(--text);flex:1;line-height:1.3;}
-.play-btn{display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-full);cursor:pointer;font-size:.74rem;font-weight:700;font-family:var(--font-body);transition:all .15s;}
+.lesson-title{font-size:.8125rem;font-weight:500;color:var(--text);flex:1;line-height:1.3;}
+.play-btn{display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-full);cursor:pointer;font-size:.75rem;font-weight:700;transition:all .15s;}
 .play-btn:hover{background:var(--primary-dark);}
-.pdf-btn{display:flex;align-items:center;gap:5px;padding:5px 12px;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:var(--radius-full);cursor:pointer;font-size:.74rem;font-weight:700;font-family:var(--font-body);transition:all .15s;text-decoration:none;}
+.pdf-btn{display:flex;align-items:center;gap:5px;padding:5px 12px;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:var(--radius-full);cursor:pointer;font-size:.75rem;font-weight:700;transition:all .15s;text-decoration:none;}
 .pdf-btn:hover{background:#dc2626;color:#fff;}
 .progress-bar-outer{background:var(--bg-2);border-radius:20px;height:8px;overflow:hidden;margin:8px 0;}
 .progress-bar-inner{height:8px;background:linear-gradient(90deg,var(--primary),#4ade80);border-radius:20px;transition:width .5s ease;}
-.what-learn-item{display:flex;gap:10px;margin-bottom:10px;font-size:.88rem;color:var(--text);}
+.what-learn-item{display:flex;gap:10px;margin-bottom:10px;font-size:.9375rem;color:var(--text);}
 .review-card{padding:16px 0;border-bottom:1px solid var(--border);}
 .review-card:last-child{border-bottom:none;}
 
@@ -47,18 +47,18 @@
   <div class="container">
     <div style="max-width:720px;">
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;font-size:.82rem;">
-        <a href="{{ route('learn') }}" style="color:rgba(255,255,255,.6);text-decoration:none;"><i class="fas fa-arrow-left"></i> Learning Center</a>
-        <span style="color:rgba(255,255,255,.3);">/</span>
-        <span style="color:rgba(255,255,255,.6);">{{ ucwords(str_replace('_',' ',$course->category)) }}</span>
+        <a href="{{ route('learn') }}" style="color:var(--text-muted);text-decoration:none;"><i class="fas fa-arrow-left"></i> Learning Center</a>
+        <span style="color:var(--text-muted);">/</span>
+        <span style="color:var(--text-muted);">{{ ucwords(str_replace('_',' ',$course->category)) }}</span>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
         @if($course->access_type==='free')   <span class="badge badge-green">FREE</span> @endif
         @if($course->is_featured)            <span class="badge badge-earth">Bestseller</span> @endif
         @if($course->has_certificate)        <span class="badge badge-sky">🎓 Certificate</span> @endif
-        <span class="badge" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2);">{{ ucfirst($course->level) }}</span>
+        <span class="badge" style="background:var(--bg-card);color:var(--text);border:1px solid var(--border);">{{ ucfirst($course->level) }}</span>
       </div>
-      <h1 style="font-family:var(--font-display);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;margin-bottom:12px;line-height:1.2;">{{ $course->title }}</h1>
-      <p style="opacity:.85;font-size:1rem;line-height:1.7;margin-bottom:20px;max-width:600px;">{{ $course->description }}</p>
+      <h1 class="heading-lg" style="font-size:clamp(1.6rem,4vw,2.4rem);margin-bottom:12px;line-height:1.2;">{{ $course->title }}</h1>
+      <p class="body-base" style="color:var(--text-muted);margin-bottom:20px;max-width:600px;">{{ $course->description }}</p>
 
       {{-- Use loaded lessons for accurate counts --}}
       @php
@@ -67,7 +67,7 @@
         $hrs  = intdiv($totalMins, 60);
         $mins = $totalMins % 60;
       @endphp
-      <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:.82rem;opacity:.8;">
+      <div class="body-sm" style="display:flex;gap:20px;flex-wrap:wrap;color:var(--text-muted);">
         <span><i class="fas fa-star" style="color:#fbbf24;"></i> {{ number_format($course->average_rating,1) }} ({{ $course->total_reviews }} reviews)</span>
         <span><i class="fas fa-users"></i> {{ number_format($course->total_enrolled) }} enrolled</span>
         <span><i class="fas fa-play-circle"></i> {{ $lessonCount }} lessons</span>
@@ -88,21 +88,21 @@
         {{-- Progress bar (enrolled active users only) --}}
         @if($enrollment && $enrollment->status === 'active')
           @php $pct = $enrollment->progressPercentage(); @endphp
-          <div style="background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--radius-lg);padding:18px 22px;margin-bottom:22px;">
+          <div id="progress-section" style="background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--radius-lg);padding:18px 22px;margin-bottom:22px;">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-              <span style="font-weight:700;color:var(--green-700);font-size:.9rem;">📚 Your Progress</span>
-              <span style="font-family:var(--font-display);font-weight:800;color:var(--primary);">{{ $pct }}%</span>
+              <span class="body-base font-700" style="color:var(--green-700);">📚 Your Progress</span>
+              <span id="progress-pct" class="heading-sm font-800" style="color:var(--primary);">{{ $pct }}%</span>
             </div>
-            <div class="progress-bar-outer"><div class="progress-bar-inner" style="width:{{ $pct }}%;"></div></div>
-            <div style="font-size:.78rem;color:var(--text-muted);margin-top:5px;">
+            <div class="progress-bar-outer"><div id="progress-bar" class="progress-bar-inner" style="width:{{ $pct }}%;"></div></div>
+            <div id="progress-count" class="body-xs" style="color:var(--text-muted);margin-top:5px;">
               {{ round($lessonCount * $pct / 100) }}/{{ $lessonCount }} lessons completed
             </div>
           </div>
         @elseif($enrollment && $enrollment->status === 'completed')
           <div style="background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--radius-lg);padding:16px 22px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-            <span style="font-weight:700;color:var(--green-700);">🎉 Course Completed — {{ $enrollment->completed_at?->format('M j, Y') }}</span>
+            <span class="body-base font-700" style="color:var(--green-700);">🎉 Course Completed — {{ $enrollment->completed_at?->format('M j, Y') }}</span>
             @if($enrollment->certificate_number)
-              <a href="{{ route('learn.certificate', $enrollment) }}" class="btn btn-primary btn-sm"><i class="fas fa-certificate"></i> Download Certificate</a>
+              <a href="{{ route('learn.certificate.pdf', $enrollment) }}" class="btn btn-primary btn-sm"><i class="fas fa-download"></i> Download Certificate PDF</a>
             @endif
           </div>
         @endif
@@ -110,7 +110,7 @@
         {{-- What You'll Learn --}}
         @if($course->what_you_learn)
           <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:22px;">
-            <h2 style="font-family:var(--font-display);font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:16px;">✅ What You'll Learn</h2>
+            <h2 class="heading-xs font-800" style="color:var(--text);margin-bottom:16px;">✅ What You'll Learn</h2>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
               @foreach(explode(',',$course->what_you_learn) as $item)
                 @if(trim($item))
@@ -127,10 +127,10 @@
         {{-- ── LESSON LIST ── --}}
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:22px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:8px;">
-            <h2 style="font-family:var(--font-display);font-size:1.05rem;font-weight:800;color:var(--text);">
+            <h2 class="heading-xs font-800" style="color:var(--text);">
               📋 Course Lessons ({{ $lessonCount }})
             </h2>
-            <div style="font-size:.8rem;color:var(--text-muted);">
+            <div class="body-sm" style="color:var(--text-muted);">
               <i class="fas fa-clock"></i> {{ $hrs }}h {{ $mins }}m ·
               <i class="fas fa-play-circle"></i> {{ $lessonCount }} lessons
             </div>
@@ -151,7 +151,7 @@
                 {{-- Number / checkmark --}}
                 <div class="lesson-num {{ $isCompleted ? 'done' : ($lesson->is_free_preview ? 'free-preview' : '') }}">
                   @if($isCompleted)
-                    <i class="fas fa-check" style="font-size:.65rem;"></i>
+                    <i class="fas fa-check" style="font-size:.75rem;"></i>
                   @else
                     {{ $i + 1 }}
                   @endif
@@ -165,12 +165,12 @@
                 <div style="flex:1;">
                   <div class="lesson-title">{{ $lesson->title }}</div>
                   @if($lesson->is_free_preview && !$enrollment)
-                    <span style="font-size:.7rem;color:var(--green-600);font-weight:700;">FREE PREVIEW</span>
+                    <span class="body-xs font-700" style="color:var(--green-600);">FREE PREVIEW</span>
                   @endif
                 </div>
 
                 {{-- Duration --}}
-                <span style="font-size:.75rem;color:var(--text-muted);white-space:nowrap;">{{ $durationStr }}</span>
+                <span class="body-xs" style="color:var(--text-muted);white-space:nowrap;">{{ $durationStr }}</span>
 
                 {{-- Action button --}}
                 @if($canAccess)
@@ -197,7 +197,7 @@
                     </button>
                   @endif
                 @else
-                  <span style="font-size:.74rem;color:var(--text-muted);"><i class="fas fa-lock"></i> Enroll to unlock</span>
+                  <span class="body-xs" style="color:var(--text-muted);"><i class="fas fa-lock"></i> Enroll to unlock</span>
                 @endif
               </div>
             @endforeach
@@ -212,15 +212,15 @@
         {{-- ── INSTRUCTOR ── --}}
         @if($course->instructor)
           <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:22px;">
-            <h2 style="font-family:var(--font-display);font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:16px;">👨‍🏫 About the Instructor</h2>
+            <h2 class="heading-xs font-800" style="color:var(--text);margin-bottom:16px;">👨‍🏫 About the Instructor</h2>
             <div style="display:flex;gap:14px;align-items:flex-start;">
               <div class="avatar avatar-lg" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-size:1rem;flex-shrink:0;">
                 {{ strtoupper(substr($course->instructor->name, 0, 2)) }}
               </div>
               <div>
-                <div style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text);">{{ $course->instructor->name }}</div>
-                <div style="font-size:.82rem;color:var(--primary);font-weight:600;margin-bottom:6px;">{{ $course->instructor->specialization ?? $course->instructor->title ?? 'Agricultural Expert' }}</div>
-                <p style="font-size:.84rem;color:var(--text-muted);line-height:1.6;">{{ $course->instructor->bio ?? 'Expert agricultural trainer with extensive field experience across Malawi and Zambia.' }}</p>
+                <div class="body-base font-700" style="color:var(--text);">{{ $course->instructor->name }}</div>
+                <div class="body-sm font-600" style="color:var(--primary);margin-bottom:6px;">{{ $course->instructor->specialization ?? $course->instructor->title ?? 'Agricultural Expert' }}</div>
+                <p class="body-sm" style="color:var(--text-muted);">{{ $course->instructor->bio ?? 'Expert agricultural trainer with extensive field experience across Malawi.' }}</p>
               </div>
             </div>
           </div>
@@ -228,23 +228,23 @@
 
         {{-- ── REVIEWS ── --}}
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:22px;">
-          <h2 style="font-family:var(--font-display);font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:6px;">⭐ Student Reviews</h2>
+          <h2 class="heading-xs font-800" style="color:var(--text);margin-bottom:6px;">⭐ Student Reviews</h2>
           <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap;">
             <div style="text-align:center;">
-              <div style="font-family:var(--font-display);font-size:3rem;font-weight:800;color:var(--primary);line-height:1;">{{ number_format($course->average_rating, 1) }}</div>
+              <div class="heading-xl font-800" style="color:var(--primary);line-height:1;">{{ number_format($course->average_rating, 1) }}</div>
               <div style="color:#f59e0b;font-size:1.1rem;">{{ str_repeat('★', round($course->average_rating)) }}{{ str_repeat('☆', 5 - round($course->average_rating)) }}</div>
-              <div style="font-size:.75rem;color:var(--text-muted);">{{ $course->total_reviews }} reviews</div>
+              <div class="body-xs" style="color:var(--text-muted);">{{ $course->total_reviews }} reviews</div>
             </div>
             <div style="flex:1;min-width:180px;">
               @foreach([5,4,3,2,1] as $star)
                 @php $pctStar = $star === 5 ? 68 : ($star === 4 ? 20 : ($star === 3 ? 8 : ($star === 2 ? 3 : 1))); @endphp
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
-                  <span style="font-size:.74rem;color:var(--text-muted);width:10px;">{{ $star }}</span>
-                  <i class="fas fa-star" style="color:#f59e0b;font-size:.72rem;"></i>
+                  <span class="body-xs" style="color:var(--text-muted);width:10px;">{{ $star }}</span>
+                  <i class="fas fa-star" style="color:#f59e0b;font-size:.75rem;"></i>
                   <div style="flex:1;background:var(--bg-2);border-radius:20px;height:6px;overflow:hidden;">
                     <div style="width:{{ $pctStar }}%;height:6px;background:#f59e0b;border-radius:20px;"></div>
                   </div>
-                  <span style="font-size:.72rem;color:var(--text-muted);width:28px;">{{ $pctStar }}%</span>
+                  <span class="body-xs" style="color:var(--text-muted);width:28px;">{{ $pctStar }}%</span>
                 </div>
               @endforeach
             </div>
@@ -254,17 +254,17 @@
             @foreach($course->reviews->take(4) as $review)
               <div class="review-card">
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-                  <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-size:.65rem;flex-shrink:0;">
+                  <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;flex-shrink:0;">
                     {{ $review->user->initials ?? 'FA' }}
                   </div>
                   <div>
-                    <div style="font-weight:700;font-size:.85rem;color:var(--text);">{{ $review->user->full_name ?? 'Farmer' }}</div>
+                    <div class="body-base font-700" style="color:var(--text);">{{ $review->user->full_name ?? 'Farmer' }}</div>
                     <div style="color:#f59e0b;font-size:.8rem;">{{ str_repeat('★', $review->rating) }}{{ str_repeat('☆', 5 - $review->rating) }}</div>
                   </div>
-                  <div style="margin-left:auto;font-size:.74rem;color:var(--text-muted);">{{ $review->created_at->format('M Y') }}</div>
+                  <div class="body-xs" style="color:var(--text-muted);margin-left:auto;">{{ $review->created_at->format('M Y') }}</div>
                 </div>
                 @if($review->review)
-                  <p style="font-size:.84rem;color:var(--text-muted);line-height:1.6;">{{ $review->review }}</p>
+                  <p class="body-sm" style="color:var(--text-muted);">{{ $review->review }}</p>
                 @endif
               </div>
             @endforeach
@@ -275,7 +275,7 @@
           {{-- Submit review form (completed enrollment only) --}}
           @if($enrollment && $enrollment->status === 'completed')
             <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
-              <div style="font-weight:700;font-size:.9rem;margin-bottom:14px;">Leave a Review</div>
+              <div class="body-base font-700" style="margin-bottom:14px;">Leave a Review</div>
               <form method="POST" action="{{ route('learn.review', $course) }}">
                 @csrf
                 <div style="display:flex;gap:6px;margin-bottom:12px;" id="starRow">
@@ -315,8 +315,8 @@
           {{-- CTA Button --}}
           @if($enrollment)
             @if($enrollment->status === 'completed')
-              <a href="{{ route('learn.certificate', $enrollment) }}" class="btn btn-primary btn-md" style="width:100%;justify-content:center;margin-bottom:10px;">
-                <i class="fas fa-certificate"></i> Download Certificate
+              <a href="{{ route('learn.certificate.pdf', $enrollment) }}" class="btn btn-primary btn-md" style="width:100%;justify-content:center;margin-bottom:10px;">
+                <i class="fas fa-download"></i> Download Certificate PDF
               </a>
             @else
               {{-- Open first available lesson --}}
@@ -331,7 +331,7 @@
                   <i class="fas fa-hourglass-half"></i> Lessons Coming Soon
                 </button>
               @endif
-              <div style="text-align:center;font-size:.8rem;color:var(--primary);font-weight:600;margin-bottom:10px;">
+              <div class="body-sm font-600" style="text-align:center;color:var(--primary);margin-bottom:10px;">
                 <i class="fas fa-graduation-cap"></i> You are enrolled
               </div>
             @endif
@@ -363,19 +363,19 @@
 
           {{-- Course includes --}}
           <div style="background:var(--bg-2);border-radius:var(--radius-md);padding:14px;margin-top:6px;">
-            <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:10px;">Course Includes</div>
+            <div class="label-sm" style="color:var(--text-muted);margin-bottom:10px;">Course Includes</div>
             @foreach([
               ['fas fa-play-circle', $lessonCount.' lessons'],
               ['fas fa-clock',       $hrs.'h '.$mins.'m of content'],
               ['fas fa-mobile-alt',  'Mobile & desktop access'],
               ['fas fa-infinity',    'Lifetime access'],
             ] as [$icon, $label])
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:.82rem;color:var(--text);">
+              <div class="body-sm" style="display:flex;align-items:center;gap:8px;margin-bottom:7px;color:var(--text);">
                 <i class="{{ $icon }}" style="color:var(--primary);width:16px;text-align:center;"></i> {{ $label }}
               </div>
             @endforeach
             @if($course->has_certificate)
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--text);">
+              <div class="body-sm" style="display:flex;align-items:center;gap:8px;color:var(--text);">
                 <i class="fas fa-certificate" style="color:var(--primary);width:16px;text-align:center;"></i> Certificate of completion
               </div>
             @endif
@@ -400,8 +400,8 @@
     {{-- Header --}}
     <div class="lesson-modal-header">
       <div>
-        <div id="modalLessonTitle" style="font-family:var(--font-display);font-weight:700;color:#fff;font-size:.95rem;">Lesson</div>
-        <div id="modalLessonMeta" style="font-size:.74rem;color:rgba(255,255,255,.55);margin-top:2px;"></div>
+        <div id="modalLessonTitle" class="body-base font-700" style="color:#fff;">Lesson</div>
+        <div id="modalLessonMeta" class="body-xs" style="color:rgba(255,255,255,.55);margin-top:2px;"></div>
       </div>
       <button onclick="closeLessonModal()" style="background:rgba(255,255,255,.1);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;color:#fff;font-size:1rem;">✕</button>
     </div>
@@ -409,7 +409,7 @@
     {{-- Player area --}}
     <div class="lesson-player" id="lessonPlayerArea">
       {{-- Content injected by JS --}}
-      <div style="color:rgba(255,255,255,.4);font-size:.9rem;">Select a lesson to start</div>
+      <div class="body-base" style="color:rgba(255,255,255,.4);">Select a lesson to start</div>
     </div>
 
     {{-- Footer --}}
@@ -500,8 +500,8 @@ function openLessonModal(lessonId, title, type, videoUrl, pdfPath, durationMins)
     const openBtn = `
       <div style="margin-top:16px;">
         <a href="${videoUrl}" target="_blank"
-           style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;background:#ff0000;color:#fff;border-radius:var(--radius-md);font-weight:700;text-decoration:none;font-size:.9rem;">
-          <svg width="18" height="13" viewBox="0 0 18 13" fill="white"><path d="M17.6 2s-.2-1.4-.8-2c-.7-.8-1.6-.8-2-.8C12.8 0 9 0 9 0S5.2 0 3.2.2c-.4.1-1.3.1-2 .8C.6.6.4 2 .4 2S.2 3.6.2 5.2v1.5c0 1.6.2 3.2.2 3.2s.2 1.4.8 2c.7.8 1.7.8 2.1.8C4.8 13 9 13 9 13s3.8 0 5.8-.2c.4-.1 1.3-.1 2-.8.6-.6.8-2 .8-2s.2-1.6.2-3.2V5.2C17.8 3.6 17.6 2 17.6 2zM7.2 9V3.6l5.4 2.7L7.2 9z"/></svg>
+           style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;background:#ff0000;color:#fff;border-radius:var(--radius-md);text-decoration:none;" class="body-base font-700">
+          <i class="fab fa-youtube" style="font-size:1.1rem;"></i>
           Watch on YouTube
         </a>
       </div>`;
@@ -528,9 +528,9 @@ function openLessonModal(lessonId, title, type, videoUrl, pdfPath, durationMins)
       // YouTube URL but couldn't extract ID — open directly
       player.innerHTML = `
         <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;background:#1e293b;padding:40px;text-align:center;">
-          <svg width="60" height="42" viewBox="0 0 18 13" fill="#ff0000"><path d="M17.6 2s-.2-1.4-.8-2c-.7-.8-1.6-.8-2-.8C12.8 0 9 0 9 0S5.2 0 3.2.2c-.4.1-1.3.1-2 .8C.6.6.4 2 .4 2S.2 3.6.2 5.2v1.5c0 1.6.2 3.2.2 3.2s.2 1.4.8 2c.7.8 1.7.8 2.1.8C4.8 13 9 13 9 13s3.8 0 5.8-.2c.4-.1 1.3-.1 2-.8.6-.6.8-2 .8-2s.2-1.6.2-3.2V5.2C17.8 3.6 17.6 2 17.6 2zM7.2 9V3.6l5.4 2.7L7.2 9z"/></svg>
-          <div style="color:#fff;font-size:1rem;font-weight:700;">${title}</div>
-          <div style="color:rgba(255,255,255,.6);font-size:.85rem;">Click below to watch this video</div>
+          <i class="fab fa-youtube" style="font-size:3rem;color:#ff0000;"></i>
+          <div class="body-base font-700" style="color:#fff;">${title}</div>
+          <div class="body-sm" style="color:rgba(255,255,255,.6);">Click below to watch this video</div>
           ${openBtn}
         </div>`;
     } else {
@@ -545,18 +545,18 @@ function openLessonModal(lessonId, title, type, videoUrl, pdfPath, durationMins)
     player.innerHTML = `
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:20px;background:#1e293b;padding:40px;text-align:center;">
         <i class="fas fa-file-pdf" style="font-size:4rem;color:#ef4444;"></i>
-        <div style="color:#fff;font-family:var(--font-display);font-size:1.1rem;font-weight:700;">${title}</div>
+        <div class="heading-xs font-700" style="color:#fff;">${title}</div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
           <a href="${pdfUrl}" target="_blank"
-             style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:#ef4444;color:#fff;border-radius:var(--radius-md);font-weight:700;text-decoration:none;font-size:.9rem;">
+             style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:#ef4444;color:#fff;border-radius:var(--radius-md);text-decoration:none;" class="body-base font-700">
             <i class="fas fa-eye"></i> Open PDF in Browser
           </a>
           <a href="${pdfUrl}" download
-             style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--primary);color:#fff;border-radius:var(--radius-md);font-weight:700;text-decoration:none;font-size:.9rem;">
+             style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--primary);color:#fff;border-radius:var(--radius-md);text-decoration:none;" class="body-base font-700">
             <i class="fas fa-download"></i> Download PDF
           </a>
         </div>
-        <div style="color:rgba(255,255,255,.5);font-size:.8rem;">Opens in a new tab</div>
+        <div class="body-sm" style="color:rgba(255,255,255,.5);">Opens in a new tab</div>
       </div>`;
     if (markEl) markEl.style.display = 'flex';
 
@@ -564,8 +564,8 @@ function openLessonModal(lessonId, title, type, videoUrl, pdfPath, durationMins)
     player.innerHTML = `
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;background:#1e293b;color:#fff;padding:40px;text-align:center;">
         <i class="fas fa-question-circle" style="font-size:4rem;color:#f59e0b;"></i>
-        <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;">Quiz: ${title}</div>
-        <div style="color:rgba(255,255,255,.6);font-size:.85rem;">Quiz functionality is coming soon. Stay tuned!</div>
+        <div class="heading-xs font-700" style="color:#fff;">Quiz: ${title}</div>
+        <div class="body-sm" style="color:rgba(255,255,255,.6);">Quiz functionality is coming soon. Stay tuned!</div>
       </div>`;
     if (markEl) markEl.style.display = 'flex';
 
@@ -573,8 +573,8 @@ function openLessonModal(lessonId, title, type, videoUrl, pdfPath, durationMins)
     player.innerHTML = `
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;background:#1e293b;color:#fff;padding:40px;text-align:center;">
         <i class="fas fa-file-alt" style="font-size:4rem;color:#94a3b8;"></i>
-        <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;">${title}</div>
-        <div style="color:rgba(255,255,255,.6);font-size:.85rem;">Text lesson content. Read the material below.</div>
+        <div class="heading-xs font-700" style="color:#fff;">${title}</div>
+        <div class="body-sm" style="color:rgba(255,255,255,.6);">Text lesson content. Read the material below.</div>
       </div>`;
     if (markEl) markEl.style.display = 'flex';
   }
@@ -603,6 +603,44 @@ function navigateLesson(dir) {
 }
 
 // ── Mark lesson complete (AJAX) ──────────────────────────────────────
+const TOTAL_LESSONS = {{ $lessonCount }};
+
+function updateProgressUI(data) {
+  // Update progress percentage
+  const pctEl = document.getElementById('progress-pct');
+  if (pctEl) pctEl.textContent = data.progress + '%';
+
+  // Update progress bar width
+  const barEl = document.getElementById('progress-bar');
+  if (barEl) barEl.style.width = data.progress + '%';
+
+  // Update lessons completed count
+  const countEl = document.getElementById('progress-count');
+  if (countEl) countEl.textContent = data.completed_count + '/' + data.total_lessons + ' lessons completed';
+
+  // If course completed, replace progress section with completion banner
+  if (data.completed) {
+    const section = document.getElementById('progress-section');
+    if (section) {
+      section.outerHTML = '<div id="progress-section" style="background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--radius-lg);padding:16px 22px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;"><span class="body-base font-700" style="color:var(--green-700);">🎉 Course Completed!</span></div>';
+    }
+  }
+}
+
+function markLessonRowComplete(lessonId) {
+  const lessonRows = document.querySelectorAll('.lesson-row');
+  lessonRows.forEach(row => {
+    const btn = row.querySelector(`[onclick*="openLessonModal(${lessonId}"]`);
+    if (btn) {
+      const numEl = row.querySelector('.lesson-num');
+      if (numEl && !numEl.classList.contains('done')) {
+        numEl.classList.add('done');
+        numEl.innerHTML = '<i class="fas fa-check" style="font-size:.75rem;"></i>';
+      }
+    }
+  });
+}
+
 async function markLessonComplete() {
   if (!currentLessonId) return;
   try {
@@ -614,16 +652,19 @@ async function markLessonComplete() {
       },
     });
     const data = await res.json();
-    showToast('✅ Lesson marked as complete!', 'success');
-    // Update the lesson number in the list to show checkmark
-    const lessonRows = document.querySelectorAll('.lesson-row');
-    lessonRows.forEach(row => {
-      const numEl = row.querySelector('.lesson-num');
-      if (numEl && row.querySelector(`[onclick*="openLessonModal(${currentLessonId}"]`)) {
-        numEl.classList.add('done');
-        numEl.innerHTML = '<i class="fas fa-check" style="font-size:.65rem;"></i>';
-      }
-    });
+    showToast(data.message || '✅ Lesson marked as complete!', 'success');
+
+    // Update progress bar + counts immediately
+    updateProgressUI(data);
+
+    // Update lesson row checkmark
+    markLessonRowComplete(currentLessonId);
+
+    // Track completed IDs locally
+    if (!COMPLETED_IDS.includes(currentLessonId)) {
+      COMPLETED_IDS.push(currentLessonId);
+    }
+
     // Auto-advance to next lesson
     setTimeout(() => navigateLesson(1), 1500);
   } catch(e) {

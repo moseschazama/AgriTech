@@ -1,0 +1,91 @@
+/* ── Farm Records & Decision Support System ── */
+
+/* Hero */
+.farm-records-hero{--hero-glow-1:rgba(22,163,74,0.07);--hero-glow-2:rgba(22,163,74,0.04);--hero-orb:rgba(22,163,74,0.06);--hero-badge-bg:var(--green-100);--hero-badge-fg:var(--green-700);--hero-badge-border:var(--green-200);--hero-accent-color:var(--green-600);--hero-overlay-start:rgba(8,24,5,0.78);--hero-overlay-mid:rgba(12,30,8,0.58);--hero-overlay-end:rgba(6,20,3,0.72);--hero-overlay-accent:rgba(74,222,128,0.15);}
+.farm-records-hero.page-hero-image{background-image:url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1920&q=80');}
+
+/* Stats Row */
+.fr-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+.fr-stat{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;display:flex;align-items:center;gap:14px;transition:all var(--t-med);}
+.fr-stat:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.fr-stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.fr-stat-val{font-family:var(--font-display);font-size:1.5rem;font-weight:800;color:var(--text);line-height:1;}
+.fr-stat-lbl{font-size:.8rem;color:var(--text-muted);margin-top:2px;}
+.fr-stat-trend{font-size:.72rem;font-weight:700;display:flex;align-items:center;gap:3px;margin-top:4px;}
+.fr-stat-trend.up{color:var(--success);}
+.fr-stat-trend.down{color:var(--danger);}
+
+/* Season Cards */
+.fr-seasons-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;margin-bottom:28px;}
+.fr-season-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all var(--t-med);}
+.fr-season-card:hover{box-shadow:var(--shadow-md);border-color:var(--green-200);}
+.fr-season-header{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.fr-season-name{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text);}
+.fr-season-status{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:var(--radius-full);text-transform:uppercase;letter-spacing:.04em;}
+.fr-season-status.planning{background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;}
+.fr-season-status.active{background:var(--green-50);color:var(--green-700);border:1px solid var(--green-200);}
+.fr-season-status.harvested{background:#fef9c3;color:#a16207;border:1px solid #fde68a;}
+.fr-season-status.completed{background:var(--gray-100);color:var(--gray-600);border:1px solid var(--gray-200);}
+.fr-season-body{padding:18px 20px;}
+.fr-season-meta{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:14px;}
+.fr-season-meta-item{display:flex;align-items:center;gap:5px;font-size:.8rem;color:var(--text-muted);}
+.fr-season-meta-item i{color:var(--primary);font-size:.75rem;}
+.fr-season-progress{margin-top:12px;}
+.fr-season-progress-bar{height:6px;background:var(--gray-100);border-radius:3px;overflow:hidden;}
+.fr-season-progress-fill{height:100%;background:linear-gradient(90deg,var(--green-400),var(--green-600));border-radius:3px;transition:width .5s ease;}
+.fr-season-progress-label{display:flex;justify-content:space-between;font-size:.72rem;color:var(--text-muted);margin-top:4px;}
+.fr-season-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;}
+.fr-season-footer .btn{flex:1;justify-content:center;}
+
+/* Analytics Panel */
+.fr-analytics{display:grid;grid-template-columns:2fr 1fr;gap:24px;margin-bottom:28px;}
+.fr-chart-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+.fr-chart-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.fr-chart-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text);}
+.fr-chart-body{padding:20px 22px;}
+.fr-chart-canvas{width:100%;height:280px;}
+
+/* Insights Panel */
+.fr-insights{display:flex;flex-direction:column;gap:14px;}
+.fr-insight{display:flex;gap:12px;padding:14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);transition:all var(--t-fast);}
+.fr-insight:hover{box-shadow:var(--shadow-sm);}
+.fr-insight-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+.fr-insight-title{font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:3px;}
+.fr-insight-msg{font-size:.78rem;color:var(--text-muted);line-height:1.5;}
+
+/* Alerts */
+.fr-alerts{margin-bottom:28px;}
+.fr-alert{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border-radius:var(--radius-lg);margin-bottom:10px;border:1px solid var(--border);transition:all var(--t-fast);}
+.fr-alert:hover{box-shadow:var(--shadow-sm);}
+.fr-alert-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.fr-alert-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+.fr-alert-content{flex:1;}
+.fr-alert-title{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:2px;}
+.fr-alert-msg{font-size:.78rem;color:var(--text-muted);line-height:1.4;}
+.fr-alert-time{font-size:.7rem;color:var(--text-muted);margin-top:4px;}
+.fr-alert-actions{display:flex;gap:6px;flex-shrink:0;}
+
+/* Event Log */
+.fr-events{display:flex;flex-direction:column;gap:10px;}
+.fr-event{display:flex;gap:12px;padding:14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);transition:all var(--t-fast);}
+.fr-event:hover{box-shadow:var(--shadow-sm);}
+.fr-event-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+.fr-event-content{flex:1;}
+.fr-event-title{font-size:.85rem;font-weight:600;color:var(--text);}
+.fr-event-desc{font-size:.78rem;color:var(--text-muted);margin-top:2px;line-height:1.4;}
+.fr-event-date{font-size:.7rem;color:var(--text-muted);margin-top:4px;}
+
+/* Forms */
+.fr-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.fr-form-full{grid-column:1/-1;}
+
+/* Tabs */
+.fr-tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--bg-2);border-radius:var(--radius-lg);padding:4px;}
+.fr-tab{flex:1;padding:10px 16px;text-align:center;font-size:.85rem;font-weight:600;color:var(--text-muted);border-radius:var(--radius-md);cursor:pointer;transition:all var(--t-fast);border:none;background:transparent;}
+.fr-tab.active{background:var(--bg-card);color:var(--primary);box-shadow:var(--shadow-xs);}
+.fr-tab:hover:not(.active){color:var(--text);}
+
+/* Responsive */
+@media(max-width:1100px){.fr-analytics{grid-template-columns:1fr;}.fr-stats{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:768px){.fr-seasons-grid{grid-template-columns:1fr;}.fr-form-grid{grid-template-columns:1fr;}}
+@media(max-width:639px){.fr-stats{grid-template-columns:1fr;gap:12px;}.fr-stat{padding:16px;}.fr-stat-val{font-size:1.3rem;}.fr-tabs{flex-wrap:wrap;}}

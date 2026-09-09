@@ -3,18 +3,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DiseaseAlertCreated;
+use App\Events\OrderStatusChanged;
+use App\Events\ProductApproved;
+use App\Events\UserRegistered;
+use App\Jobs\BroadcastNotification;
+use App\Models\Notification;
 use App\Models\District;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\Course;
 use App\Models\Innovation;
+use App\Models\Competition;
 use App\Models\DiseaseAlert;
 use App\Models\SmsCampaign;
 use App\Models\SmsLog;
 use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 /**
  * AdminController — covers all 8 panel tabs from admin.blade.php:
@@ -136,6 +145,20 @@ class AdminController extends Controller
     public function suspendFarmer(User $user)
     {
         $user->update(["status" => "suspended"]);
+
+        // Notify the user
+        try {
+            BroadcastNotification::dispatch(
+                $user->id,
+                "⚠️ Account Suspended",
+                "Your AgriTech Pro account has been suspended by an administrator. Please contact support for assistance.",
+                "account",
+                "fas fa-ban",
+                "#ef4444",
+                route("dashboard"),
+            );
+        } catch (\Throwable $e) {}
+
         return back()->with(
             "success",
             "{$user->full_name} has been suspended.",
@@ -145,9 +168,84 @@ class AdminController extends Controller
     public function activateFarmer(User $user)
     {
         $user->update(["status" => "active"]);
+
+        // Notify the user
+        try {
+            BroadcastNotification::dispatch(
+                $user->id,
+                "✅ Account Reactivated",
+                "Your AgriTech Pro account has been reactivated. You can now access all features again.",
+                "account",
+                "fas fa-check-circle",
+                "#16a34a",
+                route("dashboard"),
+            );
+        } catch (\Throwable $e) {}
+
         return back()->with(
             "success",
             "{$user->full_name} has been reactivated.",
+        );
+    }
+
+    public function farmerDetail(User $user)
+    {
+        $user->load(["farm", "orders" => fn($q) => $q->latest()->limit(5)]);
+        return response()->json([
+            "id" => $user->id,
+            "full_name" => $user->full_name,
+            "first_name" => $user->first_name,
+            "last_name" => $user->last_name,
+            "email" => $user->email,
+            "phone" => $user->phone,
+            "role" => $user->role,
+            "status" => $user->status,
+            "district" => $user->district,
+            "trading_centre" => $user->trading_centre,
+            "village" => $user->village,
+            "farm_type" => $user->farm?->farm_type,
+            "registered_at" => $user->created_at->format("M j, Y"),
+            "last_login" => $user->last_login_at?->diffForHumans(),
+            "recent_orders" => $user->orders->map(
+                fn($o) => [
+                    "order_number" => $o->order_number,
+                    "total" => $o->total,
+                    "status" => $o->status,
+                    "created_at" => $o->created_at->format("M j, Y"),
+                ],
+            ),
+        ]);
+    }
+
+    public function resetFarmerPassword(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            "new_password" => ["required", "string", "min:8"],
+        ]);
+
+        $user->update([
+            "password" => Hash::make($validated["new_password"]),
+        ]);
+
+        // Notify the user via SMS about the password change
+        try {
+            $this->sms->send(
+                phone: $user->phone,
+                message:
+                    "Hello {$user->first_name}, your AgriTech Pro account password was reset by an admin. Your new password is: {$validated["new_password"]}. Please log in and change it. — AgriTech Pro Team",
+                type: "custom",
+                recipient: $user,
+            );
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning(
+                "Password reset SMS failed for user {$user->id}: " .
+                    $e->getMessage(),
+            );
+        }
+
+        return back()->with(
+            "success",
+            "Password for {$user->full_name} has been reset. New password sent via SMS.",
         );
     }
 
@@ -172,6 +270,23 @@ class AdminController extends Controller
     public function approveProduct(Product $product)
     {
         $product->update(["status" => "active", "is_verified" => true]);
+
+        // Notify the seller
+        try {
+            BroadcastNotification::dispatch(
+                $product->seller_id,
+                "✅ Listing Approved — " . $product->name,
+                "Your product is now live in the marketplace!",
+                "marketplace",
+                "fas fa-check-circle",
+                "#16a34a",
+                route("marketplace.show", $product->slug),
+            );
+        } catch (\Throwable $e) {}
+
+        // Broadcast product approved event
+        event(new ProductApproved($product));
+
         return back()->with(
             "success",
             "\"{$product->name}\" approved and is now live.",
@@ -188,6 +303,19 @@ class AdminController extends Controller
             "status" => "inactive",
             "rejection_reason" => $validated["reason"],
         ]);
+
+        // Notify the seller
+        try {
+            BroadcastNotification::dispatch(
+                $product->seller_id,
+                "❌ Listing Rejected — " . $product->name,
+                "Your product was not approved. Reason: {$validated['reason']}",
+                "marketplace",
+                "fas fa-times-circle",
+                "#ef4444",
+                route("marketplace.my-listings"),
+            );
+        } catch (\Throwable $e) {}
 
         return back()->with("success", "\"{$product->name}\" rejected.");
     }
@@ -208,16 +336,152 @@ class AdminController extends Controller
     {
         $validated = $request->validate(["status" => ["required", "string"]]);
 
+        $oldStatus = $order->status;
+
         try {
             $order->transitionTo($validated["status"]);
         } catch (\Exception $e) {
             return back()->withErrors(["status" => $e->getMessage()]);
         }
 
+        // Broadcast order status change
+        event(new OrderStatusChanged($order, $oldStatus));
+
+        // Notify buyer
+        try {
+            $label = Order::STATUS_LABELS[$validated["status"]] ?? ucfirst($validated["status"]);
+            BroadcastNotification::dispatch(
+                $order->buyer_id,
+                "📦 Order Update — " . $order->order_number,
+                "Your order status: {$label}",
+                "order",
+                "fas fa-truck",
+                "var(--primary)",
+                route("marketplace.my-orders"),
+            );
+        } catch (\Throwable $e) {}
+
+        $label = Order::STATUS_LABELS[$validated["status"]] ?? ucfirst($validated["status"]);
         return back()->with(
             "success",
-            "Order #{$order->order_number} updated to {$validated["status"]}.",
+            "Order #{$order->order_number} updated to {$label}.",
         );
+    }
+
+    /**
+     * Admin dispatches an order — assigns driver, enters delivery details,
+     * creates delivery record if missing, sends SMS + notification to buyer.
+     */
+    public function dispatchOrder(Request $request, Order $order)
+    {
+        $validated = $request->validate([
+            "driver_name" => ["required", "string", "max:150"],
+            "driver_phone" => ["required", "string", "max:20"],
+            "driver_vehicle_plate" => ["required", "string", "max:20"],
+            "driver_vehicle_type" => ["nullable", "string", "max:100"],
+            "delivery_notes" => ["nullable", "string", "max:500"],
+        ]);
+
+        \Illuminate\Support\Facades\DB::beginTransaction();
+        try {
+            // Ensure delivery record exists
+            $delivery = $order->delivery;
+            if (!$delivery) {
+                $order->resolveDeliveryCoordinates();
+                $order->refresh();
+                $originDistrict = $order->seller?->district ?? "Lilongwe";
+                $originCoords = \App\Models\Order::resolveOriginCoordinates($originDistrict);
+                $delivery = \App\Models\Delivery::create([
+                    "order_id" => $order->id,
+                    "tracking_number" => "TRK-" . now()->format("Ymd") . "-" . strtoupper(\Illuminate\Support\Str::random(6)),
+                    "status" => "pending",
+                    "origin_address" => \App\Models\Order::originAddressFor($order->seller, $originDistrict),
+                    "origin_district" => $originDistrict,
+                    "origin_lat" => $originCoords['origin_lat'] ?? null,
+                    "origin_lng" => $originCoords['origin_lng'] ?? null,
+                    "destination_district" => $order->delivery_district,
+                    "destination_address" => $order->delivery_address,
+                    "destination_lat" => $order->delivery_lat,
+                    "destination_lng" => $order->delivery_lng,
+                ]);
+                $order->setRelation("delivery", $delivery);
+            } else {
+                $updates = [];
+                if (!$delivery->destination_lat && $order->delivery_lat) {
+                    $updates['destination_lat'] = $order->delivery_lat;
+                    $updates['destination_lng'] = $order->delivery_lng;
+                }
+                if (!$delivery->origin_lat) {
+                    $originCoords = \App\Models\Order::resolveOriginCoordinates($delivery->origin_district ?? $order->seller?->district);
+                    if ($originCoords) {
+                        $updates['origin_lat'] = $originCoords['origin_lat'];
+                        $updates['origin_lng'] = $originCoords['origin_lng'];
+                    }
+                }
+                if (!empty($updates)) { $delivery->update($updates); }
+            }
+
+            // Store driver details directly on the delivery record
+            $delivery->update([
+                "driver_name" => $validated["driver_name"],
+                "driver_phone" => $validated["driver_phone"],
+                "driver_vehicle_plate" => strtoupper($validated["driver_vehicle_plate"]),
+                "driver_vehicle_type" => $validated["driver_vehicle_type"] ?? null,
+                "status" => "assigned",
+                "assigned_at" => now(),
+                "delivery_notes" => $validated["delivery_notes"]
+                    ? ($delivery->delivery_notes
+                        ? $delivery->delivery_notes . "\n---\n" . $validated["delivery_notes"]
+                        : $validated["delivery_notes"])
+                    : $delivery->delivery_notes,
+            ]);
+
+            // Log the assignment
+            $delivery->logStatus("assigned", "Driver {$validated['driver_name']} ({$validated['driver_vehicle_plate']}) assigned by admin.");
+
+            // Transition order to on_the_way
+            $order->transitionTo("on_the_way");
+
+            // Confirm payment status
+            if ($order->payment_status === "pending") {
+                $order->update(["payment_status" => "confirmed"]);
+            }
+
+            \Illuminate\Support\Facades\DB::commit();
+
+            // Broadcast delivery status update in real-time
+            event(new \App\Events\DeliveryStatusUpdated($delivery, "assigned"));
+
+            // Send SMS to buyer with driver details
+            try {
+                $buyer = $order->buyer;
+                if ($buyer) {
+                    $msg = "Your order {$order->order_number} is on the way! "
+                         . "Driver: {$validated['driver_name']} ({$validated['driver_phone']}) "
+                         . "Vehicle: {$validated['driver_vehicle_plate']} "
+                         . ($validated['driver_vehicle_type'] ? "({$validated['driver_vehicle_type']}) " : "")
+                         . "Track live: " . url("/track/{$delivery->tracking_number}")
+                         . " — AgriTech Pro";
+                    app(\App\Services\SmsService::class)->send(
+                        phone: $buyer->phone,
+                        message: $msg,
+                        type: "order",
+                        recipient: $buyer,
+                    );
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning("Dispatch SMS failed for order {$order->id}: " . $e->getMessage());
+            }
+
+            $label = \App\Models\Order::STATUS_LABELS["on_the_way"] ?? "On the Way";
+            return back()->with(
+                "success",
+                "Order #{$order->order_number} dispatched to {$validated['driver_name']}. {$label}. SMS sent to buyer.",
+            );
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            return back()->withErrors(["dispatch" => "Dispatch failed: " . $e->getMessage()]);
+        }
     }
 
     // ── Courses Tab ────────────────────────────────────────────────────
@@ -389,6 +653,20 @@ class AdminController extends Controller
     public function approveInnovation(Request $request, Innovation $innovation)
     {
         $innovation->approve($request->user());
+
+        // Notify the innovator
+        try {
+            BroadcastNotification::dispatch(
+                $innovation->user_id,
+                "✅ Innovation Approved — " . $innovation->title,
+                "Your innovation is now live in the Innovation Hub!",
+                "innovation",
+                "fas fa-check-circle",
+                "#16a34a",
+                route("innovation.show", $innovation->slug),
+            );
+        } catch (\Throwable $e) {}
+
         return back()->with("success", "\"{$innovation->title}\" approved.");
     }
 
@@ -398,7 +676,108 @@ class AdminController extends Controller
             "reason" => ["required", "string", "max:500"],
         ]);
         $innovation->reject($request->user(), $validated["reason"]);
+
+        // Notify the innovator
+        try {
+            BroadcastNotification::dispatch(
+                $innovation->user_id,
+                "❌ Innovation Rejected — " . $innovation->title,
+                "Reason: {$validated['reason']}",
+                "innovation",
+                "fas fa-times-circle",
+                "#ef4444",
+                route("innovation.my-innovations"),
+            );
+        } catch (\Throwable $e) {}
+
         return back()->with("success", "\"{$innovation->title}\" rejected.");
+    }
+
+    /**
+     * Rank the current competition entries by votes, crown 1st/2nd/3rd and close the round.
+     */
+    public function selectCompetitionWinners(Request $request, Competition $competition)
+    {
+        abort_unless(in_array($competition->status, ["active", "closed"]), 404);
+
+        if ($competition->winners()->count() > 0) {
+            return back()->with(
+                "success",
+                "Winners for " . $competition->title . " were already selected.",
+            );
+        }
+
+        $winners = $competition->selectWinners();
+
+        if (count($winners) === 0) {
+            return back()->with("error", "No eligible entries to rank yet.");
+        }
+
+        try {
+            BroadcastNotification::dispatch(
+                $winners[0]["user_id"],
+                "🏆 " . $competition->title . " — Results Published",
+                "The leaderboard is live. Download the full results list from the Innovation Hub.",
+                "innovation",
+                "fas fa-trophy",
+                "#f59e0b",
+                route("innovation"),
+            );
+        } catch (\Throwable $e) {}
+
+        return back()->with(
+            "success",
+            "Winners selected: #1 " . ($winners[0]["title"] ?? "") . ". The round is now closed.",
+        );
+    }
+
+    /**
+     * Download the competition entries list as CSV (with winner ranking when published).
+     */
+    public function downloadCompetitionEntries(Competition $competition)
+    {
+        $rows = $competition->entriesWithPerformance();
+
+        $csv = fopen("php://temp/maxmemory:1048576", "rw");
+        fputcsv($csv, [
+            "Position",
+            "Prize (MWK)",
+            "Innovation",
+            "Category",
+            "Farmer",
+            "District",
+            "Votes",
+            "Views",
+            "Impact",
+            "Submitted",
+        ]);
+
+        $rows->each(function ($row) use ($csv) {
+            fputcsv($csv, [
+                $row["position"] ?: "",
+                $row["position"] && $row["prize"] !== null
+                    ? number_format((float) $row["prize"])
+                    : "",
+                $row["title"],
+                $row["category"],
+                $row["farmer"],
+                $row["district"],
+                $row["votes"],
+                $row["views"],
+                $row["impact"],
+                $row["submitted_at"],
+            ]);
+        });
+
+        rewind($csv);
+        $output = stream_get_contents($csv);
+        fclose($csv);
+
+        return response($output, 200, [
+            "Content-Type" => "text/csv; charset=UTF-8",
+            "Content-Disposition" =>
+                'attachment; filename="' . Str::slug($competition->title) . '-entries.csv"',
+        ]);
     }
 
     // ── SMS Tab ──────────────────────────────────────────────────────
@@ -493,6 +872,9 @@ class AdminController extends Controller
         ]);
 
         $notified = $alert->broadcastViaSms();
+
+        // Broadcast disease alert to all connected users
+        event(new DiseaseAlertCreated($alert));
 
         return back()->with(
             "success",

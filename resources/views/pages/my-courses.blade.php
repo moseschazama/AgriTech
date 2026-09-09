@@ -18,7 +18,7 @@
   <div class="container">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;">
       <div>
-        <h1 style="font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--text);">🎓 My Courses</h1>
+        <h1 style="font-size:1.5rem;font-weight:700;color:var(--text);letter-spacing:-0.02em;">🎓 My Courses</h1>
         <p style="color:var(--text-muted);">{{ isset($enrollments) ? $enrollments->total() : 0 }} course(s) enrolled</p>
       </div>
       <div style="display:flex;gap:10px;">
@@ -53,15 +53,15 @@
           <div style="height:140px;background:linear-gradient(135deg,{{ $bg }});display:flex;align-items:center;justify-content:center;font-size:3.5rem;position:relative;">
             {{ $emoji }}
             @if($enrollment->status === 'completed')
-              <span style="position:absolute;top:10px;right:10px;background:var(--primary);color:#fff;font-size:.65rem;font-weight:700;padding:3px 10px;border-radius:20px;">✓ Completed</span>
+              <span style="position:absolute;top:10px;right:10px;background:var(--primary);color:#fff;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:20px;">✓ Completed</span>
             @endif
           </div>
           {{-- Body --}}
           <div style="padding:18px;">
-            <div style="font-size:.7rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">
+            <div style="font-size:.75rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">
               {{ ucwords(str_replace('_',' ',$course->category)) }}
             </div>
-            <div style="font-family:var(--font-display);font-size:.92rem;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+            <div style="font-size:1.0625rem;font-weight:600;color:var(--text);letter-spacing:-0.01em;margin-bottom:6px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
               {{ $course->title }}
             </div>
             <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:10px;">
@@ -72,7 +72,7 @@
 
             {{-- Progress bar --}}
             <div class="progress-bar-outer"><div class="progress-bar-inner" style="width:{{ $pct }}%;"></div></div>
-            <div style="display:flex;justify-content:space-between;font-size:.74rem;color:var(--text-muted);margin-bottom:14px;">
+            <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--text-muted);margin-bottom:14px;">
               <span>{{ $pct }}% complete</span>
               <span>{{ round($lessonCount * $pct / 100) }}/{{ $lessonCount }} lessons</span>
             </div>
@@ -80,11 +80,11 @@
             {{-- Actions --}}
             <div style="display:flex;gap:8px;">
               @if($enrollment->status === 'completed' && $enrollment->certificate_number)
-                <a href="{{ route('learn.certificate', $enrollment) }}" class="btn btn-outline btn-sm" style="flex:1;justify-content:center;font-size:.78rem;">
-                  <i class="fas fa-certificate"></i> Certificate
+                <a href="{{ route('learn.certificate.pdf', $enrollment) }}" class="btn btn-outline btn-sm" style="flex:1;justify-content:center;font-size:.8125rem;">
+                  <i class="fas fa-download"></i> Certificate PDF
                 </a>
               @endif
-              <a href="{{ route('learn.show', $course) }}" class="btn btn-primary btn-sm" style="flex:1;justify-content:center;font-size:.78rem;">
+              <a href="{{ route('learn.show', $course) }}" class="btn btn-primary btn-sm" style="flex:1;justify-content:center;font-size:.8125rem;">
                 <i class="fas fa-play"></i> {{ $enrollment->status === 'completed' ? 'Review Course' : 'Continue' }}
               </a>
             </div>
@@ -93,7 +93,7 @@
       @empty
         <div style="grid-column:1/-1;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:60px;text-align:center;">
           <i class="fas fa-graduation-cap" style="font-size:3.5rem;color:var(--text-muted);margin-bottom:18px;display:block;opacity:.25;"></i>
-          <h3 style="font-family:var(--font-display);font-size:1.3rem;margin-bottom:8px;">No courses enrolled yet</h3>
+          <h3 style="font-size:1.25rem;font-weight:600;letter-spacing:-0.01em;margin-bottom:8px;">No courses enrolled yet</h3>
           <p style="color:var(--text-muted);margin-bottom:24px;">Enroll in free courses and start growing your farming skills today.</p>
           <a href="{{ route('learn') }}" class="btn btn-primary btn-lg"><i class="fas fa-graduation-cap"></i> Browse Free Courses</a>
         </div>

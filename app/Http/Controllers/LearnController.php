@@ -3,6 +3,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CourseCompleted;
+use App\Events\CourseEnrolled;
+use App\Events\LessonCompleted;
+use App\Jobs\BroadcastNotification;
 use App\Models\Course;
 use App\Models\CourseReview;
 use App\Models\Lesson;
@@ -81,7 +85,15 @@ class LearnController extends Controller
             ? $course->enrollments()->where("user_id", Auth::id())->first()
             : null;
 
-        return view("pages.course-detail", compact("course", "enrollment"));
+        $completedLessonIds = [];
+        if ($enrollment) {
+            $completedLessonIds = \App\Models\LessonProgress::where("enrollment_id", $enrollment->id)
+                ->where("is_completed", true)
+                ->pluck("lesson_id")
+                ->toArray();
+        }
+
+        return view("pages.course-detail", compact("course", "enrollment", "completedLessonIds"));
     }
     public function enroll(Request $request, Course $course)
     {
@@ -119,7 +131,7 @@ class LearnController extends Controller
 
         try {
             // Create enrollment
-            \App\Models\Enrollment::create([
+            $enrollment = \App\Models\Enrollment::create([
                 "user_id" => $user->id,
                 "course_id" => $course->id,
                 "status" => "active",
@@ -135,18 +147,20 @@ class LearnController extends Controller
 
             // Create a welcome notification (non-blocking)
             try {
-                \App\Models\Notification::create([
-                    "user_id" => $user->id,
-                    "title" => "🎓 Enrolled: " . $course->title,
-                    "message" => "You are now enrolled in \"{$course->title}\". Start learning anytime!",
-                    "type" => "lesson",
-                    "icon" => "fas fa-graduation-cap",
-                    "icon_color" => "var(--primary)",
-                    "is_read" => false,
-                ]);
+                BroadcastNotification::dispatch(
+                    $user->id,
+                    "🎓 Enrolled: " . $course->title,
+                    "You are now enrolled. Start learning anytime!",
+                    "lesson",
+                    "fas fa-graduation-cap",
+                    "var(--primary)",
+                );
             } catch (\Throwable $e) {
                 // Notification failure should never block enrollment
             }
+
+            // Broadcast enrollment event
+            event(new CourseEnrolled($enrollment));
 
             return redirect()
                 ->route("learn.show", $course)
@@ -188,13 +202,50 @@ class LearnController extends Controller
             // Record the lesson as complete
             $enrollment->completeLesson($lesson);
 
-            $pct = $enrollment->fresh()->progressPercentage();
-            $done = $enrollment->fresh()->status === "completed";
+            $freshEnrollment = $enrollment->fresh();
+            $pct = $freshEnrollment->progressPercentage();
+            $done = $freshEnrollment->status === "completed";
+
+            $completedIds = \App\Models\LessonProgress::where("enrollment_id", $enrollment->id)
+                ->where("is_completed", true)
+                ->pluck("lesson_id")
+                ->toArray();
+
+            $totalLessons = $lesson->course->publishedLessons()->count();
+
+            // Get the lesson progress record
+            $lessonProgress = \App\Models\LessonProgress::where('enrollment_id', $enrollment->id)
+                ->where('lesson_id', $lesson->id)
+                ->first();
+
+            if ($lessonProgress) {
+                event(new LessonCompleted($lessonProgress, $pct, $done));
+            }
+
+            if ($done) {
+                event(new CourseCompleted($freshEnrollment, $pct));
+
+                try {
+                    BroadcastNotification::dispatch(
+                        $user->id,
+                        "🎉 Course Complete!",
+                        "Congratulations! You completed \"{$lesson->course->title}\". Your certificate is ready!",
+                        "lesson",
+                        "fas fa-trophy",
+                        "#16a34a",
+                        route("learn.certificate", $freshEnrollment),
+                    );
+                } catch (\Throwable $e) {}
+            }
 
             return response()->json([
                 "success" => true,
                 "progress" => $pct,
                 "completed" => $done,
+                "completed_lesson_ids" => $completedIds,
+                "completed_count" => count($completedIds),
+                "total_lessons" => $totalLessons,
+                "lesson_id" => $lesson->id,
                 "message" => $done
                     ? "🎉 Course complete! Your certificate is ready."
                     : "Lesson complete! {$pct}% of the course done.",
@@ -254,5 +305,26 @@ class LearnController extends Controller
         );
 
         return view("pages.certificate", compact("enrollment"));
+    }
+
+    public function certificatePdf(\App\Models\Enrollment $enrollment)
+    {
+        abort_unless($enrollment->user_id === Auth::id(), 403);
+        abort_unless(
+            $enrollment->certificate_number,
+            404,
+            "No certificate issued for this course yet.",
+        );
+
+        $enrollment->load(['user', 'course.instructor']);
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView(
+            'pages.certificate-pdf',
+            compact('enrollment')
+        )->setPaper('a4', 'landscape');
+
+        return $pdf->download(
+            'AgriTech-Pro-Certificate-' . $enrollment->certificate_number . '.pdf'
+        );
     }
 }
