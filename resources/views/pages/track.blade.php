@@ -51,6 +51,59 @@
 @endsection
 
 @section('content')
+
+@if(!isset($delivery) || !$delivery)
+  {{-- Tracking number not found --}}
+  <section class="track-hero">
+    <div class="container">
+      <div style="text-align:center;">
+        <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);border-radius:var(--radius-full);padding:5px 14px;font-size:.78rem;font-weight:700;color:#93c5fd;margin-bottom:12px;">
+          <i class="fas fa-truck"></i> Live Tracking
+        </span>
+        <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:6px;">Track Your Order</h1>
+        @if(!empty($query))
+          <span style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.35);border-radius:var(--radius-full);padding:5px 14px;font-weight:700;color:#fca5a5;font-size:.82rem;">
+            No delivery found for "<span class="code">{{ $query }}</span>"
+          </span>
+        @endif
+      </div>
+    </div>
+  </section>
+
+  <div style="background:var(--bg-2);min-height:80vh;">
+    <div class="container" style="max-width:640px;padding-top:36px;padding-bottom:40px;">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:32px;text-align:center;box-shadow:var(--shadow-md);">
+        <i class="fas fa-box-open" style="font-size:2.6rem;color:var(--text-muted);margin-bottom:14px;display:block;"></i>
+        <h2 style="font-size:1.15rem;font-weight:800;color:var(--text);margin-bottom:8px;">
+          {{ !empty($query) ? 'Delivery not found' : 'Enter your tracking number' }}
+        </h2>
+        <p style="font-size:.9rem;color:var(--text-muted);margin-bottom:20px;line-height:1.6;">
+          @if(!empty($query))
+            We couldn't find a delivery with the number <strong>{{ $query }}</strong>. Check the tracking number on your order confirmation — it looks like <strong>TRK-YYYYMMDD-XXXXXX</strong>.
+          @else
+            Enter the tracking number from your SMS or order confirmation to see live delivery status.
+          @endif
+        </p>
+        <form action="{{ route('delivery.track', '__tracking__') }}" method="GET" id="trackForm" style="display:flex;gap:8px;">
+          <input type="text" id="trackInput" name="trackingNumber" class="form-input" placeholder="e.g. TRK-20260909-ABC123" style="flex:1;" value="{{ $query ?? '' }}"/>
+          <button type="submit" class="btn btn-primary btn-md"><i class="fas fa-search"></i> Track</button>
+        </form>
+        @if(Auth::check())
+        <a href="{{ route('marketplace.my-orders') }}" style="display:inline-flex;align-items:center;gap:6px;margin-top:18px;color:var(--primary);font-weight:700;font-size:.85rem;text-decoration:underline;"><i class="fas fa-clipboard-list"></i> View my orders</a>
+        @endif
+      </div>
+    </div>
+  </div>
+
+  <script>
+  document.getElementById('trackForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const val = document.getElementById('trackInput').value.trim();
+    if (!val) return showToast('Enter a tracking number first', 'error');
+    window.location.href = '{{ route("delivery.track", "__tracking__") }}'.replace('__tracking__', encodeURIComponent(val));
+  });
+  </script>
+@else
 @php
   $statusColors=['pending'=>'#94a3b8','assigned'=>'#60a5fa','collected'=>'#fb923c','in_transit'=>'#60a5fa','near_destination'=>'#8b5cf6','delivered'=>'#22c55e','failed'=>'#ef4444'];
   $color=$statusColors[$delivery->status]??'#94a3b8';
@@ -59,6 +112,9 @@
   $currentIdx=array_search($delivery->status,$stepKeys);
   if($currentIdx===false)$currentIdx=0;
   $pct=$delivery->progressPercentage();
+  $waypointsData = ($waypoints && $waypoints->count())
+      ? $waypoints->map(fn($w) => ['name' => $w->name, 'lat' => (float)$w->latitude, 'lng' => (float)$w->longitude, 'district' => $w->district->name ?? ''])->values()
+      : [];
 @endphp
 
 {{-- Hero --}}
@@ -368,7 +424,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Route waypoints
   @if($waypoints && $waypoints->count() > 0)
-    const waypoints = @json($waypoints->map(fn($w) => ['name' => $w->name, 'lat' => (float)$w->latitude, 'lng' => (float)$w->longitude, 'district' => $w->district->name ?? '']));
+    const waypoints = @json($waypointsData);
     const wpIcon = L.divIcon({
       html: '<div style="width:16px;height:16px;border-radius:50%;background:#f59e0b;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);"></div>',
       className: '',
@@ -488,4 +544,5 @@ function refreshLive() {
   window.location.reload();
 }
 </script>
+@endif
 @endsection

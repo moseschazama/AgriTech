@@ -53,7 +53,11 @@ class DeliveryController extends Controller
     {
         $delivery = Delivery::where("tracking_number", $trackingNumber)
             ->with(["order.items", "driver.user", "statusLogs"])
-            ->firstOrFail();
+            ->first();
+
+        if (!$delivery) {
+            return view("pages.track", ["delivery" => null, "query" => $trackingNumber]);
+        }
 
         // Load route waypoints (trading centres along the route)
         $waypoints = $delivery->getRouteWaypoints();
