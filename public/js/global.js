@@ -7,23 +7,31 @@ const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 
 /* ============================================================
-   1. SMART PAGE LOADER — only on full page navigations
+   1. SMART PAGE LOADER — only on first visit / after login
    ============================================================ */
 (function initLoader() {
   const loader = $('#page-loader');
   if (!loader) return;
 
-  // Hide immediately on back/forward navigation (bfcache)
-  if (performance && performance.getEntriesByType) {
-    const nav = performance.getEntriesByType('navigation')[0];
-    if (nav && nav.type === 'back_forward') {
-      loader.remove();
-      return;
-    }
+  // Never show on back/forward navigation (bfcache)
+  const nav = performance && performance.getEntriesByType
+    ? performance.getEntriesByType('navigation')[0]
+    : null;
+  const isBfcache = nav && nav.type === 'back_forward';
+
+  // The server only marks data-splash="1" for the very first page open
+  // of a session, or immediately after login/registration. All normal
+  // in-app navigation between pages/tabs skips the splash entirely.
+  const shouldShow = !isBfcache && document.body && document.body.dataset.splash === '1';
+
+  if (!shouldShow) {
+    loader.remove();
+    return;
   }
 
-  // Fade in loader, then fade out quickly (max 500ms for initial load)
+  loader.classList.add('show');
   loader.style.opacity = '1';
+
   const removeLoader = () => {
     loader.classList.add('done');
     setTimeout(() => { if (loader.parentNode) loader.parentNode.removeChild(loader); }, 400);
@@ -31,18 +39,18 @@ const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 
   // Hide after DOM is ready + a tiny buffer, or immediately if already interactive
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    setTimeout(removeLoader, 200);
+    setTimeout(removeLoader, 250);
   } else {
-    document.addEventListener('DOMContentLoaded', () => setTimeout(removeLoader, 200));
-    // Fallback: hide after 2s max regardless
-    setTimeout(removeLoader, 2000);
+    document.addEventListener('DOMContentLoaded', () => setTimeout(removeLoader, 250));
+    // Fallback: hide after 1.5s max regardless
+    setTimeout(removeLoader, 1500);
   }
 
-  // Expose show/hide for manual control (e.g., route transitions)
+  // Expose show/hide for manual control (e.g., heavy in-page actions)
   window.showPageLoader = () => {
     if (loader) {
+      loader.classList.add('show');
       loader.style.opacity = '1';
-      loader.style.display = 'flex';
       loader.classList.remove('done');
     }
   };

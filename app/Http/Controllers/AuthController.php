@@ -81,6 +81,8 @@ class AuthController extends Controller
                 "last_login_ip" => $request->ip(),
             ]);
 
+            $request->session()->flash("splash_on_next", true);
+
             return redirect()->intended(
                 $user->isAdmin() ? route("admin.index") : route("dashboard"),
             );
@@ -141,6 +143,8 @@ class AuthController extends Controller
             ]);
 
             Auth::login($user);
+
+            $request->session()->flash("splash_on_next", true);
 
             // Broadcast new user registration to admins
             event(new UserRegistered($user));
