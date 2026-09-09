@@ -90,7 +90,7 @@
         <i class="fas fa-sign-in-alt"></i> Sign In
       </a>
       <a href="{{ route('register') }}" class="btn btn-primary btn-md mobile-menu-cta">
-        <i class="fas fa-seedling"></i> Get Started Free
+        <i class="fas fa-seedling"></i> Get Started
       </a>
     @endauth
   </div>

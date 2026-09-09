@@ -52,7 +52,7 @@
         <span style="color:var(--text-muted);">{{ ucwords(str_replace('_',' ',$course->category)) }}</span>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
-        @if($course->access_type==='free')   <span class="badge badge-green">FREE</span> @endif
+        @if($course->access_type==='free')   <span class="badge badge-green">Open Access</span> @endif
         @if($course->is_featured)            <span class="badge badge-earth">Bestseller</span> @endif
         @if($course->has_certificate)        <span class="badge badge-sky">🎓 Certificate</span> @endif
         <span class="badge" style="background:var(--bg-card);color:var(--text);border:1px solid var(--border);">{{ ucfirst($course->level) }}</span>
@@ -165,7 +165,7 @@
                 <div style="flex:1;">
                   <div class="lesson-title">{{ $lesson->title }}</div>
                   @if($lesson->is_free_preview && !$enrollment)
-                    <span class="body-xs font-700" style="color:var(--green-600);">FREE PREVIEW</span>
+                    <span class="body-xs font-700" style="color:var(--green-600);">PREVIEW</span>
                   @endif
                 </div>
 
@@ -307,7 +307,7 @@
         <div class="cd-sidebar-body">
           {{-- Price --}}
           @if($course->access_type === 'free')
-            <div class="cd-price" style="color:var(--green-600);">FREE</div>
+            <div class="cd-price" style="color:var(--green-600);">Open Access</div>
           @else
             <div class="cd-price">{{ $course->currency }} {{ number_format($course->price) }}</div>
           @endif
@@ -340,12 +340,12 @@
               <form method="POST" action="{{ route('learn.enroll', $course) }}">
                 @csrf
                 <button type="submit" class="btn btn-primary btn-md" style="width:100%;justify-content:center;margin-bottom:10px;">
-                  <i class="fas fa-plus"></i> Enroll Free — Start Now
+                  <i class="fas fa-plus"></i> Enroll Now — Start Learning
                 </button>
               </form>
             @else
               <a href="{{ route('register') }}" class="btn btn-primary btn-md" style="width:100%;justify-content:center;margin-bottom:10px;">
-                <i class="fas fa-seedling"></i> Create Free Account
+                <i class="fas fa-seedling"></i> Create Account
               </a>
             @endauth
           @else
@@ -356,7 +356,7 @@
               </button>
             @else
               <a href="{{ route('register') }}" class="btn btn-primary btn-md" style="width:100%;justify-content:center;margin-bottom:10px;">
-                <i class="fas fa-seedling"></i> Create Free Account
+                <i class="fas fa-seedling"></i> Create Account
               </a>
             @endauth
           @endif

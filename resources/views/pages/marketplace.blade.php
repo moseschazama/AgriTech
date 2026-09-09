@@ -290,7 +290,7 @@
         {{-- Sell a Product Form --}}
         @auth
         <div class="sell-form-section content-end" id="sell">
-          <h3 style="font-size:clamp(1rem,4vw,1.2rem);font-weight:800;color:var(--text);margin-bottom:6px;word-break:break-word;">🌾 List Your Product — Free</h3>
+          <h3 style="font-size:clamp(1rem,4vw,1.2rem);font-weight:800;color:var(--text);margin-bottom:6px;word-break:break-word;">🌾 List Your Product</h3>
           <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:22px;">Reach 12,000+ buyers across Malawi. Your listing goes live once approved (usually within 24 hours).</p>
           <form method="POST" action="{{ route('marketplace.store') }}" enctype="multipart/form-data">
             @csrf
@@ -364,7 +364,7 @@
               </div>
             </div>
             <div style="margin-top:20px;">
-              <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-plus"></i> List Product Free — Goes Live After Review</button>
+              <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-plus"></i> List Product — Goes Live After Review</button>
             </div>
           </form>
         </div>
@@ -372,8 +372,8 @@
         <div style="background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--radius-lg);padding:32px;text-align:center;margin-top:28px;">
           <i class="fas fa-store" style="font-size:2.5rem;color:var(--primary);margin-bottom:14px;display:block;"></i>
           <h3 style="font-size:1.2rem;margin-bottom:8px;">Start Selling Your Farm Products</h3>
-          <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:20px;">Join 12,000+ farmers already selling on AgriTech Pro — completely free.</p>
-          <a href="{{ route('register') }}" class="btn btn-primary btn-lg"><i class="fas fa-seedling"></i> Create Free Account</a>
+          <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:20px;">Join 12,000+ farmers already selling on AgriTech Pro.</p>
+          <a href="{{ route('register') }}" class="btn btn-primary btn-lg"><i class="fas fa-seedling"></i> Create Account</a>
         </div>
         @endauth
       </div>

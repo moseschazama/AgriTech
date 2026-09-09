@@ -168,7 +168,7 @@ class AuthController extends Controller
             try {
                 $this->sms->send(
                     phone: $user->phone,
-                    message: "Welcome to AgriTech Pro, {$user->first_name}! 🌱 Explore free courses, the marketplace and more at agritechpro.zm",
+                    message: "Welcome to AgriTech Pro, {$user->first_name}! 🌱 Explore courses, the marketplace and more at agritechpro.zm",
                     type: "custom",
                     recipient: $user,
                 );

@@ -94,8 +94,8 @@
         <div style="grid-column:1/-1;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:60px;text-align:center;">
           <i class="fas fa-graduation-cap" style="font-size:3.5rem;color:var(--text-muted);margin-bottom:18px;display:block;opacity:.25;"></i>
           <h3 style="font-size:1.25rem;font-weight:600;letter-spacing:-0.01em;margin-bottom:8px;">No courses enrolled yet</h3>
-          <p style="color:var(--text-muted);margin-bottom:24px;">Enroll in free courses and start growing your farming skills today.</p>
-          <a href="{{ route('learn') }}" class="btn btn-primary btn-lg"><i class="fas fa-graduation-cap"></i> Browse Free Courses</a>
+          <p style="color:var(--text-muted);margin-bottom:24px;">Enroll in courses and start growing your farming skills today.</p>
+          <a href="{{ route('learn') }}" class="btn btn-primary btn-lg"><i class="fas fa-graduation-cap"></i> Browse Courses</a>
         </div>
       @endforelse
     </div>

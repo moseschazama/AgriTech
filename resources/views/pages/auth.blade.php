@@ -150,7 +150,7 @@
       <div class="auth-features">
         <div class="auth-feature">
           <div class="auth-feature-icon"><i class="fas fa-graduation-cap"></i></div>
-          <span>Access 300+ farming courses — many completely free</span>
+          <span>Access 300+ farming courses, certificates and expert guidance</span>
         </div>
         <div class="auth-feature">
           <div class="auth-feature-icon"><i class="fas fa-store"></i></div>
@@ -238,7 +238,7 @@
           <i class="fas fa-sign-in-alt"></i> Sign In
         </button>
         <p style="font-size:.82rem;color:var(--text-muted);text-align:center;">
-          Don't have an account? <a href="#" style="color:var(--primary);font-weight:700;" onclick="switchTab('register')">Create one free →</a>
+          Don't have an account? <a href="#" style="color:var(--primary);font-weight:700;" onclick="switchTab('register')">Create one →</a>
         </p>
       </form>
 
@@ -283,7 +283,7 @@
         @csrf
         <div>
           <div class="auth-heading">Join AgriTech Pro 🌱</div>
-          <div class="auth-subheading">Free forever — no credit card required</div>
+          <div class="auth-subheading">No credit card required</div>
         </div>
 
         @if($errors->any() && old('_form') === 'register')
@@ -379,7 +379,7 @@
         </p>
 
         <button type="submit" class="btn btn-primary btn-md" style="width:100%;justify-content:center;">
-          <i class="fas fa-seedling"></i> Create Free Account
+          <i class="fas fa-seedling"></i> Create Account
         </button>
         <p style="font-size:.82rem;color:var(--text-muted);text-align:center;">
           Already have an account? <a href="#" style="color:var(--primary);font-weight:700;" onclick="switchTab('login')">Sign in →</a>

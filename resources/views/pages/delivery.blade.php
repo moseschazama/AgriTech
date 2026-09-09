@@ -329,7 +329,7 @@
         <p style="color:var(--text-muted);margin-bottom:18px;max-width:400px;margin-left:auto;margin-right:auto;font-size:.88rem;">Sign in to see your active deliveries, live maps, and proximity alerts.</p>
         <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
           <a href="{{ route('login') }}" style="padding:10px 24px;background:var(--primary);color:#fff;border-radius:var(--radius-md);font-weight:600;text-decoration:none;font-size:.88rem;"><i class="fas fa-sign-in-alt"></i> Sign In</a>
-          <a href="{{ route('register') }}" style="padding:10px 24px;border:1px solid var(--border);border-radius:var(--radius-md);font-weight:600;color:var(--text);text-decoration:none;background:var(--bg-card);font-size:.88rem;">Create Free Account</a>
+          <a href="{{ route('register') }}" style="padding:10px 24px;border:1px solid var(--border);border-radius:var(--radius-md);font-weight:600;color:var(--text);text-decoration:none;background:var(--bg-card);font-size:.88rem;">Create Account</a>
         </div>
       </div>
     @endguest

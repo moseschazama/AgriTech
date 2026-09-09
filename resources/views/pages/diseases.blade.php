@@ -83,7 +83,7 @@
         <i class="fas fa-microscope"></i> Crop Health Analysis
       </span>
       <h1 class="page-hero-title">Crop Disease Detection &<br><span class="accent">Prevention Guide</span></h1>
-      <p class="page-hero-desc">Photo-based diagnosis in seconds + full treatment guides for 200+ crop diseases. Free for all farmers.</p>
+      <p class="page-hero-desc">Photo-based diagnosis in seconds + full treatment guides for 200+ crop diseases. Available to all farmers.</p>
       @if(isset($activeAlerts)&&$activeAlerts->count()>0)
         @php $topAlert=$activeAlerts->first(); @endphp
         <div class="page-hero-cta" style="margin-bottom:20px;">
@@ -168,10 +168,10 @@
       @else
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:40px;text-align:center;">
           <i class="fas fa-microscope" style="font-size:3rem;color:var(--primary);margin-bottom:14px;display:block;"></i>
-            <h3 class="heading-sm" style="margin-bottom:8px;">Free Crop Disease Scanner</h3>
-            <p class="body-sm" style="color:var(--text-muted);margin-bottom:20px;">Create a free account to upload photos and get instant crop disease diagnosis.</p>
+            <h3 class="heading-sm" style="margin-bottom:8px;">Crop Disease Scanner</h3>
+            <p class="body-sm" style="color:var(--text-muted);margin-bottom:20px;">Create an account to upload photos and get instant crop disease diagnosis.</p>
           <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-            <a href="{{ route('register') }}" class="btn btn-primary btn-lg"><i class="fas fa-seedling"></i> Create Free Account</a>
+            <a href="{{ route('register') }}" class="btn btn-primary btn-lg"><i class="fas fa-seedling"></i> Create Account</a>
             <a href="{{ route('login') }}" class="btn btn-outline btn-lg">Sign In</a>
           </div>
         </div>
@@ -357,14 +357,14 @@
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:36px;margin-top:48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px;color:var(--text);box-shadow:var(--shadow-md);">
       <div>
         <h3 class="heading-sm" style="font-weight:800;margin-bottom:6px;">📱 Get SMS Disease Outbreak Alerts</h3>
-        <p class="body-sm" style="color:var(--text-muted);max-width:400px;">Be the first to know when disease outbreaks are detected in your district. Free SMS alerts sent directly to your phone.</p>
+        <p class="body-sm" style="color:var(--text-muted);max-width:400px;">Be the first to know when disease outbreaks are detected in your district. SMS alerts sent directly to your phone.</p>
       </div>
       <form method="POST" action="{{ route('diseases.subscribe') }}" style="display:flex;gap:8px;flex-wrap:wrap;">
         @csrf
         <input type="tel" name="phone" class="form-input" placeholder="+265 99 123 4567"
                value="{{ auth()->check() ? Auth::user()->phone : '' }}"
                style="background:rgba(255,255,255,.95);color:var(--text);border:none;min-width:200px;"/>
-        <button type="submit" class="btn btn-primary btn-md"><i class="fas fa-bell"></i> Subscribe Free</button>
+        <button type="submit" class="btn btn-primary btn-md"><i class="fas fa-bell"></i> Subscribe</button>
       </form>
     </div>
 

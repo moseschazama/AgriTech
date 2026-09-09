@@ -312,7 +312,7 @@
           <div style="text-align:center;padding:32px;color:var(--text-muted);">
             <i class="fas fa-graduation-cap" style="font-size:2rem;margin-bottom:10px;display:block;opacity:.3;"></i>
             No courses enrolled yet.
-            <br><a href="{{ route('learn') }}" class="btn btn-primary btn-sm" style="margin-top:12px;">Browse Free Courses</a>
+            <br><a href="{{ route('learn') }}" class="btn btn-primary btn-sm" style="margin-top:12px;">Browse Courses</a>
           </div>
         @endforelse
       </div>

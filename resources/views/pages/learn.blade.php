@@ -59,7 +59,7 @@
       <span class="page-hero-badge">
         <i class="fas fa-graduation-cap"></i> Learning Center
       </span>
-      <h1 class="page-hero-title">Learn Modern Farming — <span class="accent">Free</span></h1>
+      <h1 class="page-hero-title">Learn Modern Farming</h1>
       <p class="page-hero-desc">Expert-led courses on maize farming, irrigation, livestock, agribusiness and disease management. Earn certificates and grow your farm.</p>
       <div class="page-hero-cta">
         <form method="GET" action="{{ route('learn') }}" class="learn-search">
@@ -68,7 +68,7 @@
         </form>
       </div>
       <div class="page-hero-stats">
-        @foreach(['fas fa-play-circle'=>'300+ Courses','fas fa-users'=>'12,000+ Students','fas fa-chalkboard-teacher'=>'50+ Expert Instructors','fas fa-certificate'=>'Free Certificates'] as $icon=>$stat)
+        @foreach(['fas fa-play-circle'=>'300+ Courses','fas fa-users'=>'12,000+ Students','fas fa-chalkboard-teacher'=>'50+ Expert Instructors','fas fa-certificate'=>'Certified Learning'] as $icon=>$stat)
           <div class="page-hero-stat"><i class="{{ $icon }}"></i> {{ $stat }}</div>
         @endforeach
       </div>
@@ -115,7 +115,7 @@
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
         <span class="body-sm" style="color:var(--text-muted);">{{ isset($courses) ? $courses->total() : 0 }} courses found</span>
         <select class="sort-select" onchange="window.location=this.value">
-          @foreach(['popular'=>'Most Popular','newest'=>'Newest','rating'=>'Highest Rated','price'=>'Free First'] as $val=>$label)
+          @foreach(['popular'=>'Most Popular','newest'=>'Newest','rating'=>'Highest Rated','price'=>'Open First'] as $val=>$label)
             <option value="{{ route('learn', array_merge(request()->query(), ['sort'=>$val])) }}" @selected(request('sort',$val==='popular'?'popular':null)===$val)>{{ $label }}</option>
           @endforeach
         </select>
@@ -142,7 +142,7 @@
           <div class="course-thumb" style="background:{{ explode(',', $color)[0] }};">
             <img src="{{ $cover }}" alt="{{ $course->title }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy"/>
             <div class="course-badge-wrap">
-              @if($course->access_type==='free')    <span class="badge badge-green">FREE</span>@endif
+              @if($course->access_type==='free')    <span class="badge badge-green">Open</span>@endif
               @if($course->access_type==='premium') <span class="course-premium-badge"><i class="fas fa-crown"></i> Premium</span>@endif
               @if($course->is_featured)             <span class="badge badge-earth">Bestseller</span>@endif
               @if($isEnrolled&&$enrollment?->status==='completed') <span class="badge badge-green"><i class="fas fa-check"></i> Completed</span>@endif
@@ -167,7 +167,7 @@
             @endif
             <div class="course-footer">
               <div>
-                @if($course->access_type==='free') <div class="course-price course-price-free">FREE</div>
+                @if($course->access_type==='free') <div class="course-price course-price-free">Open</div>
                 @else <div class="course-price">{{ $course->currency }} {{ number_format($course->price) }}</div>@endif
               </div>
               @if($isEnrolled)
@@ -180,13 +180,13 @@
                 @if($course->access_type==='free')
                   <form method="POST" action="{{ route('learn.enroll',$course) }}" style="display:inline;">
                     @csrf
-                    <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Enroll Free</button>
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Enroll Now</button>
                   </form>
                 @else
                   <a href="{{ route('learn.show',$course) }}" class="btn btn-outline btn-sm"><i class="fas fa-eye"></i> Preview</a>
                 @endif
               @else
-                <a href="{{ route('register') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Enroll Free</a>
+                <a href="{{ route('register') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Enroll Now</a>
               @endif
             </div>
           </div>
@@ -210,7 +210,7 @@
     <div style="margin-top:60px;">
       <div style="text-align:center;margin-bottom:32px;">
         <span class="section-label"><i class="fas fa-file-pdf"></i> PDF Guides</span>
-        <h2 class="section-title">Download Free <span>Field Guides</span></h2>
+        <h2 class="section-title">Download <span>Field Guides</span></h2>
         <p class="section-desc">Practical farming guides uploaded by our agricultural experts — print and use in the field, no internet required.</p>
       </div>
 
@@ -233,7 +233,7 @@
             @if($guide->description)
               <div class="body-xs" style="color:var(--text-muted);margin-bottom:10px;">{{ Str::limit($guide->description, 70) }}</div>
             @endif
-            <span class="badge badge-green" style="margin-bottom:14px;display:inline-block;">Free Download</span>
+            <span class="badge badge-green" style="margin-bottom:14px;display:inline-block;">Field Guide</span>
             <div class="body-xs" style="color:var(--text-muted);margin-bottom:10px;">
               <i class="fas fa-download"></i> {{ number_format($guide->download_count) }} downloads
             </div>

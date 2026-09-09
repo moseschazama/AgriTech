@@ -816,8 +816,8 @@ $$('a[href^="#"]').forEach(a => {
     { keys: ['price', 'market', 'sell', 'buy'], reply: '💰 Current market prices: Maize K280/50kg · Tomatoes K120/box · Soybeans K450/50kg · Groundnuts K550/50kg. Updated daily in the Marketplace!' },
     { keys: ['deliver', 'order', 'track', 'shipping'], reply: '🚛 Track your orders in real-time at the Delivery Tracking page. You\'ll also get SMS updates at every stage - from dispatch to arrival.' },
     { keys: ['fertilizer', 'npk', 'compost', 'manure'], reply: '🌱 For most crops: apply NPK (10:20:10) at planting + Urea top-dress 6 weeks later. Organic compost improves soil structure - aim for 2 tonnes/hectare.' },
-    { keys: ['course', 'learn', 'training', 'lesson'], reply: '📚 We have 342 courses! Bestsellers: Modern Maize Farming (free), Drone Precision Ag (K450), Profitable Dairy (K280). Go to the Learning Center to explore all.' },
-    { keys: ['register', 'sign', 'join', 'account'], reply: '✅ Joining is completely free! Click "Get Started Free" at the top of the page. You\'ll get instant access to 50+ free courses and marketplace features.' },
+    { keys: ['course', 'learn', 'training', 'lesson'], reply: '📚 We have 342 courses! Bestsellers: Modern Maize Farming, Drone Precision Ag (K450), Profitable Dairy (K280). Go to the Learning Center to explore all.' },
+    { keys: ['register', 'sign', 'join', 'account'], reply: '✅ Joining is quick! Click "Get Started" at the top of the page. You\'ll get instant access to all courses and marketplace features.' },
     { keys: ['water', 'irrigation', 'drip'], reply: '💧 Drip irrigation can save 40-60% water vs flood irrigation. Your local AgriTech Pro dealer can help size a system for your farm. Check our Irrigation course for full guidance.' },
   ];
   const defaultReply = "🤔 Great question! For detailed help on that topic, try our search bar or visit the Learning Center. You can also call our support line: +260 123 456 78.";

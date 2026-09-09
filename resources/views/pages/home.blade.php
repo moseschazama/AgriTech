@@ -100,7 +100,7 @@
         @endguest
       </div>
       <div class="hero-trust">
-        <div class="hero-trust-item"><i class="fas fa-check-circle"></i> Free to join</div>
+        <div class="hero-trust-item"><i class="fas fa-check-circle"></i> Open to all farmers</div>
         <div class="hero-trust-divider"></div>
         <div class="hero-trust-item"><i class="fas fa-check-circle"></i> Direct farmer sales</div>
         <div class="hero-trust-divider"></div>
@@ -185,7 +185,7 @@
           <div class="course-thumb" style="background:var(--bg-2);">
             <img src="{{ $cImg }}" alt="{{ $course->title }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
             <div class="course-badge-wrap">
-              @if($course->access_type === 'free')     <span class="badge badge-green">FREE</span>@endif
+              @if($course->access_type === 'free')     <span class="badge badge-green">Open</span>@endif
               @if($course->access_type === 'premium')  <span class="course-premium-badge"><i class="fas fa-crown"></i> Premium</span>@endif
               @if($course->is_featured)                <span class="badge badge-earth">Bestseller</span>@endif
               @if($course->has_certificate)            <span class="badge badge-sky">🎓 Certificate</span>@endif
@@ -202,7 +202,7 @@
             <div class="course-footer">
               <div>
                 @if($course->access_type === 'free')
-                  <div class="course-price course-price-free">FREE</div>
+                  <div class="course-price course-price-free">Open</div>
                 @else
                   <div class="course-price">{{ $course->currency }} {{ number_format($course->price) }}</div>
                 @endif
@@ -319,11 +319,11 @@
         <div style="width:52px;height:52px;border-radius:14px;background:var(--green-100);color:var(--green-700);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🛒</div>
         <div>
           <div style="font-size:1.0625rem;font-weight:800;color:var(--text);margin-bottom:4px;">Are you a farmer or agri-business?</div>
-          <div style="font-size:.86rem;color:var(--text-muted);">List your products for free and reach {{ number_format($stats['total_farmers']) }} registered farmers across Malawi.</div>
+          <div style="font-size:.86rem;color:var(--text-muted);">List your products and reach {{ number_format($stats['total_farmers']) }} registered farmers across Malawi.</div>
         </div>
       </div>
       <div style="display:flex;gap:12px;flex-wrap:wrap;">
-        <a href="{{ route('register') }}" class="btn btn-primary btn-md"><i class="fas fa-plus"></i> Start Selling Free</a>
+        <a href="{{ route('register') }}" class="btn btn-primary btn-md"><i class="fas fa-plus"></i> Start Selling</a>
         <a href="{{ route('marketplace') }}" class="btn btn-outline btn-md"><i class="fas fa-shopping-basket"></i> Browse All</a>
       </div>
     </div>
@@ -486,7 +486,7 @@
         </div>
         <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:36px;">
           <a href="{{ route('diseases') }}" class="btn btn-lg" style="background:#ef4444;color:#fff;box-shadow:0 4px 20px rgba(239,68,68,.4);">
-            <i class="fas fa-microscope"></i> Detect Disease Now — Free
+            <i class="fas fa-microscope"></i> Detect Disease Now
           </a>
           <a href="{{ route('diseases') }}" class="btn btn-outline btn-lg" style="color:#fff;border-color:#94a3b8;">
             <i class="fas fa-book"></i> Disease Library
@@ -499,8 +499,8 @@
           </div>
           <div style="width:1px;height:36px;background:rgba(255,255,255,.15);"></div>
           <div>
-            <div style="font-size:1.5rem;font-weight:800;color:#fff;">Free</div>
-            <div style="font-size:.72rem;color:rgba(255,255,255,.55);margin-top:2px;">To Detect & Learn</div>
+            <div style="font-size:1.5rem;font-weight:800;color:#fff;">Instant</div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.55);margin-top:2px;">Detection & Diagnosis</div>
           </div>
         </div>
       </div>

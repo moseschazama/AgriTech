@@ -100,7 +100,7 @@
       <div class="order-summary">
         <div class="heading-sm font-800" style="margin-bottom:18px;">Order Summary</div>
         <div class="summary-row"><span>Subtotal ({{ count($items) }} items)</span><span>MWK {{ number_format($total) }}</span></div>
-        <div class="summary-row" id="deliveryFeeRow"><span>Delivery fee</span><span id="deliveryFeeDisplay" style="font-weight:600;">{{ $deliveryFee > 0 ? 'MWK '.number_format($deliveryFee) : 'Free' }}</span></div>
+        <div class="summary-row" id="deliveryFeeRow"><span>Delivery fee</span><span id="deliveryFeeDisplay" style="font-weight:600;">{{ $deliveryFee > 0 ? 'MWK '.number_format($deliveryFee) : 'Included' }}</span></div>
         <div class="summary-row total"><span>Total</span><span id="grandTotalDisplay" style="color:var(--primary);">MWK {{ number_format($grandTotal) }}</span></div>
 
         <form method="POST" action="{{ route('checkout') }}" id="checkoutForm" style="margin-top:20px;">
@@ -190,7 +190,7 @@ function updateDeliveryFee() {
   const feeEl = document.getElementById('deliveryFeeDisplay');
   const totalEl = document.getElementById('grandTotalDisplay');
   const btn = document.querySelector('.btn-primary.btn-lg');
-  feeEl.textContent = fee > 0 ? 'MWK ' + fee.toLocaleString() : 'Free';
+  feeEl.textContent = fee > 0 ? 'MWK ' + fee.toLocaleString() : 'Included';
   totalEl.textContent = 'MWK ' + total.toLocaleString();
   if (btn) btn.innerHTML = '<i class="fas fa-lock"></i> Place Order — MWK ' + total.toLocaleString();
 }

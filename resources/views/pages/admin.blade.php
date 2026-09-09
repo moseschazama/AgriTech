@@ -482,7 +482,7 @@
             <input type="text" name="instructor_name" class="form-input" placeholder="e.g. Dr. James Mwale" required/>
             <div style="font-size:.73rem;color:var(--text-muted);margin-top:4px;">Created automatically if not yet in the system.</div>
           </div>
-          <div class="form-group"><label class="form-label">Price (MWK) — 0 = Free</label><input type="number" name="price" class="form-input" placeholder="0" min="0" value="0"/></div>
+          <div class="form-group"><label class="form-label">Price (MWK) — 0 = Open Access</label><input type="number" name="price" class="form-input" placeholder="0" min="0" value="0"/></div>
           <div class="form-group"><label class="form-label">Description *</label><textarea name="description" class="form-input" rows="3" required placeholder="What will farmers learn?"></textarea></div>
           <div class="form-group"><label class="form-label">Thumbnail</label><input type="file" name="thumbnail" class="form-input" accept="image/*" style="padding:8px;"/></div>
           <button type="submit" class="btn btn-primary btn-md" style="width:100%;justify-content:center;"><i class="fas fa-plus"></i> Create Course (Draft)</button>
@@ -572,7 +572,7 @@
                         <input type="file" name="pdf_file" accept="application/pdf" class="form-input lesson-pdf-field" style="font-size:.78rem;padding:6px;display:none;"/>
                       </div>
                       <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
-                        <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;cursor:pointer;"><input type="checkbox" name="is_free_preview" value="1" style="accent-color:var(--primary);width:auto;"/> Free preview</label>
+                        <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;cursor:pointer;"><input type="checkbox" name="is_free_preview" value="1" style="accent-color:var(--primary);width:auto;"/> Open preview</label>
                         <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;cursor:pointer;"><input type="checkbox" name="is_published" value="1" checked style="accent-color:var(--primary);width:auto;"/> Published immediately</label>
                       </div>
                       <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add Lesson</button>
@@ -837,7 +837,7 @@
           <div style="font-size:.82rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">Quick Templates</div>
           @foreach([
             ['Disease Alert','⚠️ DISEASE ALERT: {disease} detected in {district}. Action: {action}. agritechpro.mw/diseases'],
-            ['New Course',   '🌱 New free course: "{title}" now available at agritechpro.mw/learn'],
+            ['New Course',   '🌱 New course: "{title}" now available at agritechpro.mw/learn'],
             ['Weather',      '🌧️ Weather Warning: Heavy rain expected in {district}. Protect your crops.'],
             ['Market Price', '💰 Maize price K{price}/50kg in {district} today. agritechpro.mw/marketplace'],
           ] as [$name,$tpl])

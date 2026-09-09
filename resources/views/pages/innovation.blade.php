@@ -430,9 +430,9 @@
         <div style="text-align:center;padding:32px;background:var(--bg-2);border-radius:var(--radius-lg);">
           <div style="font-size:3rem;margin-bottom:14px;">🌱</div>
           <h3 style="font-size:1.25rem;font-weight:600;letter-spacing:-0.01em;margin-bottom:8px;">Join to Submit Your Innovation</h3>
-          <p style="font-size:.8125rem;color:var(--text-muted);margin-bottom:20px;">Create a free account to share your farming innovations with 12,000+ farmers across Africa.</p>
+          <p style="font-size:.8125rem;color:var(--text-muted);margin-bottom:20px;">Create an account to share your farming innovations with 12,000+ farmers across Africa.</p>
           <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-            <a href="{{ route('register') }}" class="btn btn-primary btn-lg"><i class="fas fa-seedling"></i> Create Free Account</a>
+            <a href="{{ route('register') }}" class="btn btn-primary btn-lg"><i class="fas fa-seedling"></i> Create Account</a>
             <a href="{{ route('login') }}" class="btn btn-outline btn-lg">Sign In</a>
           </div>
         </div>
