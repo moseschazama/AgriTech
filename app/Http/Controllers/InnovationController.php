@@ -39,7 +39,7 @@ class InnovationController extends Controller
         $pastWinners = Innovation::whereNotNull('winner_position')
             ->with('user')
             ->orderByDesc('won_at')
-            ->orderByRaw('FIELD(winner_position, 1, 2, 3)')
+            ->orderByRaw('CASE winner_position WHEN 1 THEN 0 WHEN 2 THEN 1 WHEN 3 THEN 2 ELSE 3 END')
             ->limit(3)
             ->get();
 

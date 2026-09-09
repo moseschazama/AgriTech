@@ -86,9 +86,9 @@
         <span class="underline-word">decisions</span>
       </h1>
       <p class="hero-desc">
-        AgriTech Pro brings district-level weather forecasts, practical farming courses,
-        a marketplace without middlemen and crop disease detection into one place.
-        Ask less, act more — with the right information, at the right time.
+        District-level weather forecasts, hands-on farming courses, a marketplace
+        that connects you straight to the buyer, and crop disease detection.
+        One place, built for how Malawian farmers actually work.
       </p>
       <div class="hero-cta">
         @guest
@@ -165,7 +165,7 @@
     <div class="section-header">
       <span class="section-label"><i class="fas fa-graduation-cap"></i> Learning Center</span>
       <h2 class="section-title">Learn From The <span>Best Experts</span></h2>
-      <p class="section-desc">Modern farming techniques, agribusiness skills and technology training — taught by experienced agricultural professionals.</p>
+      <p class="section-desc">Hands-on courses in modern techniques, agribusiness and farm technology, taught by working agricultural professionals.</p>
     </div>
     <div class="courses-filter" id="coursesFilter">
       <button class="filter-btn active" data-filter="all">All Courses</button>
@@ -245,7 +245,7 @@
       <div>
         <span class="section-label"><i class="fas fa-store"></i> Agri Marketplace</span>
         <h2 class="section-title">Fresh From the <span>Farm</span></h2>
-        <p class="section-desc">Buy directly from verified farmers — no middlemen. Seeds, fertilizers, livestock, fresh produce and machinery.</p>
+        <p class="section-desc">Fresh produce, seeds, fertilizers, livestock and machinery, sold straight by the farmers who grow them.</p>
       </div>
       <a href="{{ route('marketplace') }}" class="btn btn-outline btn-md">View All Products <i class="fas fa-arrow-right"></i></a>
     </div>
@@ -463,8 +463,8 @@
           Your Harvest
         </h2>
         <p class="disease-cta-desc">
-          Upload a photo of your sick plant and the analyzer identifies the disease in minutes —
-          then gives you the treatment steps, recommended chemicals and prevention guide.
+          Upload a photo of the affected plant. The analyzer identifies the disease in minutes
+          and gives you treatment steps, recommended chemicals and a prevention guide.
         </p>
         <div class="disease-feat-grid" style="margin-bottom:32px;">
           @foreach([
@@ -493,13 +493,15 @@
           </a>
         </div>
         <div class="disease-stats-row">
-          @foreach(['92%'=>'Detection Accuracy','200+'=>'Diseases in Library','2 sec'=>'Photo Analysis','Free'=>'Always Free'] as $val => $lbl)
-            <div>
-              <div style="font-size:1.5rem;font-weight:800;color:#fff;">{{ $val }}</div>
-              <div style="font-size:.72rem;color:rgba(255,255,255,.55);margin-top:2px;">{{ $lbl }}</div>
-            </div>
-            @if(!$loop->last)<div style="width:1px;height:36px;background:rgba(255,255,255,.15);"></div>@endif
-          @endforeach
+          <div>
+            <div style="font-size:1.5rem;font-weight:800;color:#fff;">{{ number_format($diseaseCount) }}</div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.55);margin-top:2px;">Diseases Covered</div>
+          </div>
+          <div style="width:1px;height:36px;background:rgba(255,255,255,.15);"></div>
+          <div>
+            <div style="font-size:1.5rem;font-weight:800;color:#fff;">Free</div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.55);margin-top:2px;">To Detect & Learn</div>
+          </div>
         </div>
       </div>
       {{-- Right --}}
@@ -520,8 +522,8 @@
                   <div style="font-size:.55rem;color:#fca5a5;">Maize · High Risk</div>
                 </div>
                 <div style="text-align:center;">
-                  <div style="font-size:.9rem;font-weight:800;color:#4ade80;">94%</div>
-                  <div style="font-size:.52rem;color:rgba(255,255,255,.5);">match</div>
+                  <div style="font-size:.7rem;font-weight:800;color:#4ade80;"><i class="fas fa-check"></i></div>
+                  <div style="font-size:.52rem;color:rgba(255,255,255,.5);">identified</div>
                 </div>
               </div>
               <div style="display:flex;gap:5px;margin:0 8px;">
@@ -531,7 +533,7 @@
             </div>
           </div>
           <div style="position:absolute;top:-14px;right:-20px;background:#fff;border-radius:20px;padding:6px 12px;display:flex;align-items:center;gap:5px;font-size:.75rem;font-weight:700;color:var(--text);box-shadow:0 4px 16px rgba(0,0,0,.3);">
-            <i class="fas fa-check-circle" style="color:#4ade80;"></i> 94% Accurate
+            <i class="fas fa-book-medical" style="color:#16a34a;"></i> Step-by-step treatment guide
           </div>
         </div>
         {{-- Crop protection supplies --}}
@@ -546,37 +548,6 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
-{{-- ── SUCCESS STORIES ── --}}
-<section class="section">
-  <div class="container">
-    <div class="section-header center">
-      <span class="section-label"><i class="fas fa-star"></i> Success Stories</span>
-      <h2 class="section-title">Farmers Who <span>Transformed</span> Their Lives</h2>
-    </div>
-    <div class="stories-grid">
-      @foreach([
-        ['initials'=>'CM','bg'=>'#16a34a','name'=>'Charles Mwale','role'=>'Maize Farmer, Eastern Province','text'=>'AgriTech Pro\'s drone farming course completely changed how I manage my 20-hectare maize farm. I\'ve reduced input costs by 35% and increased yield by over 60% in just one season.','result'=>'+60% Yield','stars'=>5],
-        ['initials'=>'GN','bg'=>'#ea580c','name'=>'Grace Nkosi','role'=>'Vegetable Farmer, Southern Province','text'=>'The marketplace connected me directly to buyers in Lusaka. No more middlemen taking most of my profit. My income tripled within 4 months of joining the platform.','result'=>'3x Income','stars'=>5],
-        ['initials'=>'PT','bg'=>'#0284c7','name'=>'Peter Tembo','role'=>'Irrigation Innovator, Copperbelt','text'=>'I submitted my rainwater harvesting innovation, won the K10,000 competition prize, and now three other farmers in my district are using the same system.','result'=>'K10K Won','stars'=>5],
-      ] as $story)
-        <div class="story-card" data-reveal>
-          <div class="story-quote-icon">"</div>
-          <p class="story-text">{{ $story['text'] }}</p>
-          <div class="story-author">
-            <div class="avatar avatar-md" style="background:{{ $story['bg'] }};color:#fff;">{{ $story['initials'] }}</div>
-            <div class="story-author-info">
-              <strong>{{ $story['name'] }}</strong>
-              <span>{{ $story['role'] }}</span>
-              <div class="stars" style="margin-top:3px;color:#f59e0b;">{{ str_repeat('★',$story['stars']) }}</div>
-            </div>
-          </div>
-          <div class="story-result">{{ $story['result'] }}</div>
-        </div>
-      @endforeach
     </div>
   </div>
 </section>

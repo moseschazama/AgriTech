@@ -9,6 +9,7 @@ use App\Models\Innovation;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\DiseaseAlert;
+use App\Models\Disease;
 use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
@@ -52,8 +53,10 @@ class HomeController extends Controller
             ->latest()
             ->first();
 
+        $diseaseCount = Disease::count();
+
         return view('pages.home', compact(
-            'stats', 'featuredCourses', 'featuredProducts', 'topInnovations', 'activeAlert'
+            'stats', 'featuredCourses', 'featuredProducts', 'topInnovations', 'activeAlert', 'diseaseCount'
         ));
     }
 }

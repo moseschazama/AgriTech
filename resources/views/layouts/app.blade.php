@@ -69,6 +69,14 @@
     #toast-container .toast.toast-info{border-left:4px solid var(--info);}
     #toast-container .toast.toast-info .toast-icon{color:var(--info);}
     @media(max-width:480px){#toast-container{right:12px;left:12px;max-width:100%;bottom:16px;}#toast-container .toast{padding:12px 14px;}}
+    /* ── Back to Top ── */
+    #backToTop{position:fixed;bottom:24px;right:24px;width:46px;height:46px;border-radius:50%;border:none;background:var(--green-600);color:#fff;font-size:1rem;cursor:pointer;box-shadow:0 4px 16px rgba(22,163,74,.3);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s ease,transform .2s ease,visibility .2s;z-index:900;}
+    #backToTop.show{opacity:1;visibility:visible;transform:none;}
+    #backToTop:hover{background:var(--green-700);box-shadow:0 6px 20px rgba(22,163,74,.4);}
+    [data-theme="dark"] #backToTop{background:var(--green-500);}
+    [data-theme="dark"] #backToTop:hover{background:var(--green-600);}
+    #backToTop:focus-visible{outline:3px solid var(--primary);outline-offset:3px;}
+    @media(max-width:639px){#backToTop{bottom:20px;right:16px;width:42px;height:42px;}}
     /* ── Button Loading States ── */
     .btn-spinner{animation:fa-spin 1s linear infinite;margin-right:6px;}
     button:disabled,.btn:disabled{opacity:.6;cursor:not-allowed;pointer-events:auto;}
@@ -104,7 +112,7 @@
     @keyframes loaderProgress{0%{transform:translateX(-100%)}100%{transform:translateX(400%)}}
   </style>
 </head>
-<body>
+<body id="top">
 
 {{-- Page Loader — removed by global.js after initial load --}}
 <div id="page-loader">
@@ -145,6 +153,11 @@
 
 @include('partials.chatbot')
 
+{{-- Back to top floating button — shown after scrolling --}}
+<button id="backToTop" type="button" title="Back to top" aria-label="Back to top">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
 <div id="toast-container"></div>
 
 @auth
@@ -183,6 +196,24 @@
       };
       setTimeout(check, 300);
     }
+  })();
+</script>
+
+<script>
+  // Back to top — show after scrolling, smooth-scroll to top on click
+  (function(){
+    var btn = document.getElementById('backToTop');
+    if (!btn) return;
+    var toggle = function(){
+      var y = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+      btn.classList.toggle('show', y > 400);
+    };
+    window.addEventListener('scroll', toggle, { passive: true });
+    toggle();
+    btn.addEventListener('click', function(){
+      try { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      catch (e) { window.scrollTo(0, 0); }
+    });
   })();
 </script>
 </body>

@@ -75,7 +75,7 @@ class Innovation extends Model
     public function scopeWinners($query)
     {
         return $query->whereNotNull('winner_position')
-            ->orderByRaw('FIELD(winner_position, 1, 2, 3)');
+            ->orderByRaw('CASE winner_position WHEN 1 THEN 0 WHEN 2 THEN 1 WHEN 3 THEN 2 ELSE 3 END');
     }
 
     // ── Business Logic ────────────────────────────────────────────────
