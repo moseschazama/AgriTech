@@ -62,6 +62,7 @@
 }
 
 /* Hero content */
+.hero-inner {
     position: relative;
     z-index: 1;
     max-width: 1340px;
