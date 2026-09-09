@@ -1,9 +1,9 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Order Confirmed — AgriTech Pro')
 @section('extra_css')
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>
 <style>
-.confirm-hero{background:linear-gradient(135deg,#f8fafc,#f0fdf4,#f8fafc);padding:56px 0;color:var(--text);text-align:center;}
+.confirm-hero{background:#f6faf5;padding:56px 0;color:var(--text);text-align:center;}
 .confirm-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:32px;max-width:660px;margin:0 auto;}
 .step-row{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);}
 .step-row:last-child{border-bottom:none;}
@@ -39,7 +39,7 @@
     @endphp
 
     @if($paymentMethod === 'airtel_money')
-      <div class="pay-box" style="background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1.5px solid #fb923c;">
+      <div class="pay-box" style="background:#fff7ed;border:1.5px solid #fb923c;">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
           <div style="width:48px;height:48px;background:#ea580c;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;">📱</div>
           <div><div class="heading-xs" style="color:#9a3412;">Pay via Airtel Money</div><div class="body-sm" style="color:#c2410c;">Complete payment now to confirm your order</div></div>
@@ -56,7 +56,7 @@
       </div>
 
     @elseif($paymentMethod === 'tnm_mpamba')
-      <div class="pay-box" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px solid #3b82f6;">
+      <div class="pay-box" style="background:#eff6ff;border:1.5px solid #3b82f6;">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
           <div style="width:48px;height:48px;background:#1d4ed8;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;">📱</div>
           <div><div class="heading-xs" style="color:#1e3a8a;">Pay via TNM Mpamba</div><div class="body-sm" style="color:#1d4ed8;">Complete payment to confirm your order</div></div>
@@ -69,7 +69,7 @@
       </div>
 
     @elseif($paymentMethod === 'mtn_momo')
-      <div class="pay-box" style="background:linear-gradient(135deg,#fefce8,#fef9c3);border:1.5px solid #ca8a04;">
+      <div class="pay-box" style="background:#fefce8;border:1.5px solid #ca8a04;">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
           <div style="width:48px;height:48px;background:#ca8a04;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;">📱</div>
           <div><div class="heading-xs" style="color:#713f12;">Pay via MTN MoMo</div><div class="body-sm" style="color:#92400e;">Complete payment to confirm your order</div></div>

@@ -1,9 +1,9 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Track Order {{ $delivery->tracking_number }} — AgriTech Pro')
 @section('extra_css')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
-.track-hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#0f172a 100%);padding:36px 0;color:#fff;}
+.track-hero{background:#0f172a;padding:36px 0;color:#fff;}
 .track-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:24px;margin-bottom:18px;}
 .map-container{border-radius:var(--radius-lg);overflow:hidden;height:380px;border:1px solid var(--border);position:relative;}
 #deliveryMap{width:100%;height:100%;z-index:1;}
@@ -12,7 +12,7 @@
 @keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:.4;}}
 .map-overlay-eta{position:absolute;bottom:12px;right:12px;z-index:1000;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 16px;box-shadow:0 4px 12px rgba(0,0,0,.15);text-align:right;}
 .progress-outer{background:var(--bg-2);border-radius:20px;height:8px;overflow:hidden;margin:12px 0;}
-.progress-inner{height:8px;background:linear-gradient(90deg,var(--primary),#4ade80);border-radius:20px;transition:width .8s ease;}
+.progress-inner{height:8px;background:var(--primary);border-radius:20px;transition:width .8s ease;}
 .steps-row{display:flex;justify-content:space-between;gap:2px;margin-top:14px;}
 .step-item{flex:1;text-align:center;position:relative;}
 .step-circle{width:32px;height:32px;border-radius:50%;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;font-size:.7rem;border:2px solid var(--border);background:var(--bg-card);color:var(--text-muted);transition:all .3s;}
@@ -268,7 +268,7 @@
         @if($delivery->driver)
           @php $driverPhone=$delivery->driver->user?->phone; @endphp
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border);">
-            <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#1e3a5f,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;">
+            <div style="width:40px;height:40px;border-radius:50%;background:#1e3a5f;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;">
               {{ substr($delivery->driver->user->first_name??'D',0,1) }}{{ substr($delivery->driver->user->last_name??'R',0,1) }}
             </div>
             <div style="min-width:0;">

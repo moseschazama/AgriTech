@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Sign In / Register — AgriTech Pro')
 
 @php
@@ -16,7 +16,7 @@
       min-height: calc(100vh - var(--nav-h));
     }
     .auth-left {
-      background: linear-gradient(145deg, #1e293b, #334155, #1e293b);
+      background: #1e293b;
       display: flex; flex-direction: column;
       justify-content: center; padding: 60px 64px;
       position: relative; overflow: hidden;

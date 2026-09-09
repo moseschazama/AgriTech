@@ -1,10 +1,10 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'My Courses — AgriTech Pro')
 @section('extra_css')
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>
 <style>
 .progress-bar-outer{background:var(--bg-2);border-radius:20px;height:7px;overflow:hidden;margin:8px 0;}
-.progress-bar-inner{height:7px;background:linear-gradient(90deg,var(--primary),#4ade80);border-radius:20px;}
+.progress-bar-inner{height:7px;background:var(--primary);border-radius:20px;}
 .course-enroll-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all .2s;}
 .course-enroll-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
 .my-courses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
@@ -50,7 +50,7 @@
         @endphp
         <div class="course-enroll-card">
           {{-- Thumb --}}
-          <div style="height:140px;background:linear-gradient(135deg,{{ $bg }});display:flex;align-items:center;justify-content:center;font-size:3.5rem;position:relative;">
+          <div style="height:140px;background:{{ explode(',', $bg)[0] }};display:flex;align-items:center;justify-content:center;font-size:3.5rem;position:relative;">
             {{ $emoji }}
             @if($enrollment->status === 'completed')
               <span style="position:absolute;top:10px;right:10px;background:var(--primary);color:#fff;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:20px;">✓ Completed</span>

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Delivery Tracking — AgriTech Pro')
 @section('extra_css')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -8,7 +8,7 @@
 .delivery-hero{--hero-glow-1:rgba(59,130,246,0.07);--hero-glow-2:rgba(59,130,246,0.04);--hero-orb:rgba(59,130,246,0.06);--hero-badge-bg:#eff6ff;--hero-badge-fg:#1d4ed8;--hero-badge-border:#bfdbfe;--hero-accent-color:#60a5fa;--hero-overlay-start:rgba(8,18,38,0.78);--hero-overlay-mid:rgba(10,22,45,0.58);--hero-overlay-end:rgba(5,15,35,0.72);--hero-overlay-accent:rgba(96,165,250,0.15);}
 .delivery-hero.page-hero-image{background-image:url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1920&q=80');}
 .delivery-hero.page-hero-image .page-hero-badge{background:rgba(96,165,250,0.2);border-color:rgba(96,165,250,0.35);color:#93c5fd;}
-.delivery-hero.page-hero-image .page-hero-title .accent{background:linear-gradient(135deg,#60a5fa,#38bdf8);-webkit-background-clip:text;background-clip:text;}
+.delivery-hero.page-hero-image .page-hero-title .accent{color:#60a5fa;}
 .delivery-hero.page-hero-image .page-hero-pill i,.delivery-hero.page-hero-image .page-hero-stat i{color:#60a5fa;}
 .track-search{display:flex;gap:0;max-width:520px;margin:0 auto;}
 .track-search input{flex:1;padding:12px 16px;border:none;border-radius:var(--radius-md) 0 0 var(--radius-md);font-size:.88rem;background:rgba(255,255,255,.95);color:var(--text);}
@@ -22,7 +22,7 @@
 .dc-map-overlay{position:absolute;top:8px;left:8px;z-index:1000;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:8px 12px;box-shadow:0 2px 8px rgba(0,0,0,.12);font-size:.78rem;font-weight:600;display:flex;align-items:center;gap:8px;}
 .dc-map-overlay .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .dc-progress{background:var(--bg-2);border-radius:20px;height:7px;margin-bottom:16px;overflow:hidden;}
-.dc-progress-fill{height:7px;background:linear-gradient(90deg,var(--primary),#4ade80);border-radius:20px;transition:width .8s ease;}
+.dc-progress-fill{height:7px;background:var(--primary);border-radius:20px;transition:width .8s ease;}
 .dc-timeline{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;position:relative;overflow-x:auto;padding-bottom:4px;gap:2px;}
 .dc-timeline::before{content:'';position:absolute;top:16px;left:6%;right:6%;height:2px;background:var(--border);z-index:0;}
 .dc-step{display:flex;flex-direction:column;align-items:center;gap:6px;z-index:1;flex:1;min-width:56px;}
@@ -220,7 +220,7 @@
               <div class="dc-info-block-title"><i class="fas fa-user" style="color:var(--primary);"></i> Driver</div>
               @if($delivery->driver_name)
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                  <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1e3a5f,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;">
+                  <div style="width:36px;height:36px;border-radius:50%;background:#1e3a5f;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;">
                     {{ strtoupper(substr($delivery->driver_name,0,1)) }}{{ strtoupper(substr(str_word_count($delivery->driver_name,1),-1)[0]??'D') }}
                   </div>
                   <div>

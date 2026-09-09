@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Agri Marketplace — AgriTech Pro')
 @section('extra_css')
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>
@@ -215,7 +215,7 @@
               $wishlisted=auth()->check()&&$product->wishlistedBy->isNotEmpty();
             @endphp
             <div class="product-card">
-              <div class="product-thumb" style="background:linear-gradient(135deg,{{ $pColor }});">
+              <div class="product-thumb" style="background:{{ explode(',', $pColor)[0] }};">
                 @if($product->thumbnail)
                   <img src="{{ asset('storage/'.$product->thumbnail) }}" alt="{{ $product->name }}" style="width:100%;height:100%;object-fit:cover;"/>
                 @else

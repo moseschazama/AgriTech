@@ -1,10 +1,10 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', $disease->name . ' — Treatment & Prevention Guide | AgriTech Pro')
 @section('extra_css')
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>
 <link rel="stylesheet" href="{{ asset('css/home.css') }}"/>
 <style>
-.detail-hero{background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;padding:56px 0 44px;}
+.detail-hero{background:#0f172a;color:#fff;padding:56px 0 44px;}
 .breadcrumb{font-size:.78rem;color:#94a3b8;margin-bottom:14px;}
 .breadcrumb a{color:#4ade80;text-decoration:none;}
 .severity-badge{font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:var(--radius-full);}

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Farmer Dashboard — AgriTech Pro')
 @section('extra_css')
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>
@@ -54,8 +54,8 @@
 .course-progress-item{padding:12px 0;border-bottom:1px solid var(--border);}
 .course-progress-item:last-child{border-bottom:none;}
 .progress-bar-wrap{background:var(--bg-2);border-radius:var(--radius-full);height:6px;margin:8px 0 4px;overflow:hidden;}
-.progress-fill-bar{height:6px;background:linear-gradient(90deg,var(--primary),var(--primary-light));border-radius:var(--radius-full);transition:width .5s ease;}
-.weather-widget-card{background:linear-gradient(135deg,#0c4a2e,#166534);border-radius:var(--radius-lg);padding:20px;color:#fff;margin-bottom:18px;}
+.progress-fill-bar{height:6px;background:var(--primary);border-radius:var(--radius-full);transition:width .5s ease;}
+.weather-widget-card{background:#0c4a2e;border-radius:var(--radius-lg);padding:20px;color:#fff;margin-bottom:18px;}
 .mobile-sidebar-btn{display:none;position:fixed;bottom:20px;right:20px;width:48px;height:48px;background:var(--primary);color:#fff;border-radius:50%;border:none;font-size:1.2rem;cursor:pointer;z-index:200;box-shadow:var(--shadow-green);}
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%);z-index:300;width:280px;box-shadow:var(--shadow-xl);}.sidebar.open{transform:translateX(0);}
@@ -79,7 +79,7 @@
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div class="sidebar-user">
-      <div class="avatar avatar-md" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-size:.8rem;">{{ Auth::user()->initials }}</div>
+      <div class="avatar avatar-md" style="background:#16a34a;color:#fff;font-size:.8rem;">{{ Auth::user()->initials }}</div>
       <div class="sidebar-user-info">
         <strong>{{ Auth::user()->full_name }}</strong>
         <span>{{ Auth::user()->district ?? 'AgriTech Pro' }}</span>

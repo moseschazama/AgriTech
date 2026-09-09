@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Innovation Hub — AgriTech Pro')
 @section('extra_css')
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>
@@ -7,7 +7,7 @@
 .innov-hero{--hero-glow-1:rgba(99,102,241,0.07);--hero-glow-2:rgba(22,163,74,0.04);--hero-orb:rgba(99,102,241,0.06);--hero-badge-bg:rgba(99,102,241,0.1);--hero-badge-fg:#6366f1;--hero-badge-border:rgba(99,102,241,0.2);--hero-accent-color:#6366f1;--hero-overlay-start:rgba(15,12,35,0.78);--hero-overlay-mid:rgba(20,15,45,0.55);--hero-overlay-end:rgba(10,8,30,0.72);--hero-overlay-accent:rgba(129,140,248,0.15);}
 .innov-hero.page-hero-image{background-image:url('https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=1920&q=80');}
 .innov-hero.page-hero-image .page-hero-badge{background:rgba(129,140,248,0.2);border-color:rgba(129,140,248,0.35);color:#c7d2fe;}
-.innov-hero.page-hero-image .page-hero-title .accent{background:linear-gradient(135deg,#a5b4fc,#818cf8);-webkit-background-clip:text;background-clip:text;}
+.innov-hero.page-hero-image .page-hero-title .accent{color:#a5b4fc;}
 .innov-hero.page-hero-image .page-hero-pill i,.innov-hero.page-hero-image .page-hero-stat i{color:#a5b4fc;}
 .innov-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
 .innov-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all .2s;}
@@ -24,7 +24,7 @@
 .innov-farmer > div:last-child div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .vote-btn{display:flex;align-items:center;gap:6px;background:var(--bg-2);border:1.5px solid var(--border);border-radius:var(--radius-full);padding:6px 14px;font-size:.8125rem;font-weight:700;color:var(--text);cursor:pointer;transition:all .15s;flex-shrink:0;}
 .vote-btn:hover,.vote-btn.voted{background:var(--primary);border-color:var(--primary);color:#fff;}
-.comp-card{background:linear-gradient(135deg,var(--green-50),var(--green-100),var(--green-50));border:1px solid var(--green-200);border-radius:var(--radius-xl);padding:36px;color:var(--text);position:relative;overflow:hidden;margin-bottom:36px;}
+.comp-card{background:var(--green-50);border:1px solid var(--green-200);border-radius:var(--radius-xl);padding:36px;color:var(--text);position:relative;overflow:hidden;margin-bottom:36px;}
 .comp-card::before{content:'🏆';position:absolute;right:32px;top:50%;transform:translateY(-50%);font-size:6rem;opacity:.12;}
 .prize-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 20px;text-align:center;}
 .submit-form-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:36px;margin-top:40px;}
@@ -129,7 +129,7 @@
     @if(isset($leaders) && $leaders->count() > 0)
     <div style="margin-bottom:32px;">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
-        <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#fef9c3,#fde68a);display:flex;align-items:center;justify-content:center;font-size:1.05rem;">🏆</div>
+        <div style="width:38px;height:38px;border-radius:12px;background:#fefce8;display:flex;align-items:center;justify-content:center;font-size:1.05rem;">🏆</div>
         <div>
           <h3 style="font-size:1.1rem;font-weight:700;letter-spacing:-0.01em;color:var(--text);margin-bottom:2px;">Community Leaderboard</h3>
           <p style="font-size:.8rem;color:var(--text-muted);">The people leading right now — cast your vote to help crown the next champion.</p>
@@ -147,7 +147,7 @@
             $lVoted=auth()->check()&&Auth::user()->hasVotedFor($ld);
           @endphp
           <div style="background:var(--bg-card);border:2px solid {{ $gold?$rankBorders[0] : 'var(--border)' }};border-radius:var(--radius-xl);overflow:hidden;{{ $gold?'box-shadow:0 18px 40px -18px rgba(245,158,11,.45);':'' }} transform:{{ $gold?'translateY(-8px)':'translateY(0)' }};">
-            <div style="position:relative;height:140px;background:linear-gradient(135deg,{{ $gold?$rankBgs[0]:'var(--bg-2),var(--border)' }});display:flex;align-items:center;justify-content:center;">
+            <div style="position:relative;height:140px;background:{{ $gold?$rankBgs[0]:'var(--bg-2)' }};display:flex;align-items:center;justify-content:center;">
               <img src="{{ $lCover }}" alt="{{ $ld->title }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
               @if($ld->images&&count($ld->images)>0)
                 <img src="{{ asset('storage/'.$ld->images[0]) }}" alt="{{ $ld->title }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
@@ -165,7 +165,7 @@
               @endif
               <div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);gap:8px;">
                 <div style="display:flex;align-items:center;gap:8px;min-width:0;">
-                  <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-size:.62rem;flex-shrink:0;">{{ $ld->user->initials??'FA' }}</div>
+                  <div class="avatar avatar-sm" style="background:#16a34a;color:#fff;font-size:.62rem;flex-shrink:0;">{{ $ld->user->initials??'FA' }}</div>
                   <div style="min-width:0;">
                     <div style="font-size:.78rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $ld->user->full_name??'Farmer' }}</div>
                     <div style="font-size:.72rem;color:var(--text-muted);">{{ $ld->district??'Malawi' }}</div>
@@ -217,7 +217,7 @@
           $userVoted=auth()->check()&&Auth::user()->hasVotedFor($innovation);
         @endphp
         <div class="innov-card">
-          <div class="innov-thumb" style="background:linear-gradient(135deg,{{ $bg }});">
+          <div class="innov-thumb" style="background:{{ explode(',', $bg)[0] }};">
             <img src="{{ $cover }}" alt="{{ $innovation->title }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
             @if($innovation->images&&count($innovation->images)>0)
               <img src="{{ asset('storage/'.$innovation->images[0]) }}" alt="{{ $innovation->title }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
@@ -245,7 +245,7 @@
             @endif
             <div class="innov-footer">
               <div class="innov-farmer">
-                <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-size:.65rem;">{{ $innovation->user->initials??'FA' }}</div>
+                <div class="avatar avatar-sm" style="background:#16a34a;color:#fff;font-size:.65rem;">{{ $innovation->user->initials??'FA' }}</div>
                 <div>
                   <div style="font-size:.8125rem;font-weight:600;color:var(--text);">{{ $innovation->user->full_name??'Farmer' }}</div>
                   <div style="font-size:.75rem;color:var(--text-muted);">{{ $innovation->district??'Malawi' }}</div>
@@ -288,7 +288,7 @@
     <div style="margin-top:44px;">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px;">
         <div style="display:flex;align-items:center;gap:12px;">
-          <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#fef9c3,#fde68a);display:flex;align-items:center;justify-content:center;font-size:1.05rem;">🥇</div>
+          <div style="width:38px;height:38px;border-radius:12px;background:#fefce8;display:flex;align-items:center;justify-content:center;font-size:1.05rem;">🥇</div>
           <div>
             <h3 style="font-size:1.1rem;font-weight:700;letter-spacing:-0.01em;color:var(--text);margin-bottom:2px;">Previous Winners</h3>
             <p style="font-size:.8rem;color:var(--text-muted);">Champions from the last competition round — new entries open soon.</p>
@@ -309,7 +309,7 @@
             $posBg=['#fef3c7','#f3f4f6','#ffedd5'];
           @endphp
           <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;">
-            <div style="position:relative;height:150px;background:linear-gradient(135deg,{{ $posBg[$w->winner_position-1] }},var(--bg-card));">
+            <div style="position:relative;height:150px;background:{{ $posBg[$w->winner_position-1] }};">
               <img src="{{ $wCover }}" alt="{{ $w->title }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
               @if($w->images&&count($w->images)>0)
                 <img src="{{ asset('storage/'.$w->images[0]) }}" alt="{{ $w->title }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
@@ -324,7 +324,7 @@
               <div style="font-size:.95rem;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:10px;">{{ $w->title }}</div>
               <div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);">
                 <div style="display:flex;align-items:center;gap:8px;min-width:0;">
-                  <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#b45309,#92400e);color:#fff;font-size:.62rem;flex-shrink:0;">{{ $w->user->initials??'FA' }}</div>
+                  <div class="avatar avatar-sm" style="background:#b45309;color:#fff;font-size:.62rem;flex-shrink:0;">{{ $w->user->initials??'FA' }}</div>
                   <div style="min-width:0;">
                     <div style="font-size:.78rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $w->user->full_name??'Farmer' }}</div>
                     <div style="font-size:.72rem;color:var(--text-muted);">{{ $w->district??'Malawi' }}</div>
@@ -409,7 +409,7 @@
               <div style="font-size:.75rem;color:var(--text-muted);margin-top:3px;">Upload photos of your innovation in action. Max 4MB each.</div>
             </div>
             @if(isset($activeCompetition)&&$activeCompetition&&$activeCompetition->isOpen())
-              <div class="form-group" style="grid-column:1/-1;background:linear-gradient(135deg,#fef9c3,#fef3c7);border:1.5px solid #fbbf24;border-radius:var(--radius-md);padding:16px;">
+              <div class="form-group" style="grid-column:1/-1;background:#fefce8;border:1.5px solid #fbbf24;border-radius:var(--radius-md);padding:16px;">
                 <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
                   <input type="checkbox" id="inCompetition" name="in_competition" value="1" @checked(old('in_competition')) style="width:auto;accent-color:var(--primary);margin-top:2px;"/>
                   <input type="hidden" id="compId" name="competition_id" value="{{ $activeCompetition->id }}"/>

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Farm Alerts — Admin — AgriTech Pro')
 @section('extra_css')
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>
@@ -49,7 +49,7 @@
   <aside class="faaf-sidebar" id="faafSidebar">
     <div class="faaf-sidebar-logo">
       <div style="display:flex;align-items:center;gap:10px;">
-        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#dc2626,#b91c1c);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;"><i class="fas fa-exclamation-triangle"></i></div>
+        <div style="width:36px;height:36px;border-radius:10px;background:#dc2626;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;"><i class="fas fa-exclamation-triangle"></i></div>
         <div><div style="font-size:.88rem;font-weight:700;color:#fff;">Farm Alerts</div><div style="font-size:.65rem;color:rgba(255,255,255,.4);">Admin Intervention</div></div>
       </div>
     </div>
@@ -60,7 +60,7 @@
     </nav>
     <div style="padding:16px 20px;border-top:1px solid rgba(255,255,255,.08);">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;font-size:.7rem;">{{ Auth::user()->initials }}</div>
+        <div class="avatar avatar-sm" style="background:#dc2626;color:#fff;font-size:.7rem;">{{ Auth::user()->initials }}</div>
         <div><div style="font-size:.82rem;font-weight:600;color:#fff;">{{ Auth::user()->full_name }}</div><div style="font-size:.7rem;color:rgba(255,255,255,.4);">Administrator</div></div>
       </div>
       <form action="{{ route('logout') }}" method="POST">

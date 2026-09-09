@@ -1,10 +1,10 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', $course->title.' — AgriTech Pro')
 @section('extra_css')
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>
 <link rel="stylesheet" href="{{ asset('css/home.css') }}"/>
 <style>
-.course-hero{background:linear-gradient(135deg,#f8fafc,#f0fdf4,#f8fafc);padding:52px 0 40px;color:var(--text);}
+.course-hero{background:#f6faf5;padding:52px 0 40px;color:var(--text);}
 .cd-layout{display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:start;}
 .cd-sidebar{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;position:sticky;top:90px;}
 .cd-sidebar-thumb{height:200px;display:flex;align-items:center;justify-content:center;font-size:6rem;}
@@ -21,7 +21,7 @@
 .pdf-btn{display:flex;align-items:center;gap:5px;padding:5px 12px;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:var(--radius-full);cursor:pointer;font-size:.75rem;font-weight:700;transition:all .15s;text-decoration:none;}
 .pdf-btn:hover{background:#dc2626;color:#fff;}
 .progress-bar-outer{background:var(--bg-2);border-radius:20px;height:8px;overflow:hidden;margin:8px 0;}
-.progress-bar-inner{height:8px;background:linear-gradient(90deg,var(--primary),#4ade80);border-radius:20px;transition:width .5s ease;}
+.progress-bar-inner{height:8px;background:var(--primary);border-radius:20px;transition:width .5s ease;}
 .what-learn-item{display:flex;gap:10px;margin-bottom:10px;font-size:.9375rem;color:var(--text);}
 .review-card{padding:16px 0;border-bottom:1px solid var(--border);}
 .review-card:last-child{border-bottom:none;}
@@ -214,7 +214,7 @@
           <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:22px;">
             <h2 class="heading-xs font-800" style="color:var(--text);margin-bottom:16px;">👨‍🏫 About the Instructor</h2>
             <div style="display:flex;gap:14px;align-items:flex-start;">
-              <div class="avatar avatar-lg" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-size:1rem;flex-shrink:0;">
+              <div class="avatar avatar-lg" style="background:#16a34a;color:#fff;font-size:1rem;flex-shrink:0;">
                 {{ strtoupper(substr($course->instructor->name, 0, 2)) }}
               </div>
               <div>
@@ -254,7 +254,7 @@
             @foreach($course->reviews->take(4) as $review)
               <div class="review-card">
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-                  <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;flex-shrink:0;">
+                  <div class="avatar avatar-sm" style="background:#16a34a;color:#fff;flex-shrink:0;">
                     {{ $review->user->initials ?? 'FA' }}
                   </div>
                   <div>
@@ -303,7 +303,7 @@
           $emoji = $catEmojis[$course->category] ?? '🌱';
           $bg    = $catColors[$course->category] ?? '#dcfce7,#bbf7d0';
         @endphp
-        <div class="cd-sidebar-thumb" style="background:linear-gradient(135deg,{{ $bg }});">{{ $emoji }}</div>
+        <div class="cd-sidebar-thumb" style="background:{{ explode(',', $bg)[0] }};">{{ $emoji }}</div>
         <div class="cd-sidebar-body">
           {{-- Price --}}
           @if($course->access_type === 'free')

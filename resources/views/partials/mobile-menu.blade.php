@@ -1,4 +1,4 @@
-<div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+﻿<div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
 <div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation">
   <div class="mobile-menu-header">
     <a href="{{ route('home') }}" class="mobile-menu-logo">
@@ -73,7 +73,7 @@
   <div class="mobile-menu-footer">
     @auth
       <div class="mobile-menu-user">
-        <div class="avatar avatar-md" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-size:.85rem;">{{ Auth::user()->initials }}</div>
+        <div class="avatar avatar-md" style="background:#16a34a;color:#fff;font-size:.85rem;">{{ Auth::user()->initials }}</div>
         <div class="mobile-menu-user-info">
           <div class="mobile-menu-user-name">{{ Auth::user()->full_name }}</div>
           <div class="mobile-menu-user-role">{{ ucfirst(Auth::user()->role) }}{{ Auth::user()->district ? ' · '.Auth::user()->district : '' }}</div>

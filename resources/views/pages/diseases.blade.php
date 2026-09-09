@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Crop Disease Detection & Prevention — AgriTech Pro')
 @section('extra_css')
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>
@@ -39,7 +39,7 @@
 .treatment-step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
 .step-num{width:28px;height:28px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;flex-shrink:0;margin-top:2px;}
 .disease-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-.live-feed{background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:var(--radius-xl);padding:22px;color:#e2e8f0;overflow:hidden;}
+.live-feed{background:#0f172a;border-radius:var(--radius-xl);padding:22px;color:#e2e8f0;overflow:hidden;}
 .live-feed-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
 .live-dot{width:9px;height:9px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:7px;animation:liveBlink 1s infinite;}
 @keyframes liveBlink{0%,100%{opacity:1;}50%{opacity:.25;}}
@@ -268,7 +268,7 @@
             $cropImg=$cropImgs[$disease->affected_crop]??'leaf-healthy.jpg';
           @endphp
           <div class="disease-card" onclick="openDiseaseModal({{ $disease->id }})">
-            <div class="disease-card-header" style="background-image:linear-gradient(135deg,rgba(240,253,244,.9),rgba(204,251,241,.86)),url('{{ asset('assets/img/agri/'.$cropImg) }}');background-size:cover;background-position:center;">
+            <div class="disease-card-header" style="background-image:url('{{ asset('assets/img/agri/'.$cropImg) }}');background-size:cover;background-position:center;">
               <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
                 <div>
                   <span class="badge badge-sky body-xs" style="margin-bottom:4px;">{{ $disease->affected_crop }}</span>

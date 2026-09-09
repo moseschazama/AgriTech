@@ -1,4 +1,4 @@
-<header class="navbar" id="navbar">
+﻿<header class="navbar" id="navbar">
   <div class="nav-inner">
 
     {{-- Logo --}}
@@ -80,7 +80,7 @@
 
         {{-- User Avatar Dropdown --}}
         <div class="nav-user" id="navUser">
-          <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-size:.75rem;cursor:pointer;">
+          <div class="avatar avatar-sm" style="background:#16a34a;color:#fff;font-size:.75rem;cursor:pointer;">
             {{ Auth::user()->initials }}
           </div>
           <div>

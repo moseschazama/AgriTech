@@ -259,8 +259,7 @@ select {
     content: '';
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(ellipse at 25% 0%, var(--hero-glow-1, rgba(22,163,74,0.05)) 0%, transparent 55%);
+    background: rgba(22, 163, 74, 0.04);
     pointer-events: none;
     z-index: 0;
 }
@@ -276,20 +275,11 @@ select {
     background-repeat: no-repeat;
 }
 .page-hero.page-hero-image::before {
-    background: linear-gradient(
-        160deg,
-        var(--hero-overlay-start, rgba(0,0,0,0.72)) 0%,
-        var(--hero-overlay-mid, rgba(0,0,0,0.55)) 50%,
-        var(--hero-overlay-end, rgba(0,0,0,0.68)) 100%
-    );
+    background: rgba(0, 0, 0, 0.64);
     z-index: 1;
 }
 .page-hero.page-hero-image::after {
-    background: radial-gradient(
-        ellipse at 80% 20%,
-        var(--hero-overlay-accent, rgba(22,163,74,0.12)) 0%,
-        transparent 60%
-    );
+    background: rgba(22, 163, 74, 0.1);
     z-index: 1;
 }
 .page-hero.page-hero-image > .container {
@@ -307,12 +297,9 @@ select {
     text-shadow: 0 2px 16px rgba(0,0,0,0.3);
 }
 .page-hero.page-hero-image .page-hero-title .accent {
-    color: #fff;
+    color: #4ade80;
     text-shadow: none;
-    background: linear-gradient(135deg, #4ade80, #22c55e);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    background: none;
 }
 .page-hero.page-hero-image .page-hero-desc {
     color: rgba(255,255,255,0.88);
@@ -734,9 +721,9 @@ select {
 }
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--green-400), var(--green-600));
-    border-radius: 4px;
-    transition: width 1s ease;
+    background: var(--green-500);
+    border-radius: inherit;
+    transition: width 0.4s ease;
 }
 [data-theme="dark"] .progress-bar {
     background: var(--gray-700);
@@ -1087,7 +1074,7 @@ select {
     visibility: visible;
 }
 .chatbot-head {
-    background: linear-gradient(135deg, var(--green-600), var(--green-800));
+    background: var(--green-700);
     color: #fff;
     padding: 16px 20px;
     display: flex;
@@ -1221,7 +1208,7 @@ select {
 
 /* ---- WEATHER WIDGET ---- */
 .weather-bar {
-    background: linear-gradient(135deg, var(--sky-500), var(--sky-600));
+    background: var(--green-800);
     color: #fff;
     padding: 8px 0;
     text-align: center;
@@ -1399,7 +1386,7 @@ select {
 }
 .loader-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--green-400), var(--green-600));
+    background: var(--green-500);
     animation: loaderAnim 0.3s ease forwards;
 }
 @keyframes loaderAnim {

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Admin Panel — AgriTech Pro')
 @section('extra_css')
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>
@@ -30,7 +30,7 @@
 .data-table tbody tr:hover td{background:var(--bg-2);}
 .data-table td form{display:inline;}
 .district-bar{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-.district-bar-fill{height:8px;background:linear-gradient(90deg,var(--primary),#4ade80);border-radius:20px;transition:width .8s ease;}
+.district-bar-fill{height:8px;background:var(--primary);border-radius:20px;transition:width .8s ease;}
 .sms-template{background:var(--bg-2);border:1.5px solid var(--border);border-radius:var(--radius-md);padding:14px;cursor:pointer;transition:all .15s;margin-bottom:10px;}
 .sms-template:hover{border-color:var(--primary);background:var(--green-50);}
 .sms-template-title{font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:4px;}
@@ -53,7 +53,7 @@
 <aside class="admin-sidebar" id="adminSidebar">
   <div class="admin-sidebar-logo">
     <div style="display:flex;align-items:center;gap:10px;">
-      <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#16a34a,#15803d);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;"><i class="fas fa-seedling"></i></div>
+      <div style="width:36px;height:36px;border-radius:10px;background:#16a34a;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;"><i class="fas fa-seedling"></i></div>
       <div><div style="font-size:.88rem;font-weight:700;color:#fff;">AgriTech Pro</div><div style="font-size:.65rem;color:rgba(255,255,255,.4);">Admin Panel</div></div>
     </div>
   </div>
@@ -81,7 +81,7 @@
   </nav>
   <div style="padding:16px 20px;border-top:1px solid rgba(255,255,255,.08);">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-      <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-size:.7rem;">{{ Auth::user()->initials }}</div>
+      <div class="avatar avatar-sm" style="background:#16a34a;color:#fff;font-size:.7rem;">{{ Auth::user()->initials }}</div>
       <div><div style="font-size:.82rem;font-weight:600;color:#fff;">{{ Auth::user()->full_name }}</div><div style="font-size:.7rem;color:rgba(255,255,255,.4);">Administrator</div></div>
     </div>
     <form action="{{ route('logout') }}" method="POST">
@@ -228,7 +228,7 @@
               <tr>
                 <td>
                   <div style="display:flex;align-items:center;gap:8px;">
-                    <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-size:.65rem;flex-shrink:0;">{{ $farmer->initials }}</div>
+                    <div class="avatar avatar-sm" style="background:#16a34a;color:#fff;font-size:.65rem;flex-shrink:0;">{{ $farmer->initials }}</div>
                     <div><div style="font-weight:600;">{{ $farmer->full_name }}</div><div style="font-size:.73rem;color:var(--text-muted);">{{ $farmer->email }}</div></div>
                   </div>
                 </td>
@@ -757,7 +757,7 @@
           </div>
 
           @if($adminWinners->count()>0)
-            <div style="margin-top:16px;padding:12px 16px;background:linear-gradient(135deg,#fef9c3,#fef3c7);border:1.5px solid #fbbf24;border-radius:var(--radius-md);font-size:.8rem;">
+            <div style="margin-top:16px;padding:12px 16px;background:#fefce8;border:1.5px solid #fbbf24;border-radius:var(--radius-md);font-size:.8rem;">
               <strong>🏆 Published winners:</strong> 
               @foreach($adminWinners as $w)
                 <span style="margin-right:10px;">#{{ $w->winner_position }} — {{ $w->title }} ({{ $w->user->full_name??'Farmer' }}, {{ $w->vote_count }} votes)</span>
@@ -1047,7 +1047,7 @@ function viewFarmer(userId) {
     .then(u => {
       body.innerHTML =
         '<div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border);">' +
-          '<div class="avatar avatar-md" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-size:.85rem;flex-shrink:0;">' + (u.first_name?.[0]||'') + (u.last_name?.[0]||'') + '</div>' +
+          '<div class="avatar avatar-md" style="background:#16a34a;color:#fff;font-size:.85rem;flex-shrink:0;">' + (u.first_name?.[0]||'') + (u.last_name?.[0]||'') + '</div>' +
           '<div><div style="font-weight:700;font-size:1rem;">' + u.full_name + '</div>' +
           '<span class="badge ' + (u.status==='active'?'badge-green':'badge-coral') + '" style="font-size:.65rem;">' + u.status + '</span></div>' +
         '</div>' +

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', $product->name.' — AgriTech Pro')
 @section('extra_css')
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>
@@ -33,7 +33,7 @@
       <div>
         @php $pEmojis=['seeds'=>'🌽','fertilizer'=>'🧪','produce'=>'🍅','livestock'=>'🐐','tools'=>'💧','equipment'=>'⚙️','chemicals'=>'⚗️','other'=>'📦'];
               $pColors=['seeds'=>'#dcfce7,#bbf7d0','fertilizer'=>'#e0f2fe,#bae6fd','produce'=>'#fef2f2,#fecaca','livestock'=>'#fef9c3,#fef08a','tools'=>'#f0fdf4,#dcfce7','equipment'=>'#f5f3ff,#ede9fe']; @endphp
-        <div class="pd-gallery-main" id="pdMain" style="background:linear-gradient(135deg,{{ $pColors[$product->category]??'#dcfce7,#bbf7d0' }});">
+        <div class="pd-gallery-main" id="pdMain" style="background:{{ explode(',', $pColors[$product->category]??'#dcfce7')[0] }};">
           @if($product->thumbnail)<img src="{{ asset('storage/'.$product->thumbnail) }}" style="width:100%;height:100%;object-fit:cover;"/>
           @else {{ $pEmojis[$product->category]??'📦' }} @endif
         </div>
@@ -63,7 +63,7 @@
           @forelse($product->reviews->take(5) as $review)
             <div class="review-card">
               <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-                <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;">{{ $review->user->initials??'FA' }}</div>
+                <div class="avatar avatar-sm" style="background:#16a34a;color:#fff;">{{ $review->user->initials??'FA' }}</div>
                 <div><div class="body-base font-700">{{ $review->user->full_name??'Buyer' }}</div><div style="color:#f59e0b;font-size:.78rem;">{{ str_repeat('★',$review->rating) }}</div></div>
                 @if($review->is_verified_purchase)<span class="badge badge-green body-xs" style="margin-left:auto;">Verified Purchase</span>@endif
               </div>
@@ -123,7 +123,7 @@
         <div class="seller-card">
           <div class="label-sm" style="color:var(--text-muted);margin-bottom:10px;">Sold By</div>
           <div style="display:flex;align-items:center;gap:10px;">
-            <div class="avatar avatar-md" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-size:.75rem;">{{ $product->seller->initials??'SE' }}</div>
+            <div class="avatar avatar-md" style="background:#16a34a;color:#fff;font-size:.75rem;">{{ $product->seller->initials??'SE' }}</div>
             <div><div class="body-base font-700">{{ $product->seller->full_name??'Verified Seller' }}</div><div class="body-xs" style="color:var(--text-muted);">{{ $product->district }}{{ $product->district?', '.$product->district:'' }}</div></div>
           </div>
         </div>
@@ -141,7 +141,7 @@
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
           @foreach($related as $rp)
             <a href="{{ route('marketplace.show',$rp) }}" class="related-card" style="text-decoration:none;display:block;">
-              <div style="height:120px;background:linear-gradient(135deg,#dcfce7,#bbf7d0);display:flex;align-items:center;justify-content:center;font-size:2.5rem;">{{ $pEmojis[$rp->category]??'📦' }}</div>
+              <div style="height:120px;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-size:2.5rem;">{{ $pEmojis[$rp->category]??'📦' }}</div>
               <div style="padding:12px;">
                 <div class="body-base font-700" style="color:var(--text);margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ $rp->name }}</div>
                 <div class="body-sm font-700" style="color:var(--primary);">{{ $rp->currency }} {{ number_format($rp->price) }}</div>

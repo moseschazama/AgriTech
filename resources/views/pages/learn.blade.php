@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Learning Center — AgriTech Pro')
 @section('extra_css')
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>
@@ -22,7 +22,7 @@
 .course-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--green-300);}
 .course-thumb{height:170px;position:relative;}
 .course-badge-wrap{position:absolute;top:10px;left:10px;display:flex;gap:5px;flex-wrap:wrap;}
-.course-premium-badge{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-size:.75rem;font-weight:700;padding:3px 8px;border-radius:var(--radius-full);}
+.course-premium-badge{background:#f59e0b;color:#fff;font-size:.75rem;font-weight:700;padding:3px 8px;border-radius:var(--radius-full);}
 .course-body{padding:16px;}
 .course-category{font-size:.75rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
 .course-title{font-size:.9375rem;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
@@ -31,7 +31,7 @@
 .course-price{font-size:1.0625rem;font-weight:800;color:var(--primary);}
 .course-price-free{color:var(--green-600);}
 .progress-bar-outer{background:var(--bg-2);border-radius:20px;height:5px;margin:6px 0;overflow:hidden;}
-.progress-bar-inner{height:5px;background:linear-gradient(90deg,var(--primary),#4ade80);border-radius:20px;}
+.progress-bar-inner{height:5px;background:var(--primary);border-radius:20px;}
 .guide-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;text-align:center;transition:all .2s;}
 .guide-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
 .guide-icon{width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 14px;}
@@ -139,7 +139,7 @@
           $enrollment=auth()->check()?$course->enrollments()->where('user_id',Auth::id())->first():null;
         @endphp
         <div class="course-card">
-          <div class="course-thumb" style="background:linear-gradient(135deg,{{ $color }});">
+          <div class="course-thumb" style="background:{{ explode(',', $color)[0] }};">
             <img src="{{ $cover }}" alt="{{ $course->title }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy"/>
             <div class="course-badge-wrap">
               @if($course->access_type==='free')    <span class="badge badge-green">FREE</span>@endif

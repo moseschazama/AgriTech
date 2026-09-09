@@ -1,6 +1,6 @@
 <footer class="footer" style="position:relative;overflow:hidden;">
-  {{-- Subtle top glow --}}
-  <div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:400px;height:2px;background:linear-gradient(90deg,transparent,var(--primary),transparent);opacity:.4;"></div>
+  {{-- Subtle top accent --}}
+  <div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:400px;height:2px;background:var(--primary);opacity:.18;"></div>
 
   <div class="container" style="padding:48px 20px 28px;">
     {{-- Main grid --}}
@@ -9,7 +9,7 @@
       {{-- Brand --}}
       <div>
         <a href="{{ route('home') }}" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:14px;">
-          <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--green-500),var(--green-700));color:#fff;display:flex;align-items:center;justify-content:center;font-size:.95rem;box-shadow:0 4px 12px rgba(22,163,74,.3);">
+          <div style="width:38px;height:38px;border-radius:10px;background:var(--green-600);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.95rem;box-shadow:0 4px 12px rgba(22,163,74,.3);">
             <i class="fas fa-seedling"></i>
           </div>
           <div>

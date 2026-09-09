@@ -242,9 +242,14 @@
 /* ---- STATS ---- */
 .stats-section {
     padding: 48px 0;
-    background: var(--bg-2);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
+    background: var(--green-50);
+    border-top: 1px solid var(--green-100);
+    border-bottom: 1px solid var(--green-100);
+}
+[data-theme="dark"] .stats-section {
+    background: #0d1a10;
+    border-top-color: rgba(22, 163, 74, 0.15);
+    border-bottom-color: rgba(22, 163, 74, 0.15);
 }
 .stats-grid {
     display: grid;
@@ -356,7 +361,7 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+    background: #f59e0b;
     color: #fff;
     font-size: 0.68rem;
     font-weight: 700;
@@ -541,8 +546,11 @@
 
 /* ---- INNOVATION ---- */
 .innovation-section {
-    background: var(--bg);
+    background: #f1faf4;
     position: relative;
+}
+[data-theme="dark"] .innovation-section {
+    background: #0d1710;
 }
 .innovation-inner {
     position: relative;
@@ -813,12 +821,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(
-            ellipse at 15% 50%,
-            rgba(22, 163, 74, 0.12),
-            transparent 55%
-        );
+    background: rgba(22, 163, 74, 0.05);
     pointer-events: none;
 }
 
@@ -1257,9 +1260,14 @@
    ============================================================ */
 
 .mkt-section {
-    background: var(--bg-2);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
+    background: #fbfaf5;
+    border-top: 1px solid rgba(21, 128, 61, 0.12);
+    border-bottom: 1px solid rgba(21, 128, 61, 0.12);
+}
+[data-theme="dark"] .mkt-section {
+    background: #121211;
+    border-top-color: rgba(22, 163, 74, 0.12);
+    border-bottom-color: rgba(22, 163, 74, 0.12);
 }
 
 /* Header */

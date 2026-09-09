@@ -1,10 +1,10 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'My Profile — AgriTech Pro')
 @section('extra_css')
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>
 <link rel="stylesheet" href="{{ asset('css/home.css') }}"/>
 <style>
-.profile-hero{background:linear-gradient(135deg,#f8fafc,#f0fdf4,#f8fafc);padding:48px 0 80px;color:var(--text);position:relative;}
+.profile-hero{background:#f6faf5;padding:48px 0 80px;color:var(--text);position:relative;}
 .profile-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:32px;margin-top:-60px;position:relative;z-index:2;margin-bottom:24px;}
 .profile-hero-inner{display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap;}
 .profile-avatar-wrap{position:relative;flex-shrink:0;}
@@ -55,7 +55,7 @@
         @if(isset($user)&&$user->avatar)
           <img src="{{ asset('storage/'.$user->avatar) }}" alt="{{ $user->full_name }}" class="avatar avatar-xl" style="object-fit:cover;"/>
         @else
-          <div class="avatar avatar-xl" style="background:linear-gradient(135deg,#fff,#dcfce7);color:var(--green-700);font-size:1.8rem;font-weight:800;">{{ Auth::user()->initials }}</div>
+          <div class="avatar avatar-xl" style="background:var(--green-50);color:var(--green-700);font-size:1.8rem;font-weight:800;">{{ Auth::user()->initials }}</div>
         @endif
         <div class="profile-avatar-edit" onclick="document.getElementById('avatarInput').click()" title="Change photo">
           <i class="fas fa-camera"></i>

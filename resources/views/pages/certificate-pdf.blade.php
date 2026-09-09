@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -34,7 +34,7 @@
 
   .cert-id { font-size: 11px; color: #94a3b8; margin-top: 22px; letter-spacing: 1px; }
 
-  .seal { position: absolute; right: 50px; bottom: 50px; width: 80px; height: 80px; border-radius: 50%; border: 3px solid #16a34a; display: flex; align-items: center; justify-content: center; flex-direction: column; background: linear-gradient(135deg, #f0fdf4, #dcfce7); }
+  .seal { position: absolute; right: 50px; bottom: 50px; width: 80px; height: 80px; border-radius: 50%; border: 3px solid #16a34a; display: flex; align-items: center; justify-content: center; flex-direction: column; background: #f0fdf4; }
   .seal-icon { font-size: 24px; color: #16a34a; }
   .seal-text { font-size: 7px; font-weight: 800; color: #0d4a1e; text-align: center; line-height: 1.3; margin-top: 2px; }
 </style>

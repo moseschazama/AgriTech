@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'My Innovations — AgriTech Pro')
 @section('extra_css')<link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"/>@endsection
 @section('content')
@@ -13,7 +13,7 @@
       @forelse(isset($innovations)?$innovations:[] as $innovation)
         @php $sc=['draft'=>'badge-gray','pending_review'=>'badge-earth','approved'=>'badge-green','featured'=>'badge-sky','rejected'=>'badge-coral']; @endphp
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;">
-          <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#dcfce7,#86efac);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">💡</div>
+          <div style="width:52px;height:52px;border-radius:14px;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">💡</div>
           <div style="flex:1;min-width:200px;">
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
               <span class="badge {{ $sc[$innovation->status]??'badge-gray' }}" style="font-size:.75rem;">{{ ucfirst($innovation->status) }}</span>

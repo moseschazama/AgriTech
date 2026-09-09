@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Certificate — AgriTech Pro')
 @section('extra_css')
 <style>
@@ -17,7 +17,7 @@
 .cert-meta-val{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:#0d4a1e;}
 .cert-meta-lbl{font-size:.72rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;margin-top:2px;}
 .cert-number{font-family:var(--font-mono,monospace);font-size:.78rem;color:#94a3b8;margin-top:28px;}
-.cert-seal{position:absolute;right:70px;bottom:70px;width:90px;height:90px;border-radius:50%;border:4px solid #16a34a;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(135deg,#f0fdf4,#dcfce7);}
+.cert-seal{position:absolute;right:70px;bottom:70px;width:90px;height:90px;border-radius:50%;border:4px solid #16a34a;display:flex;align-items:center;justify-content:center;flex-direction:column;background:var(--green-50);}
 </style>
 @endsection
 

@@ -331,7 +331,7 @@
 </section>
 
  {{-- ── INNOVATION SHOWCASE ── --}}
-<section class="section" style="background:var(--bg-2);">
+<section class="section innovation-section">
   <div class="container">
     <div class="section-header center">
       <span class="section-label"><i class="fas fa-lightbulb"></i> Innovation Hub</span>
