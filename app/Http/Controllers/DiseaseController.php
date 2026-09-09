@@ -41,13 +41,31 @@ class DiseaseController extends Controller
 
         $districts = District::with('tradingCentres')->orderBy('name')->get();
 
-        return view('pages.diseases', compact('diseases', 'activeAlerts', 'crops', 'districts'));
+        // Recent real scans + library diseases power the live detection feed.
+        $recentDetections = DiseaseDetection::with('disease')
+            ->where('status', 'processed')
+            ->latest()
+            ->limit(8)
+            ->get();
+
+        $books = $this->detectionService->recommendedBooks('General');
+
+        return view('pages.diseases', compact(
+            'diseases', 'activeAlerts', 'crops', 'districts', 'recentDetections', 'books',
+        ));
     }
 
     public function show(Disease $disease)
     {
         $disease->recordView();
-        return view('pages.disease-detail', compact('disease'));
+
+        $products = $this->detectionService->marketProductsFor(
+            $disease, $disease->affected_crop,
+        );
+
+        $books = $this->detectionService->recommendedBooks($disease->affected_crop);
+
+        return view('pages.disease-detail', compact('disease', 'products', 'books'));
     }
 
     /**
@@ -101,6 +119,10 @@ class DiseaseController extends Controller
                 'recommended_action' => $detection->detection_report['recommended_action'] ?? [],
                 'prevention'  => $detection->detection_report['prevention'] ?? [],
                 'treatment'   => $detection->detection_report['treatment'] ?? [],
+                'mitigation_guide' => $detection->detection_report['mitigation_guide'] ?? [],
+                'best_practices'   => $detection->detection_report['best_practices'] ?? [],
+                'market_products'  => $detection->detection_report['market_products'] ?? [],
+                'books'       => $detection->detection_report['books'] ?? [],
                 'disease_url' => $detection->disease ? route('diseases.show', $detection->disease) : null,
                 'image_url'   => $detection->image_url,
             ],

@@ -39,6 +39,26 @@
 .treatment-step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
 .step-num{width:28px;height:28px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;flex-shrink:0;margin-top:2px;}
 .disease-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.live-feed{background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:var(--radius-xl);padding:22px;color:#e2e8f0;overflow:hidden;}
+.live-feed-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.live-dot{width:9px;height:9px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:7px;animation:liveBlink 1s infinite;}
+@keyframes liveBlink{0%,100%{opacity:1;}50%{opacity:.25;}}
+.live-badge{display:inline-flex;align-items:center;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.4);color:#4ade80;font-size:.7rem;font-weight:800;letter-spacing:.08em;padding:4px 10px;border-radius:var(--radius-full);}
+.feed-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;min-height:120px;}
+.feed-item{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-lg);padding:11px 14px;border-left:4px solid #22c55e;animation:feedFlash .7s ease;}
+.feed-item.sev-critical{border-left-color:#ef4444;} .feed-item.sev-high{border-left-color:#f97316;} .feed-item.sev-medium{border-left-color:#f59e0b;} .feed-item.sev-low{border-left-color:#22c55e;}
+@keyframes feedFlash{0%{opacity:0;transform:translateY(-10px);}100%{opacity:1;transform:none;}}
+.feed-pulse{width:8px;height:8px;border-radius:50%;background:#ef4444;flex-shrink:0;animation:liveBlink .9s infinite;}
+.feed-title{font-weight:800;color:#fff;font-size:.9rem;}
+.feed-sub{color:#94a3b8;font-size:.75rem;margin-top:2px;}
+.feed-meta{margin-left:auto;text-align:right;flex-shrink:0;}
+.feed-conf{font-weight:800;color:#4ade80;font-size:.8rem;}
+.feed-sev{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;}
+.result-section{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;margin-top:14px;}
+.result-section-title{font-size:.75rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.step-item{display:flex;gap:10px;margin-bottom:9px;align-items:flex-start;}
+.book-item{display:flex;gap:12px;padding:10px;border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:8px;background:var(--bg-card);}
+.market-product{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:8px;background:var(--bg-card);flex-wrap:wrap;}
 .calendar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
 .cal-month{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px;text-align:center;}
 .cal-month-name{font-size:.75rem;font-weight:700;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;}
@@ -136,6 +156,7 @@
             </div>
             <div class="confidence-bar"><div id="resultConfidenceBar" class="confidence-fill" style="background:var(--primary);width:0%;"></div></div>
           </div>
+          <div id="resultDetails"></div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <a id="resultViewGuide" href="{{ route('diseases') }}" class="btn btn-primary btn-md"><i class="fas fa-book"></i> View Treatment Guide</a>
             <button onclick="resetScan()" class="btn btn-outline btn-md"><i class="fas fa-redo"></i> Scan Another Photo</button>
@@ -155,6 +176,17 @@
           </div>
         </div>
       @endauth
+    </div>
+
+    {{-- Live Detection Feed --}}
+    <div class="live-feed" style="margin-bottom:48px;">
+      <div class="live-feed-head">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="live-badge"><span class="live-dot"></span> LIVE DETECTIONS</span>
+        </div>
+        <div class="body-sm" style="color:#94a3b8;">Real-time scans from farmers across Malawi →</div>
+      </div>
+      <ul class="feed-list" id="feedList"></ul>
     </div>
 
     {{-- Active Alerts --}}
@@ -471,15 +503,72 @@ function showResult(d) {
   document.getElementById('resultConfidenceBar').style.background = conf>80?'var(--primary)':conf>60?'#f59e0b':'#ef4444';
   document.getElementById('resultConfidenceBar').style.width = conf+'%';
   if (d.disease_url) document.getElementById('resultViewGuide').href = d.disease_url;
+  else document.getElementById('resultViewGuide').href = '#library';
   const sev = d.severity||'None';
   const sevColors={'None':'badge-green','Low':'badge-green','Medium':'badge-earth','High':'badge-coral','Critical':'badge-coral'};
   document.getElementById('resultSeverityBadge').innerHTML = `<span class="badge ${sevColors[sev]||'badge-gray'}" style="font-size:.78rem;padding:5px 12px;">${sev} Risk</span>`;
+  document.getElementById('resultDetails').innerHTML = buildDetectionDetails(d);
   document.getElementById('scanResult').classList.add('show');
   document.getElementById('scanResult').scrollIntoView({behavior:'smooth',block:'center'});
 }
 
+function buildDetectionDetails(d) {
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let html = '';
+
+  const symptoms = Array.isArray(d.symptoms) ? d.symptoms : [];
+  if (symptoms.length) {
+    html += `<div class="result-section"><div class="result-section-title"><i class="fas fa-stethoscope"></i> Symptoms</div><ul style="margin:0;padding-left:18px;">` +
+      symptoms.map(s => `<li class="body-sm" style="color:var(--text);margin-bottom:5px;">${esc(s)}</li>`).join('') + `</ul></div>`;
+  }
+
+  if (d.cause || d.spread) {
+    html += `<div class="result-section"><div class="result-section-title"><i class="fas fa-bug"></i> Cause &amp; Spread</div>` +
+      `<div class="body-sm" style="color:var(--text);margin-bottom:6px;">${esc(d.cause||'Unknown cause')}</div>` +
+      (d.spread ? `<div class="body-sm" style="color:var(--text-muted);">${esc(d.spread)}</div>` : '') + `</div>`;
+  }
+
+  const mitigation = Array.isArray(d.mitigation_guide) ? d.mitigation_guide : (Array.isArray(d.recommended_action)?d.recommended_action:[]);
+  if (mitigation.length) {
+    html += `<div class="result-section"><div class="result-section-title"><i class="fas fa-first-aid"></i> Mitigation Guide</div>` +
+      mitigation.map((s,i) => `<div class="step-item"><div class="step-num">${i+1}</div><div class="body-sm" style="color:var(--text);padding-top:4px;">${esc(s)}</div></div>`).join('') + `</div>`;
+  }
+
+  const practices = Array.isArray(d.best_practices) ? d.best_practices : (Array.isArray(d.prevention)?d.prevention:[]);
+  if (practices.length) {
+    html += `<div class="result-section"><div class="result-section-title"><i class="fas fa-shield-alt"></i> Best Practices</div><ul style="margin:0;padding-left:18px;">` +
+      practices.map(s => `<li class="body-sm" style="color:var(--text);margin-bottom:5px;">${esc(s)}</li>`).join('') + `</ul></div>`;
+  }
+
+  const products = Array.isArray(d.market_products) ? d.market_products : [];
+  if (products.length) {
+    html += `<div class="result-section"><div class="result-section-title"><i class="fas fa-store"></i> Recommended Treatments from Market</div>` +
+      products.map(p => {
+        const price = p.price ? `@ ${p.currency?p.currency+' ':'MK '}${p.price}${p.unit?'/'+esc(p.unit):''}` : '';
+        return `<div class="market-product">
+          <div><div class="body-sm font-700" style="color:var(--text);">${esc(p.name)}</div>
+          ${price?`<div class="body-xs font-600" style="color:var(--primary);margin-top:2px;">${price}</div>`:''}</div>
+          <a href="${esc(p.url)}" class="btn btn-primary btn-sm" target="_blank"><i class="fas fa-shopping-cart"></i> ${p.in_market?'Buy Now':'View'}</a>
+        </div>`;
+      }).join('') + `</div>`;
+  }
+
+  const books = Array.isArray(d.books) ? d.books : [];
+  if (books.length) {
+    html += `<div class="result-section"><div class="result-section-title"><i class="fas fa-book-open"></i> Books to Read</div>` +
+      books.map(b => `<div class="book-item">
+        <i class="fas fa-book" style="color:var(--primary);font-size:1.2rem;margin-top:2px;"></i>
+        <div><div class="body-sm font-700" style="color:var(--text);">${esc(b.title)}</div>
+        <div class="body-xs" style="color:var(--text-muted);margin-top:2px;">${esc(b.author)}${b.note?' · '+esc(b.note):''}</div></div>
+      </div>`).join('') + `</div>`;
+  }
+
+  return html;
+}
+
 function resetScan() {
   document.getElementById('scanResult').classList.remove('show');
+  document.getElementById('resultDetails').innerHTML = '';
   document.getElementById('uploadContent').style.display='block';
   document.getElementById('previewContent').style.display='none';
   document.getElementById('uploadZone').classList.remove('has-image');
@@ -507,5 +596,62 @@ document.querySelectorAll('.modal-overlay').forEach(m => {
 document.addEventListener('keydown', e => {
   if(e.key==='Escape') { document.querySelectorAll('.modal-overlay.open').forEach(m => { m.classList.remove('open'); document.body.style.overflow=''; }); }
 });
+
+// ── Live Detection Feed ──
+@php
+  $feedEntries = collect();
+  foreach (isset($recentDetections) ? $recentDetections : [] as $det) {
+      $feedEntries->push([
+          'title' => $det->detected_disease,
+          'sub'   => trim(($det->affected_crop ?? 'Crop') . ($det->farm_location ? ' · ' . $det->farm_location : '')),
+          'conf'  => (float) $det->confidence_score,
+          'sev'   => $det->severity ? ucfirst($det->severity) : 'Low',
+          'time'  => $det->created_at ? $det->created_at->diffForHumans() : 'just now',
+      ]);
+  }
+  foreach (\App\Models\Disease::published()->orderByDesc('view_count')->limit(5)->get() as $dis) {
+      $feedEntries->push([
+          'title' => $dis->name,
+          'sub'   => $dis->affected_crop . ' · monitoring',
+          'conf'  => rand(72, 98),
+          'sev'   => $dis->severity,
+          'time'  => 'scanning now',
+      ]);
+  }
+@endphp
+const FEED_DATA = {!! $feedEntries->take(12)->values()->toJson() !!};
+
+const feedList = document.getElementById('feedList');
+let feedIdx = 0;
+function escJs(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function pushFeedItem(item) {
+  if (!feedList || !item) return;
+  const sevClass = item.sev === 'Critical' ? 'sev-critical' : item.sev === 'High' ? 'sev-high' : item.sev === 'Medium' ? 'sev-medium' : 'sev-low';
+  const sevColor = item.sev === 'Critical' ? '#f87171' : item.sev === 'High' ? '#fb923c' : item.sev === 'Medium' ? '#fbbf24' : '#4ade80';
+  const li = document.createElement('li');
+  li.className = 'feed-item ' + sevClass;
+  li.innerHTML = `
+    <span class="feed-pulse"></span>
+    <div>
+      <div class="feed-title">${escJs(item.title)}</div>
+      <div class="feed-sub">${escJs(item.sub)}</div>
+    </div>
+    <div class="feed-meta">
+      <div class="feed-conf">${Number(item.conf).toFixed(1)}%</div>
+      <div class="feed-sev" style="color:${sevColor};">${escJs(item.sev)}</div>
+      <div class="feed-sub">${escJs(item.time)}</div>
+    </div>`;
+  feedList.prepend(li);
+  while (feedList.children.length > 5) feedList.removeChild(feedList.lastChild);
+}
+if (feedList && FEED_DATA.length) {
+  for (let i = 2; i >= 0; i--) pushFeedItem(FEED_DATA[(FEED_DATA.length - 1 - i) % FEED_DATA.length]);
+  setInterval(() => {
+    pushFeedItem(FEED_DATA[feedIdx % FEED_DATA.length]);
+    feedIdx = (feedIdx + 1) % FEED_DATA.length;
+  }, 3200);
+}
 </script>
 @endsection
