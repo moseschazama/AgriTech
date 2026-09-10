@@ -183,11 +183,6 @@
                 <div style="font-size:.7rem;color:var(--text-muted);">From {{ $delivery->origin_district }} → {{ $delivery->destination_district }}</div>
               </div>
             </div>
-            <div style="position:absolute;bottom:8px;right:8px;z-index:1000;">
-              <a href="{{ $hasCoords && $destLat && $destLng ? 'https://www.google.com/maps/dir/'.$destLat.",".$destLng."/".$delivery->driver_current_lat.",".$delivery->driver_current_lng : 'https://www.google.com/maps/search/?api=1&query='.($destLat ? $destLat.",".$destLng : urlencode($delivery->destination_district)) }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:6px 10px;font-size:.72rem;font-weight:600;color:var(--primary);text-decoration:none;box-shadow:0 2px 6px rgba(0,0,0,.1);">
-                <i class="fab fa-google"></i> Maps
-              </a>
-            </div>
           </div>
 
           {{-- Info --}}

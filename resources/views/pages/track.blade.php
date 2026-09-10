@@ -203,11 +203,6 @@
           <div style="color:var(--text-muted);margin-top:4px;font-size:.85rem;">
             {{ $delivery->status==='delivered' ? 'Delivered on '.$delivery->delivered_at?->format('M j, Y g:i A') : $delivery->failure_reason }}
           </div>
-          @if($delivery->destination_lat && $delivery->destination_lng)
-            <a href="https://www.google.com/maps/search/?api=1&query={{ $delivery->destination_lat }},{{ $delivery->destination_lng }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;margin-top:12px;color:var(--primary);font-weight:600;text-decoration:underline;font-size:.85rem;">
-              <i class="fab fa-google"></i> View destination on Google Maps
-            </a>
-          @endif
         </div>
       @else
         <div class="map-container">
