@@ -38,7 +38,7 @@
 
     @if(count($items)===0)
       <div class="cart-empty-state" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:60px;text-align:center;">
-        <i class="fas fa-shopping-cart" style="font-size:3rem;color:var(--text-muted);margin-bottom:16px;display:block;opacity:.3;"></i>
+        <i class="fas fa-shopping-cart" style="font-size:1.75rem;color:var(--text-muted);margin-bottom:14px;display:block;opacity:.3;"></i>
         <h3 class="heading-sm" style="margin-bottom:8px;">Your cart is empty</h3>
         <p style="color:var(--text-muted);margin-bottom:20px;">Browse our marketplace to find quality farm products.</p>
         <a href="{{ route('marketplace') }}" class="btn btn-primary btn-lg"><i class="fas fa-store"></i> Browse Marketplace</a>

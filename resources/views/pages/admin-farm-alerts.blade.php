@@ -33,7 +33,7 @@
 .faaf-alert-meta span{display:flex;align-items:center;gap:4px;}
 .faaf-alert-actions{display:flex;gap:6px;flex-shrink:0;}
 .faaf-empty{text-align:center;padding:60px 20px;color:var(--text-muted);}
-.faaf-empty i{font-size:3rem;margin-bottom:16px;display:block;opacity:.3;}
+.faaf-empty i{font-size:1.75rem;margin-bottom:14px;display:block;opacity:.3;}
 .faaf-intervene-form{display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:20px;}
 .faaf-intervene-form.show{display:block;}
 @media(max-width:1100px){.faaf-stats{grid-template-columns:repeat(2,1fr);}}

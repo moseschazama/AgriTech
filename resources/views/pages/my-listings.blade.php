@@ -94,7 +94,7 @@
             @empty
               <tr>
                 <td colspan="6" style="text-align:center;padding:60px;color:var(--text-muted);">
-                  <i class="fas fa-tag" style="font-size:2.5rem;margin-bottom:14px;display:block;opacity:.3;"></i>
+                  <i class="fas fa-tag" style="font-size:1.4rem;margin-bottom:12px;display:block;opacity:.3;"></i>
                   <div style="font-size:1.25rem;font-weight:600;letter-spacing:-0.01em;margin-bottom:8px;">No listings yet</div>
                   <p style="margin-bottom:18px;">List your farm products and reach 12,000+ buyers across Malawi.</p>
                   <a href="{{ route('marketplace') }}#sell" class="btn btn-primary btn-md"><i class="fas fa-plus"></i> List Your First Product</a>

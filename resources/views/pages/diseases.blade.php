@@ -117,7 +117,7 @@
           @csrf
           <div class="upload-zone" id="uploadZone" onclick="document.getElementById('photoInput').click()">
             <div id="uploadContent">
-              <i class="fas fa-camera" style="font-size:2.5rem;color:var(--primary);margin-bottom:14px;display:block;"></i>
+              <i class="fas fa-camera" style="font-size:1.4rem;color:var(--primary);margin-bottom:12px;display:block;"></i>
               <div class="body-base font-700" style="color:var(--text);margin-bottom:6px;">Upload or Drag a Photo</div>
               <div class="body-sm" style="color:var(--text-muted);margin-bottom:14px;">Take a close-up photo of the sick leaf · JPG, PNG, WebP · Max 10MB</div>
               <button type="button" class="btn btn-primary btn-sm" onclick="event.stopPropagation();document.getElementById('photoInput').click()">
@@ -167,7 +167,7 @@
         </div>
       @else
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:40px;text-align:center;">
-          <i class="fas fa-microscope" style="font-size:3rem;color:var(--primary);margin-bottom:14px;display:block;"></i>
+          <i class="fas fa-microscope" style="font-size:1.7rem;color:var(--primary);margin-bottom:14px;display:block;"></i>
             <h3 class="heading-sm" style="margin-bottom:8px;">Crop Disease Scanner</h3>
             <p class="body-sm" style="color:var(--text-muted);margin-bottom:20px;">Create an account to upload photos and get instant crop disease diagnosis.</p>
           <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
@@ -305,7 +305,7 @@
           </div>
         @empty
           <div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted);">
-            <i class="fas fa-search" style="font-size:3rem;margin-bottom:16px;display:block;opacity:.3;"></i>
+            <i class="fas fa-search" style="font-size:1.75rem;margin-bottom:14px;display:block;opacity:.3;"></i>
             <h3>No diseases found</h3>
             <p>Try a different crop or search term.</p>
             <a href="{{ route('diseases') }}" class="btn btn-primary btn-sm" style="margin-top:16px;">Clear filters</a>

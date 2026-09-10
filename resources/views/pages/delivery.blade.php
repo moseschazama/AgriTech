@@ -284,7 +284,7 @@
       @endforeach
     @else
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:50px;text-align:center;margin-bottom:24px;">
-        <i class="fas fa-truck" style="font-size:2.5rem;margin-bottom:14px;display:block;color:var(--text-muted);opacity:.25;"></i>
+        <i class="fas fa-truck" style="font-size:1.4rem;margin-bottom:12px;display:block;color:var(--text-muted);opacity:.25;"></i>
         <h3 style="font-weight:700;margin-bottom:6px;">No active deliveries</h3>
         <p style="color:var(--text-muted);margin-bottom:18px;font-size:.88rem;">Order something from the marketplace to start tracking!</p>
         <a href="{{ route('marketplace') }}" style="display:inline-flex;align-items:center;gap:6px;padding:10px 24px;background:var(--primary);color:#fff;border-radius:var(--radius-md);font-weight:600;text-decoration:none;font-size:.88rem;"><i class="fas fa-store"></i> Browse Marketplace</a>

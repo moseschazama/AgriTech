@@ -19,7 +19,7 @@
 .sort-select{padding:8px 14px;border:1.5px solid var(--border);border-radius:var(--radius-md);font-size:.8125rem;background:var(--bg-card);color:var(--text);cursor:pointer;}
 .course-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
 .course-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all .2s;}
-.course-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--green-300);}
+.course-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--green-300);}
 .course-thumb{height:170px;position:relative;}
 .course-badge-wrap{position:absolute;top:10px;left:10px;display:flex;gap:5px;flex-wrap:wrap;}
 .course-premium-badge{background:#f59e0b;color:#fff;font-size:.75rem;font-weight:700;padding:3px 8px;border-radius:var(--radius-full);}
@@ -191,7 +191,7 @@
         </div>
       @empty
         <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-muted);">
-          <i class="fas fa-graduation-cap" style="font-size:3rem;margin-bottom:16px;display:block;opacity:.3;"></i>
+          <i class="fas fa-graduation-cap" style="font-size:1.75rem;margin-bottom:14px;display:block;opacity:.3;"></i>
           <h3 style="margin-bottom:8px;">No courses found</h3>
           <p>Try a different search or category filter.</p>
           <a href="{{ route('learn') }}" class="btn btn-primary btn-sm" style="margin-top:16px;">Clear filters</a>
@@ -241,7 +241,7 @@
           </div>
         @empty
           <div style="grid-column:1/-1;text-align:center;padding:48px 20px;color:var(--text-muted);">
-            <i class="fas fa-file-pdf" style="font-size:2.5rem;margin-bottom:14px;display:block;opacity:.3;"></i>
+            <i class="fas fa-file-pdf" style="font-size:1.4rem;margin-bottom:12px;display:block;opacity:.3;"></i>
             <p>No guides uploaded yet{{ request('guide_topic') ? ' for this topic' : '' }}.</p>
             @if(request('guide_topic'))
               <a href="{{ route('learn') }}" style="color:var(--primary);font-size:.85rem;">View all guides →</a>
@@ -253,7 +253,7 @@
 
     {{-- ── BECOME AN INSTRUCTOR CTA ── --}}
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:40px;margin-top:48px;text-align:center;color:var(--text);box-shadow:var(--shadow-md);">
-      <div style="font-size:2.5rem;margin-bottom:14px;color:var(--primary);"><i class="fas fa-chalkboard-user"></i></div>
+      <div style="font-size:1.4rem;margin-bottom:12px;color:var(--primary);"><i class="fas fa-chalkboard-user"></i></div>
       <h2 class="heading-md" style="margin-bottom:10px;">Are You an Agricultural Expert?</h2>
       <p class="body-base" style="color:var(--text-muted);max-width:480px;margin:0 auto 24px;">Share your knowledge with 12,000+ farmers across Malawi. Create courses and earn from your expertise.</p>
       <a href="{{ route('register') }}" class="btn btn-primary btn-lg"><i class="fas fa-chalkboard-teacher"></i> Become an Instructor</a>

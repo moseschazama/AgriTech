@@ -48,7 +48,7 @@
         @endphp
         <div class="course-enroll-card">
           {{-- Thumb --}}
-          <div style="height:140px;background:{{ explode(',', $bg)[0] }};display:flex;align-items:center;justify-content:center;font-size:3rem;color:var(--primary);position:relative;">
+          <div style="height:140px;background:{{ explode(',', $bg)[0] }};display:flex;align-items:center;justify-content:center;font-size:1.7rem;color:var(--primary);position:relative;">
             <i class="fas {{ \App\Support\CategoryIcons::course($course->category) }}"></i>
             @if($enrollment->status === 'completed')
               <span style="position:absolute;top:10px;right:10px;background:var(--primary);color:#fff;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:20px;">✓ Completed</span>

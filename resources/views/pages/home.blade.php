@@ -307,7 +307,7 @@
         </div>
       @empty
         <div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted);">
-          <i class="fas fa-store" style="font-size:3rem;margin-bottom:16px;display:block;opacity:.3;"></i>
+          <i class="fas fa-store" style="font-size:1.75rem;margin-bottom:14px;display:block;opacity:.3;"></i>
           No featured products yet. <a href="{{ route('marketplace') }}" style="color:var(--primary);">Browse marketplace →</a>
         </div>
       @endforelse
@@ -407,7 +407,7 @@
     </div>
     @else
       <div style="text-align:center;padding:60px;color:var(--text-muted);">
-        <i class="fas fa-lightbulb" style="font-size:3rem;margin-bottom:16px;display:block;opacity:.3;"></i>
+        <i class="fas fa-lightbulb" style="font-size:1.75rem;margin-bottom:14px;display:block;opacity:.3;"></i>
         No innovations yet. Be the first to submit!
       </div>
     @endif

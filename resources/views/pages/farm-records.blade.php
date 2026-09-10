@@ -183,7 +183,7 @@
           </div>
         @empty
           <div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted);">
-            <i class="fas fa-seedling" style="font-size:3rem;margin-bottom:16px;display:block;opacity:.3;"></i>
+            <i class="fas fa-seedling" style="font-size:1.75rem;margin-bottom:14px;display:block;opacity:.3;"></i>
             <h3 style="margin-bottom:8px;">No seasons yet</h3>
             <p>Start tracking your farming seasons to see analytics and insights.</p>
             <button onclick="document.getElementById('addSeasonModal').style.display='flex'" class="btn btn-primary btn-sm" style="margin-top:16px;">
@@ -249,7 +249,7 @@
           </div>
         @empty
           <div style="text-align:center;padding:60px;color:var(--text-muted);">
-            <i class="fas fa-lightbulb" style="font-size:3rem;margin-bottom:16px;display:block;opacity:.3;"></i>
+            <i class="fas fa-lightbulb" style="font-size:1.75rem;margin-bottom:14px;display:block;opacity:.3;"></i>
             <h3 style="margin-bottom:8px;">No insights yet</h3>
             <p>Add costs, sales, and events to your seasons to get intelligent recommendations.</p>
           </div>
@@ -279,7 +279,7 @@
           </div>
         @empty
           <div style="text-align:center;padding:60px;color:var(--text-muted);">
-            <i class="fas fa-clipboard-list" style="font-size:3rem;margin-bottom:16px;display:block;opacity:.3;"></i>
+            <i class="fas fa-clipboard-list" style="font-size:1.75rem;margin-bottom:14px;display:block;opacity:.3;"></i>
             <h3 style="margin-bottom:8px;">No events logged</h3>
             <p>Start logging farm activities, weather, and treatments.</p>
           </div>

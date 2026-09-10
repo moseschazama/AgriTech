@@ -39,7 +39,7 @@
         </a>
       @empty
         <div style="padding:60px;text-align:center;color:var(--text-muted);">
-          <i class="fas fa-bell-slash" style="font-size:3rem;margin-bottom:16px;display:block;opacity:.3;"></i>
+          <i class="fas fa-bell-slash" style="font-size:1.75rem;margin-bottom:14px;display:block;opacity:.3;"></i>
           <h3 class="heading-md" style="margin-bottom:8px;">No notifications yet</h3>
           <p>When you get orders, course updates or alerts, they'll appear here.</p>
         </div>

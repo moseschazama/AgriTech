@@ -301,7 +301,7 @@
           $catColors = ['soil_crops'=>'#dcfce7,#bbf7d0','livestock'=>'#fef9c3,#fef08a','agri_tech'=>'#e0f2fe,#bae6fd','agribusiness'=>'#f5f3ff,#ede9fe','organic'=>'#f0fdf4,#dcfce7','irrigation'=>'#e0f2fe,#bae6fd','post_harvest'=>'#fff7ed,#fed7aa'];
           $bg    = $catColors[$course->category] ?? '#dcfce7,#bbf7d0';
         @endphp
-        <div class="cd-sidebar-thumb" style="background:{{ explode(',', $bg)[0] }};"><i class="fas {{ \App\Support\CategoryIcons::course($course->category) }}" style="font-size:3rem;color:var(--primary);"></i></div>
+        <div class="cd-sidebar-thumb" style="background:{{ explode(',', $bg)[0] }};"><i class="fas {{ \App\Support\CategoryIcons::course($course->category) }}" style="font-size:1.7rem;color:var(--primary);"></i></div>
         <div class="cd-sidebar-body">
           {{-- Price --}}
           @if($course->access_type === 'free')

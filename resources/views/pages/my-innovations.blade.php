@@ -39,7 +39,7 @@
         </div>
       @empty
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:60px;text-align:center;">
-          <i class="fas fa-lightbulb" style="font-size:3rem;color:var(--text-muted);margin-bottom:16px;display:block;opacity:.3;"></i>
+          <i class="fas fa-lightbulb" style="font-size:1.75rem;color:var(--text-muted);margin-bottom:14px;display:block;opacity:.3;"></i>
           <h3 style="font-size:1.25rem;font-weight:600;letter-spacing:-0.01em;margin-bottom:8px;">No innovations yet</h3>
           <p style="color:var(--text-muted);margin-bottom:20px;">Share your farming innovation with 12,000+ farmers.</p>
           <a href="{{ route('innovation') }}#submit" class="btn btn-primary btn-lg"><i class="fas fa-lightbulb"></i> Submit Your First Innovation</a>

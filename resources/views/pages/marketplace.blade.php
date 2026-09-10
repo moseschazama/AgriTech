@@ -23,10 +23,10 @@
 .star-btn.active,.star-btn:hover{border-color:var(--primary);background:var(--green-50);color:var(--primary);}
 .product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
 .product-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all .2s;}
-.product-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--green-300);}
+.product-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--green-300);}
 .product-thumb{height:170px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.product-wishlist{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gray-400);transition:all .15s;z-index:2;}
-.product-wishlist:hover,.product-wishlist.active{color:#ef4444;transform:scale(1.1);}
+.product-wishlist{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gray-400);transition:all .15s;z-index:2;}
+.product-wishlist:hover,.product-wishlist.active{color:#ef4444;}
 .product-badge{position:absolute;top:10px;left:10px;font-size:.67rem;font-weight:700;padding:3px 8px;border-radius:var(--radius-full);z-index:2;}
 .product-body{padding:14px;}
 .product-cat{font-size:.69rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
@@ -36,9 +36,9 @@
 .product-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:10px;gap:8px;}
 .product-price{font-size:1rem;font-weight:800;color:var(--primary);}
 .product-unit{font-size:.71rem;color:var(--text-muted);}
-.add-cart-btn{width:34px;height:34px;border-radius:50%;background:var(--primary);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:.85rem;text-decoration:none;flex-shrink:0;}
-.add-cart-btn:hover{background:var(--primary-dark);transform:scale(1.1);}
-.add-cart-btn:disabled{background:var(--gray-300);cursor:not-allowed;transform:none;}
+.add-cart-btn{width:34px;height:34px;border-radius:10px;background:var(--primary);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:.85rem;text-decoration:none;flex-shrink:0;}
+.add-cart-btn:hover{background:var(--primary-dark);}
+.add-cart-btn:disabled{background:var(--gray-300);cursor:not-allowed;}
 .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
 .toolbar-left{font-size:.83rem;color:var(--text-muted);}
 .cart-drawer{position:fixed;right:0;top:0;width:360px;height:100vh;background:var(--bg-card);border-left:1px solid var(--border);z-index:2000;transform:translateX(100%);transition:transform .3s ease;display:flex;flex-direction:column;box-shadow:-4px 0 24px rgba(0,0,0,.12);}
@@ -46,7 +46,7 @@
 .cart-drawer-header{padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
 .cart-drawer-body{flex:1;overflow-y:auto;padding:16px;}
 .cart-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
-.cart-qty-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--bg-2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;}
+.cart-qty-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--bg-2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;}
 .cart-drawer-footer{padding:16px;border-top:1px solid var(--border);}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1999;display:none;}
 .overlay.active{display:block;}
@@ -272,7 +272,7 @@
             </div>
           @empty
             <div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted);">
-              <i class="fas fa-search" style="font-size:3rem;margin-bottom:16px;display:block;opacity:.3;"></i>
+              <i class="fas fa-search" style="font-size:1.75rem;margin-bottom:14px;display:block;opacity:.3;"></i>
               <h3 style="margin-bottom:8px;">No products found</h3>
               <p>Try adjusting your search or filters.</p>
               <a href="{{ route('marketplace') }}" class="btn btn-primary btn-sm" style="margin-top:16px;">Clear filters</a>
@@ -367,7 +367,7 @@
         </div>
         @else
         <div style="background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--radius-lg);padding:32px;text-align:center;margin-top:28px;">
-          <i class="fas fa-store" style="font-size:2.5rem;color:var(--primary);margin-bottom:14px;display:block;"></i>
+          <i class="fas fa-store" style="font-size:1.4rem;color:var(--primary);margin-bottom:12px;display:block;"></i>
           <h3 style="font-size:1.2rem;margin-bottom:8px;">Start Selling Your Farm Products</h3>
           <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:20px;">Join 12,000+ farmers already selling on AgriTech Pro.</p>
           <a href="{{ route('register') }}" class="btn btn-primary btn-lg"><i class="fas fa-seedling"></i> Create Account</a>
@@ -423,7 +423,7 @@
       @endforeach
     @else
       <div style="text-align:center;padding:40px;color:var(--text-muted);">
-        <i class="fas fa-shopping-cart" style="font-size:2.5rem;margin-bottom:14px;display:block;opacity:.3;"></i>
+        <i class="fas fa-shopping-cart" style="font-size:1.4rem;margin-bottom:12px;display:block;opacity:.3;"></i>
         Your cart is empty.<br>
         <button onclick="closeCart()" class="btn btn-primary btn-sm" style="margin-top:16px;">Browse Products</button>
       </div>

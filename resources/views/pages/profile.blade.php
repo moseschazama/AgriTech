@@ -347,7 +347,7 @@
         </div>
       @else
         <div class="form-section" style="text-align:center;padding:60px;">
-          <i class="fas fa-certificate" style="font-size:3rem;color:var(--text-muted);margin-bottom:16px;display:block;opacity:.3;"></i>
+          <i class="fas fa-certificate" style="font-size:1.75rem;color:var(--text-muted);margin-bottom:14px;display:block;opacity:.3;"></i>
           <h3 style="font-size:1.2rem;margin-bottom:8px;">No Certificates Yet</h3>
           <p style="color:var(--text-muted);margin-bottom:20px;">Complete a course with a certificate to earn your first credential.</p>
           <a href="{{ route('learn') }}" class="btn btn-primary btn-lg"><i class="fas fa-graduation-cap"></i> Browse Courses</a>

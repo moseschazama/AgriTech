@@ -11,7 +11,7 @@
 .innov-hero.page-hero-image .page-hero-pill i,.innov-hero.page-hero-image .page-hero-stat i{color:#a5b4fc;}
 .innov-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
 .innov-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all .2s;}
-.innov-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);}
+.innov-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
 .innov-thumb{height:200px;position:relative;display:flex;align-items:center;justify-content:center;font-size:4rem;overflow:hidden;}
 .innov-body{padding:20px;}
 .innov-cat-badge{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--primary);margin-bottom:8px;}
@@ -271,7 +271,7 @@
         </div>
       @empty
         <div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted);">
-          <i class="fas fa-lightbulb" style="font-size:3rem;margin-bottom:16px;display:block;opacity:.3;"></i>
+          <i class="fas fa-lightbulb" style="font-size:1.75rem;margin-bottom:14px;display:block;opacity:.3;"></i>
           <h3 style="margin-bottom:8px;">No innovations yet</h3>
           <p>Be the first to submit your farming innovation!</p>
         </div>
@@ -427,7 +427,7 @@
         </form>
       @else
         <div style="text-align:center;padding:32px;background:var(--bg-2);border-radius:var(--radius-lg);">
-          <div style="font-size:2.5rem;margin-bottom:14px;color:var(--primary);"><i class="fas fa-seedling"></i></div>
+          <div style="font-size:1.4rem;margin-bottom:12px;color:var(--primary);"><i class="fas fa-seedling"></i></div>
           <h3 style="font-size:1.25rem;font-weight:600;letter-spacing:-0.01em;margin-bottom:8px;">Join to Submit Your Innovation</h3>
           <p style="font-size:.8125rem;color:var(--text-muted);margin-bottom:20px;">Create an account to share your farming innovations with 12,000+ farmers across Africa.</p>
           <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
