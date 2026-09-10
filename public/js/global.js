@@ -7,61 +7,8 @@ const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 
 /* ============================================================
-   1. SMART PAGE LOADER — only on first visit / after login
+   1. DARK MODE
    ============================================================ */
-(function initLoader() {
-  const loader = $('#page-loader');
-  if (!loader) return;
-
-  // Never show on back/forward navigation (bfcache)
-  const nav = performance && performance.getEntriesByType
-    ? performance.getEntriesByType('navigation')[0]
-    : null;
-  const isBfcache = nav && nav.type === 'back_forward';
-
-  // The server only marks data-splash="1" for the very first page open
-  // of a session, or immediately after login/registration. All normal
-  // in-app navigation between pages/tabs skips the splash entirely.
-  const shouldShow = !isBfcache && document.body && document.body.dataset.splash === '1';
-
-  if (!shouldShow) {
-    loader.remove();
-    return;
-  }
-
-  loader.classList.add('show');
-  loader.style.opacity = '1';
-
-  const removeLoader = () => {
-    loader.classList.add('done');
-    setTimeout(() => { if (loader.parentNode) loader.parentNode.removeChild(loader); }, 400);
-  };
-
-  // Hide after DOM is ready + a tiny buffer, or immediately if already interactive
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    setTimeout(removeLoader, 250);
-  } else {
-    document.addEventListener('DOMContentLoaded', () => setTimeout(removeLoader, 250));
-    // Fallback: hide after 1.5s max regardless
-    setTimeout(removeLoader, 1500);
-  }
-
-  // Expose show/hide for manual control (e.g., heavy in-page actions)
-  window.showPageLoader = () => {
-    if (loader) {
-      loader.classList.add('show');
-      loader.style.opacity = '1';
-      loader.classList.remove('done');
-    }
-  };
-  window.hidePageLoader = () => {
-    if (loader && loader.parentNode) {
-      removeLoader();
-    }
-  };
-})();
-
-/* ---- DARK MODE ---- */
 (function initDarkMode() {
   const btn = $('#darkToggle');
   const html = document.documentElement;

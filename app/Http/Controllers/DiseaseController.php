@@ -65,7 +65,9 @@ class DiseaseController extends Controller
 
         $books = $this->detectionService->recommendedBooks($disease->affected_crop);
 
-        return view('pages.disease-detail', compact('disease', 'products', 'books'));
+        $courses = $this->detectionService->recommendedCourses($disease, $disease->affected_crop);
+
+        return view('pages.disease-detail', compact('disease', 'products', 'books', 'courses'));
     }
 
     /**
@@ -123,6 +125,7 @@ class DiseaseController extends Controller
                 'best_practices'   => $detection->detection_report['best_practices'] ?? [],
                 'market_products'  => $detection->detection_report['market_products'] ?? [],
                 'books'       => $detection->detection_report['books'] ?? [],
+                'courses'     => $detection->detection_report['courses'] ?? [],
                 'disease_url' => $detection->disease ? route('diseases.show', $detection->disease) : null,
                 'image_url'   => $detection->image_url,
             ],

@@ -165,6 +165,40 @@
       </div>
     </div>
 
+    {{-- Keep Learning — curated course recommendations --}}
+    @if(isset($courses) && count($courses) > 0)
+    <div class="guide-card" style="margin-top:24px;">
+      <span class="section-label"><i class="fas fa-graduation-cap"></i> Keep Learning — Recommended Courses</span>
+      <p class="body-sm" style="color:var(--text-muted);margin-bottom:14px;">
+        Treat it today, and learn how to prevent it next season. These courses complete the picture with hands-on, long-term disease management skills.
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;">
+        @foreach($courses as $rec)
+          <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;display:flex;flex-direction:column;gap:8px;">
+            <div>
+              <span class="badge badge-sky body-xs" style="display:inline-block;margin-bottom:6px;">{{ $rec['category_label'] }}</span>
+              <div class="body-base font-700" style="color:var(--text);line-height:1.3;">{{ $rec['title'] }}</div>
+            </div>
+            <div class="body-xs" style="color:var(--text-muted);">
+              <i class="fas fa-play-circle"></i> {{ $rec['lessons'] }} lessons · {{ intdiv($rec['duration_minutes'], 60) }}h {{ $rec['duration_minutes'] % 60 }}m
+              @if($rec['is_free'])
+                <span class="badge badge-green" style="margin-left:4px;">Open</span>
+              @else
+                <span class="badge badge-earth" style="margin-left:4px;">{{ number_format($rec['price']) }} {{ $rec['currency'] }}</span>
+              @endif
+            </div>
+            @if($rec['reason'])
+              <div class="body-xs font-600" style="color:var(--primary);"><i class="fas fa-check-circle"></i> {{ $rec['reason'] }}</div>
+            @endif
+            <a href="{{ $rec['url'] }}" class="btn btn-primary btn-sm" style="margin-top:auto;justify-content:center;">
+              <i class="fas fa-graduation-cap"></i> Open in Learning Center
+            </a>
+          </div>
+        @endforeach
+      </div>
+    </div>
+    @endif
+
     {{-- CTA --}}
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:32px;margin-top:32px;text-align:center;">
       <h3 class="heading-sm font-800" style="color:var(--text);margin-bottom:8px;">Spotted this on your farm?</h3>

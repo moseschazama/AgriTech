@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\Models\Disease;
 use App\Models\DiseaseDetection;
+use App\Models\Course;
 use App\Models\Notification;
 use App\Models\Product;
 use App\Models\User;
@@ -255,6 +256,7 @@ class DiseaseDetectionService
             'best_practices' => $this->curatedBestPractices(),
             'market_products' => [],
             'books' => $this->recommendedBooks($crop),
+            'courses' => $this->recommendedCourses(null, $crop),
             'top_predictions' => [
                 ['name' => 'No significant disease detected', 'confidence' => $confidence],
             ],
@@ -284,6 +286,7 @@ class DiseaseDetectionService
             'best_practices' => $this->curatedBestPractices(),
             'market_products' => $this->marketProductsFor($disease, $reportCrop),
             'books' => $this->recommendedBooks($reportCrop),
+            'courses' => $this->recommendedCourses($disease, $reportCrop),
             'top_predictions' => [
                 ['name' => $diseaseName, 'confidence' => $confidence],
             ],
@@ -430,6 +433,128 @@ class DiseaseDetectionService
     }
 
     /**
+     * Recommended courses so detection links straight into long-term, structured
+     * learning — remediation today AND knowledge to prevent the disease next
+     * season. Ranks published courses by relevance to the diagnosed crop and
+     * condition, then boosts the best fit so the first suggestion is always the
+     * most useful one.
+     */
+    public function recommendedCourses(?Disease $disease, string $crop): array
+    {
+        // Best-fit course by crop so the most relevant course always leads.
+        $courseMap = [
+            'maize' => 1,
+            'soybean' => 7,
+            'soybeans' => 7,
+            'tomato' => 4,
+            'pepper' => 4,
+            'solanaceae' => 4,
+            'potato' => 4,
+            'groundnut' => 7,
+            'groundnuts' => 7,
+            'cassava' => 1,
+            'rice' => 7,
+        ];
+
+        $cropTokens = array_values(array_filter(
+            preg_split('/[^a-z0-9]+/', strtolower($crop)) ?: [],
+            fn ($t) => strlen($t) >= 3,
+        ));
+
+        $diseaseKeywords = ['disease', 'pest', 'protection', 'integrated pest', 'prevention', 'spray', 'fungicide', 'insecticide'];
+        $practiceKeywords = ['management', 'prevent', 'organic', 'climate', 'irrigat', 'post-harvest'];
+
+        $scored = [];
+
+        foreach (Course::published()->get() as $course) {
+            $blob = strtolower(implode(' ', [
+                $course->title,
+                $course->description ?? '',
+                is_array($course->what_you_learn)
+                    ? implode(' ', $course->what_you_learn)
+                    : (string) ($course->what_you_learn ?? ''),
+                str_replace('_', ' ', $course->category ?? ''),
+            ]));
+
+            $score = 0;
+            $reason = null;
+
+            foreach ($cropTokens as $t) {
+                if (str_contains($blob, $t)) {
+                    $score += 3;
+                    $reason = $reason ?: 'practises on ' . ucfirst($t);
+                }
+            }
+
+            foreach ($diseaseKeywords as $kw) {
+                if (str_contains($blob, $kw)) {
+                    $score += 2;
+                    $reason = $reason ?: 'disease & pest management';
+                    break;
+                }
+            }
+
+            foreach ($practiceKeywords as $kw) {
+                if (str_contains($blob, $kw)) {
+                    $score += 1;
+                    break;
+                }
+            }
+
+            if ($course->access_type === 'free') {
+                $score += 1;
+            }
+
+            if ($course->is_featured) {
+                $score += 1;
+            }
+
+            if ($score > 0) {
+                $scored[] = compact('course', 'score', 'reason');
+            }
+        }
+
+        foreach ($cropTokens as $t) {
+            if (!isset($courseMap[$t])) {
+                continue;
+            }
+
+            foreach ($scored as $i => $s) {
+                if ($s['course']->id === $courseMap[$t]) {
+                    $scored[$i]['score'] += 6;
+                    $scored[$i]['reason'] = 'designed for ' . ucfirst($t);
+                    break;
+                }
+            }
+        }
+
+        usort($scored, fn ($a, $b) => $b['score'] <=> $a['score']);
+
+        $out = [];
+
+        foreach (array_slice($scored, 0, 4) as $s) {
+            $course = $s['course'];
+
+            $out[] = [
+                'id' => $course->id,
+                'title' => $course->title,
+                'category' => $course->category,
+                'category_label' => ucwords(str_replace('_', ' ', $course->category)),
+                'access_type' => $course->access_type,
+                'is_free' => $course->access_type === 'free',
+                'price' => (float) $course->price,
+                'currency' => $course->currency ?? 'MWK',
+                'lessons' => (int) $course->total_lessons,
+                'duration_minutes' => (int) $course->total_duration_minutes,
+                'reason' => $s['reason'] ?? 'Deepen your crop knowledge',
+                'url' => route('learn.show', $course),
+            ];
+        }
+
+        return $out;
+    }
+
+    /**
      * Apply a "diseased" prediction to the detection record.
      */
     protected function applyPrediction(DiseaseDetection $detection, array $report): void
@@ -458,6 +583,7 @@ class DiseaseDetectionService
             'best_practices' => $report['best_practices'] ?? [],
             'market_products' => $report['market_products'] ?? [],
             'books' => $report['books'] ?? [],
+            'courses' => $report['courses'] ?? [],
         ]);
 
         $this->notifyResult($detection, (bool) $disease);
@@ -486,6 +612,8 @@ class DiseaseDetectionService
             'recommended_action' => $report['recommended_action'] ?? [],
             'prevention' => $report['prevention'] ?? [],
             'treatment' => [],
+            'books' => $report['books'] ?? [],
+            'courses' => $report['courses'] ?? [],
         ]);
 
         Notification::create([

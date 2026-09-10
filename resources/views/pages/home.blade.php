@@ -181,7 +181,7 @@
           $hrs    = intdiv($course->total_duration_minutes,60);
           $mins   = $course->total_duration_minutes % 60;
         @endphp
-        <div class="course-card" data-reveal data-category="{{ $course->category }}">
+        <div class="course-card" data-reveal data-category="{{ $course->category }}" onclick="window.location='{{ route('learn.show', $course) }}'" role="link" tabindex="0" onkeydown="if(event.key==='Enter')window.location='{{ route('learn.show', $course) }}'" style="cursor:pointer;" title="Open course: {{ $course->title }}">
           <div class="course-thumb" style="background:var(--bg-2);">
             <img src="{{ $cImg }}" alt="{{ $course->title }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
             <div class="course-badge-wrap">

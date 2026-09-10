@@ -20,7 +20,10 @@
 .alert-icon-critical{color:#ef4444;} .alert-icon-warning{color:#f59e0b;} .alert-icon-info{color:#3b82f6;}
 .disease-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all .2s;cursor:pointer;}
 .disease-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
-.disease-card-header{padding:16px 18px;border-bottom:1px solid var(--border);}
+.disease-card-header{padding:16px 18px;border-bottom:1px solid var(--border);position:relative;}
+.disease-card-header::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.86) 0%,rgba(255,255,255,.6) 100%);pointer-events:none;}
+.disease-card-header > *{position:relative;z-index:1;}
+[data-theme="dark"] .disease-card-header::after{background:linear-gradient(180deg,rgba(10,18,12,.88) 0%,rgba(10,18,12,.6) 100%);}
 .severity-badge{font-size:.75rem;font-weight:700;padding:3px 9px;border-radius:var(--radius-full);}
 .sev-critical{background:#fef2f2;color:#dc2626;border:1px solid #fecaca;}
 .sev-high{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;}
@@ -266,11 +269,26 @@
             $sevClass=['Critical'=>'sev-critical','High'=>'sev-high','Medium'=>'sev-medium','Low'=>'sev-low'][$disease->severity]??'sev-medium';
             $catColors=['fungal'=>'#dcfce7,#86efac','bacterial'=>'#e0f2fe,#7dd3fc','viral'=>'#f3e8ff,#c4b5fd','pest'=>'#fff7ed,#fb923c','environmental'=>'#fef9c3,#fbbf24'];
             $catColor=$catColors[$disease->category]??'#dcfce7,#86efac';
-            $cropImgs=['Maize'=>'maize-field.jpg','Tomato'=>'tomato.jpg','Potato'=>'potato.jpg','Beans'=>'veggies.jpg','Groundnuts'=>'groundnut.jpg','Rice'=>'harvest.jpg','Soybean'=>'groundnut.jpg','Sweet Potato'=>'potato.jpg'];
-            $cropImg=$cropImgs[$disease->affected_crop]??'leaf-healthy.jpg';
+            // Per-disease images first, then crop fallback, then a generic leaf.
+            $diseaseImgs=[
+              'fall-armyworm'=>'maize-field.jpg',
+              'maize-lethal-necrosis-mln'=>'maize-field.jpg',
+              'late-blight-of-potato-tomato'=>'tomato.jpg',
+              'bacterial-wilt-of-solanaceae'=>'tomato.jpg',
+              'cassava-mosaic-disease-cmd'=>'leaf-healthy.jpg',
+              'groundnut-rosette-disease'=>'groundnut.jpg',
+              'maize-streak-virus-msv'=>'maize-field.jpg',
+              'gray-leaf-spot'=>'leaf-healthy.jpg',
+            ];
+            $cropImgs=['Maize'=>'maize-field.jpg','Tomato'=>'tomato.jpg','Potato'=>'potato.jpg','Beans'=>'veggies.jpg','Groundnuts'=>'groundnut.jpg','Rice'=>'harvest.jpg','Soybean'=>'groundnut.jpg','Sweet Potato'=>'potato.jpg','Cassava'=>'leaf-healthy.jpg'];
+            $firstCrop=ucwords(explode(' / ', $disease->affected_crop)[0]);
+            $firstDiseaseImg=$disease->images[0] ?? null;
+            $cropImg=$firstDiseaseImg
+              ? 'storage/'.$firstDiseaseImg
+              : 'assets/img/agri/'.($diseaseImgs[$disease->slug] ?? $cropImgs[$firstCrop] ?? 'leaf-healthy.jpg');
           @endphp
           <div class="disease-card" onclick="openDiseaseModal({{ $disease->id }})">
-            <div class="disease-card-header" style="background-image:url('{{ asset('assets/img/agri/'.$cropImg) }}');background-size:cover;background-position:center;">
+            <div class="disease-card-header" style="background-image:url('{{ asset($cropImg) }}');background-size:cover;background-position:center;">
               <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
                 <div>
                   <span class="badge badge-sky body-xs" style="margin-bottom:4px;">{{ $disease->affected_crop }}</span>
@@ -299,7 +317,7 @@
               </div>
               <div style="display:flex;align-items:center;justify-content:space-between;">
                 <span class="body-xs" style="color:var(--text-muted);"><i class="fas fa-eye"></i> {{ number_format($disease->view_count) }} views</span>
-                <span class="body-sm font-600" style="color:var(--primary);">View Full Guide →</span>
+                <a href="{{ route('diseases.show', $disease) }}" class="body-sm font-600" style="color:var(--primary);text-decoration:none;" onclick="event.stopPropagation();">View Full Guide →</a>
               </div>
             </div>
           </div>
@@ -375,6 +393,12 @@
 
 {{-- Disease Modals --}}
 @foreach(isset($diseases)?$diseases:[] as $disease)
+@php
+  $mImgs=['fall-armyworm'=>'maize-field.jpg','maize-lethal-necrosis-mln'=>'maize-field.jpg','late-blight-of-potato-tomato'=>'tomato.jpg','bacterial-wilt-of-solanaceae'=>'tomato.jpg','cassava-mosaic-disease-cmd'=>'leaf-healthy.jpg','groundnut-rosette-disease'=>'groundnut.jpg','maize-streak-virus-msv'=>'maize-field.jpg','gray-leaf-spot'=>'leaf-healthy.jpg'];
+  $mCrops=['Maize'=>'maize-field.jpg','Tomato'=>'tomato.jpg','Potato'=>'potato.jpg','Beans'=>'veggies.jpg','Groundnuts'=>'groundnut.jpg','Rice'=>'harvest.jpg','Soybean'=>'groundnut.jpg','Sweet Potato'=>'potato.jpg','Cassava'=>'leaf-healthy.jpg'];
+  $mFirst=$disease->images[0] ?? null;
+  $mImg = $mFirst ? 'storage/'.$mFirst : 'assets/img/agri/'.($mImgs[$disease->slug] ?? $mCrops[ucwords(explode(' / ',$disease->affected_crop)[0])] ?? 'leaf-healthy.jpg');
+@endphp
 <div class="modal-overlay" id="modal-{{ $disease->id }}">
   <div class="modal-box">
     <div class="modal-header">
@@ -388,6 +412,7 @@
       </div>
       <button onclick="closeDiseaseModal({{ $disease->id }})" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-muted);">✕</button>
     </div>
+    <div style="height:160px;background:url('{{ asset($mImg) }}') center/cover no-repeat;"></div>
     <div class="modal-body">
       <div style="display:grid;gap:20px;">
         <div>
@@ -563,6 +588,29 @@ function buildDetectionDetails(d) {
         <div><div class="body-sm font-700" style="color:var(--text);">${esc(b.title)}</div>
         <div class="body-xs" style="color:var(--text-muted);margin-top:2px;">${esc(b.author)}${b.note?' · '+esc(b.note):''}</div></div>
       </div>`).join('') + `</div>`;
+  }
+
+  const courses = Array.isArray(d.courses) ? d.courses : [];
+  if (courses.length) {
+    html += `<div class="result-section"><div class="result-section-title"><i class="fas fa-graduation-cap"></i> Keep Learning — Recommended Courses</div>` +
+      `<div class="body-xs" style="color:var(--text-muted);margin-bottom:10px;">Fixed the problem today? Master prevention and long-term crop care with these courses.</div>` +
+      courses.map(c => {
+        const badge = c.is_free
+          ? '<span class="badge badge-green" style="font-size:.68rem;padding:2px 8px;">Open</span>'
+          : `<span class="badge badge-earth" style="font-size:.68rem;padding:2px 8px;">${Number(c.price||0).toLocaleString()} ${esc(c.currency||'')}</span>`;
+        return `<div class="book-item">
+        <i class="fas fa-graduation-cap" style="color:var(--primary);font-size:1.2rem;margin-top:2px;"></i>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;">
+            <div class="body-sm font-700" style="color:var(--text);">${esc(c.title)}</div>
+            ${badge}
+          </div>
+          <div class="body-xs" style="color:var(--text-muted);margin-top:2px;">${esc(c.category_label||'')} · ${c.lessons||0} lessons · ${Math.floor((c.duration_minutes||0)/60)}h ${(c.duration_minutes||0)%60}m</div>
+          ${c.reason?`<div class="body-xs" style="color:var(--primary);font-weight:600;margin-top:3px;"><i class="fas fa-check-circle"></i> ${esc(c.reason)}</div>`:''}
+          <a href="${esc(c.url)}" class="btn btn-primary btn-sm" style="margin-top:8px;"><i class="fas fa-book-open"></i> Open in Learning Center</a>
+        </div>
+      </div>`;
+      }).join('') + `</div>`;
   }
 
   return html;

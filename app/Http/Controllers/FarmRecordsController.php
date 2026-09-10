@@ -25,7 +25,7 @@ class FarmRecordsController extends Controller
     {
         $farm = $this->getUserFarm();
         if (!$farm) {
-            return redirect()->route('profile.farm')->with('info', 'Please set up your farm first to access records.');
+            return redirect()->route('profile')->with('info', 'Please set up your farm first to access records.');
         }
 
         $seasons = $farm->seasons()->latest()->get();

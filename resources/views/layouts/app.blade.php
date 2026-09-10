@@ -103,23 +103,9 @@
     /* ── Inline Loader ── */
     .inline-loader{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;color:var(--text-muted);}
     .inline-loader i{font-size:.85rem;}
-    /* ── Page Loader ── */
-    #page-loader{position:fixed;inset:0;z-index:99998;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;transition:opacity .4s ease;}
-    #page-loader.show{display:flex;}
-    #page-loader.done{opacity:0;pointer-events:none;}
-    .loader-logo{font-size:1.5rem;font-weight:800;color:var(--primary);margin-bottom:16px;}
-    .loader-bar{width:200px;height:3px;background:var(--gray-200);border-radius:20px;overflow:hidden;}
-    .loader-fill{height:100%;width:30%;background:var(--primary);border-radius:20px;animation:loaderProgress 1.2s ease-in-out infinite;}
-    @keyframes loaderProgress{0%{transform:translateX(-100%)}100%{transform:translateX(400%)}}
   </style>
 </head>
-<body id="top" data-splash="{{ isset($splashShow) && $splashShow ? '1' : '0' }}">
-
-{{-- Page Loader — only on first visit / after login (see global.js) --}}
-<div id="page-loader">
-  <div class="loader-logo"> AgriTech Pro</div>
-  <div class="loader-bar"><div class="loader-fill"></div></div>
-</div>
+<body id="top">
 
 {{-- Flash Messages — converted to toasts by JS --}}
 @if(session('success'))

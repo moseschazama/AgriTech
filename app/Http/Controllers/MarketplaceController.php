@@ -359,6 +359,7 @@ class MarketplaceController extends Controller
                 "quantity" => $qty,
                 "unit_price" => $product->price,
                 "total_price" => $lineTotal,
+                "unit" => $product->unit ?? "unit",
             ];
         }
 
