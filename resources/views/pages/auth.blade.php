@@ -202,7 +202,6 @@
 
         <div class="social-login-btns">
           <button type="button" class="social-login-btn" onclick="showToast('Google login coming soon!','info')"><i class="fab fa-google" style="color:#ea4335;"></i> Google</button>
-          <button type="button" class="social-login-btn" onclick="showToast('Facebook login coming soon!','info')"><i class="fab fa-facebook" style="color:#1877f2;"></i> Facebook</button>
         </div>
         <div class="auth-divider">or sign in with email / phone</div>
 
