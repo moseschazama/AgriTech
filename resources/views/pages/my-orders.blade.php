@@ -25,7 +25,7 @@
   <div class="container">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
       <div>
-        <h1 class="heading-md" style="color:var(--text);">📦 My Orders</h1>
+        <h1 class="heading-md" style="color:var(--text);"><i class="fas fa-receipt" style="color:var(--primary);"></i> My Orders</h1>
         <p style="color:var(--text-muted);">Track all your purchases</p>
       </div>
       <a href="{{ route('marketplace') }}" class="btn btn-primary btn-sm"><i class="fas fa-store"></i> Browse More</a>
@@ -158,7 +158,7 @@
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-top:12px;border-top:1px solid var(--border);">
           <div class="heading-xs" style="color:var(--primary);">{{ $order->currency }} {{ number_format($order->total) }}</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button onclick="showToast('📄 Invoice downloading...','success')" class="btn btn-outline btn-sm"><i class="fas fa-file-invoice"></i> Invoice</button>
+            <button onclick="showToast('Invoice downloading...','success')" class="btn btn-outline btn-sm"><i class="fas fa-file-invoice"></i> Invoice</button>
             @if($order->status==='delivered')
               <a href="{{ route('marketplace') }}" class="btn btn-primary btn-sm"><i class="fas fa-redo"></i> Reorder</a>
             @endif

@@ -154,7 +154,7 @@
   <div class="dash-header">
     <div>
       <div class="page-title">
-        Good {{ now()->hour < 12 ? 'morning' : (now()->hour < 17 ? 'afternoon' : 'evening') }}, {{ Auth::user()->first_name }}! 🌱
+        Good {{ now()->hour < 12 ? 'morning' : (now()->hour < 17 ? 'afternoon' : 'evening') }}, {{ Auth::user()->first_name }}!
       </div>
       <div class="page-subtitle">{{ now()->format('l, F j, Y') }} · Your farm is looking great today</div>
     </div>
@@ -224,7 +224,7 @@
     {{-- Production Chart --}}
     <div class="widget">
       <div class="widget-header">
-        <div class="widget-title">📈 Sales Overview (Last 7 Days)</div>
+        <div class="widget-title"><i class="fas fa-chart-line" style="color:var(--primary);margin-right:6px;"></i> Sales Overview (Last 7 Days)</div>
         <span class="badge badge-green" style="font-size:.7rem;">Live</span>
       </div>
       <div class="widget-body">
@@ -241,7 +241,7 @@
     {{-- Notifications --}}
     <div class="widget">
       <div class="widget-header">
-        <div class="widget-title">🔔 Notifications</div>
+        <div class="widget-title"><i class="fas fa-bell" style="color:var(--primary);margin-right:6px;"></i> Notifications</div>
         @if(Auth::user()->unreadNotifications()->count() > 0)
           <button onclick="markAllRead()" class="btn btn-outline btn-sm" style="font-size:.72rem;padding:4px 10px;">
             Mark all read
@@ -283,7 +283,7 @@
     {{-- Active Courses --}}
     <div class="widget">
       <div class="widget-header">
-        <div class="widget-title">🎓 Continue Learning</div>
+        <div class="widget-title"><i class="fas fa-graduation-cap" style="color:var(--primary);margin-right:6px;"></i> Continue Learning</div>
         <a href="{{ route('learn') }}" class="btn btn-outline btn-sm" style="font-size:.72rem;padding:4px 10px;">Browse more</a>
       </div>
       <div class="widget-body" style="padding:0 20px;">
@@ -321,7 +321,7 @@
     {{-- Recent Orders --}}
     <div class="widget">
       <div class="widget-header">
-        <div class="widget-title">📦 Recent Orders</div>
+        <div class="widget-title"><i class="fas fa-receipt" style="color:var(--primary);margin-right:6px;"></i> Recent Orders</div>
         <a href="{{ route('marketplace.my-orders') }}" class="btn btn-outline btn-sm" style="font-size:.72rem;padding:4px 10px;">View all</a>
       </div>
       <div class="widget-body" style="padding:0 20px;">

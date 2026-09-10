@@ -117,7 +117,7 @@
 
 {{-- Page Loader — only on first visit / after login (see global.js) --}}
 <div id="page-loader">
-  <div class="loader-logo">🌱 AgriTech Pro</div>
+  <div class="loader-logo"> AgriTech Pro</div>
   <div class="loader-bar"><div class="loader-fill"></div></div>
 </div>
 

@@ -108,7 +108,7 @@
     {{-- Crop Scanner --}}
     <div style="max-width:640px;margin:0 auto 48px;">
       <div style="text-align:center;margin-bottom:20px;">
-        <h2 class="heading-md" style="color:var(--text);margin-bottom:6px;">🔬 Crop Photo Scanner</h2>
+        <h2 class="heading-md" style="color:var(--text);margin-bottom:6px;"><i class="fas fa-microscope" style="color:var(--primary);"></i> Crop Photo Scanner</h2>
         <p class="body-sm" style="color:var(--text-muted);">Take a photo of a sick plant leaf and our analyzer identifies the disease instantly.</p>
       </div>
 
@@ -191,11 +191,13 @@
 
     {{-- Active Alerts --}}
     <div id="alerts" style="margin-bottom:48px;">
-      <h2 class="heading-sm font-800" style="color:var(--text);margin-bottom:16px;">🚨 Active Disease Alerts</h2>
+      <h2 class="heading-sm font-800" style="color:var(--text);margin-bottom:16px;"><i class="fas fa-circle-exclamation" style="color:#dc2626;"></i> Active Disease Alerts</h2>
       @forelse(isset($activeAlerts)?$activeAlerts:[] as $alert)
         <div class="alert-card alert-{{ $alert->alert_type }}">
           <div class="alert-icon-{{ $alert->alert_type }}" style="font-size:1.5rem;flex-shrink:0;">
-            @if($alert->alert_type==='critical') 🚨 @elseif($alert->alert_type==='warning') ⚠️ @else ℹ️ @endif
+            @if($alert->alert_type==='critical') <i class="fas fa-tower-broadcast" style="color:#dc2626;"></i>
+            @elseif($alert->alert_type==='warning') <i class="fas fa-triangle-exclamation" style="color:#f59e0b;"></i>
+            @else <i class="fas fa-circle-info" style="color:#2563eb;"></i> @endif
           </div>
           <div style="flex:1;">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
@@ -214,7 +216,7 @@
             @endif
           </div>
           <div style="flex-shrink:0;">
-            <button onclick="showToast('📥 Downloading advisory PDF...','success')" class="btn btn-outline btn-sm">
+            <button onclick="showToast('Downloading advisory PDF...','success')" class="btn btn-outline btn-sm">
               <i class="fas fa-download"></i> Advisory
             </button>
           </div>
@@ -231,7 +233,7 @@
     <div id="library">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:24px;">
         <div>
-          <h2 class="heading-sm font-800" style="color:var(--text);margin-bottom:6px;">📚 Disease Library</h2>
+          <h2 class="heading-sm font-800" style="color:var(--text);margin-bottom:6px;"><i class="fas fa-book-medical" style="color:var(--primary);"></i> Disease Library</h2>
           <p class="body-sm" style="color:var(--text-muted);">{{ isset($diseases)?$diseases->total():0 }} diseases documented with full treatment guides</p>
         </div>
         <form method="GET" action="{{ route('diseases') }}" style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -317,7 +319,7 @@
 
     {{-- Seasonal Risk Calendar --}}
     <div style="margin-top:56px;">
-      <h2 class="heading-sm font-800" style="color:var(--text);margin-bottom:6px;">📅 Seasonal Disease Risk Calendar</h2>
+      <h2 class="heading-sm font-800" style="color:var(--text);margin-bottom:6px;"><i class="fas fa-calendar-days" style="color:var(--primary);"></i> Seasonal Disease Risk Calendar</h2>
       <p class="body-sm" style="color:var(--text-muted);margin-bottom:20px;">Based on Malawi growing seasons (Oct–Sep)</p>
       <div class="calendar-grid">
         @foreach(['Oct'=>['Fall Armyworm','Critical'],'Nov'=>['Maize Streak','High'],'Dec'=>['Cassava Mosaic','High'],'Jan'=>['Late Blight','Critical'],'Feb'=>['Groundnut Rosette','High'],'Mar'=>['Soybean Rust','Medium'],'Apr'=>['Cotton Bollworm','High'],'May'=>['Bacterial Wilt','Medium'],'Jun'=>['Cabbage Rot','Low'],'Jul'=>['Dry Season','None'],'Aug'=>['Dry Season','None'],'Sep'=>['Prepare','Low']] as $month=>[$disease,$risk])
@@ -332,7 +334,7 @@
 
     {{-- Prevention Tips --}}
     <div style="margin-top:48px;">
-      <h2 class="heading-sm font-800" style="color:var(--text);margin-bottom:16px;">🛡️ Prevention Best Practices</h2>
+      <h2 class="heading-sm font-800" style="color:var(--text);margin-bottom:16px;"><i class="fas fa-shield-halved" style="color:var(--green-600);"></i> Prevention Best Practices</h2>
       <div class="prevention-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
         @foreach([
           ['fas fa-seedling','var(--green-100)','var(--green-700)','Use Certified Seed','Always buy certified, disease-resistant seed varieties from licensed agro-dealers.'],
@@ -356,7 +358,7 @@
     {{-- SMS Subscription --}}
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:36px;margin-top:48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px;color:var(--text);box-shadow:var(--shadow-md);">
       <div>
-        <h3 class="heading-sm" style="font-weight:800;margin-bottom:6px;">📱 Get SMS Disease Outbreak Alerts</h3>
+<h3 class="heading-sm" style="font-weight:800;margin-bottom:6px;"><i class="fas fa-comment-sms" style="color:var(--primary);"></i> Get SMS Disease Outbreak Alerts</h3>
         <p class="body-sm" style="color:var(--text-muted);max-width:400px;">Be the first to know when disease outbreaks are detected in your district. SMS alerts sent directly to your phone.</p>
       </div>
       <form method="POST" action="{{ route('diseases.subscribe') }}" style="display:flex;gap:8px;flex-wrap:wrap;">

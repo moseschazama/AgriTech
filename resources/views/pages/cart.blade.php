@@ -32,7 +32,7 @@
 <div class="section" style="background:var(--bg-2);">
   <div class="container">
     <div style="margin-bottom:24px;">
-      <h1 class="heading-lg" style="font-size:clamp(1.3rem,4vw,1.6rem);color:var(--text);word-break:break-word;">🛒 Your Cart</h1>
+      <h1 class="heading-lg" style="font-size:clamp(1.3rem,4vw,1.6rem);color:var(--text);word-break:break-word;"><i class="fas fa-cart-shopping" style="color:var(--primary);"></i> Your Cart</h1>
       <p style="color:var(--text-muted);">Review your items before checkout</p>
     </div>
 
@@ -54,10 +54,9 @@
           @if($item['product'])
           @php
             $p=$item['product'];
-            $emojis=['seeds'=>'🌽','fertilizer'=>'🧪','produce'=>'🍅','livestock'=>'🐐','tools'=>'💧','equipment'=>'⚙️','chemicals'=>'⚗️','other'=>'📦'];
           @endphp
           <div class="cart-item-row">
-            <div class="cart-item-thumb">{{ $emojis[$p->category]??'📦' }}</div>
+            <div class="cart-item-thumb"><i class="fas {{ \App\Support\CategoryIcons::product($p->category) }}"></i></div>
             <div style="flex:1;">
               <div class="body-base font-700" style="color:var(--text);margin-bottom:3px;">{{ $p->name }}</div>
               <div class="body-xs" style="color:var(--text-muted);">{{ ucfirst($p->category) }} · Sold by {{ $p->seller->full_name??'Verified Seller' }}</div>
@@ -84,7 +83,7 @@
             <div style="text-align:right;">
               <div class="text-base font-800" style="color:var(--primary);">{{ $p->currency }} {{ number_format($item['subtotal']) }}</div>
               @if($p->stock_quantity<=$item['quantity']&&$p->stock_quantity>0)
-                <div class="body-xs" style="color:#f59e0b;margin-top:4px;">⚠️ Limited stock</div>
+                <div class="body-xs" style="color:#f59e0b;margin-top:4px;"><i class="fas fa-triangle-exclamation" style="margin-right:3px;"></i> Limited stock</div>
               @endif
             </div>
           </div>
@@ -126,9 +125,10 @@
           </div>
 
           <div class="body-base font-700" style="margin:16px 0 12px;">Payment Method</div>
-          @foreach(['airtel_money'=>['📱 Airtel Money','Pay with your Airtel Money account'],'mtn_momo'=>['🟡 MTN MoMo','Pay with MTN Mobile Money'],'tnm_mpamba'=>['🔵 TNM Mpamba','Pay with TNM Mpamba']] as $val=>[$name,$desc])
+          @foreach(['airtel_money'=>['fa-mobile-screen-button','#ea580c','Airtel Money','Pay with your Airtel Money account'],'mtn_momo'=>['fa-mobile-screen-button','#ca8a04','MTN MoMo','Pay with MTN Mobile Money'],'tnm_mpamba'=>['fa-mobile-screen-button','#1d4ed8','TNM Mpamba','Pay with TNM Mpamba']] as $val=>[$pIcon,$pColor,$name,$desc])
             <label class="payment-method-btn" onclick="selectPayment('{{ $val }}',this)">
               <input type="radio" name="payment_method" value="{{ $val }}" {{ $val==='airtel_money'?'checked':'' }} style="margin:0;"/>
+              <i class="fas {{ $pIcon }}" style="color:{{ $pColor }};font-size:1.15rem;flex-shrink:0;"></i>
               <div><div class="body-base font-700">{{ $name }}</div><div class="body-xs" style="color:var(--text-muted);">{{ $desc }}</div></div>
             </label>
           @endforeach
@@ -145,7 +145,7 @@
             <i class="fas fa-lock"></i> Place Order — MWK {{ number_format($grandTotal) }}
           </button>
           <div class="body-xs" style="text-align:center;color:var(--text-muted);margin-top:10px;">
-            🔒 Secure checkout · SMS confirmation sent after order is placed
+            <i class="fas fa-lock" style="color:var(--text-muted);"></i> Secure checkout · SMS confirmation sent after order is placed
           </div>
         </form>
       </div>

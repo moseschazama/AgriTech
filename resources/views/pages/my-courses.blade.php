@@ -18,7 +18,7 @@
   <div class="container">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;">
       <div>
-        <h1 style="font-size:1.5rem;font-weight:700;color:var(--text);letter-spacing:-0.02em;">🎓 My Courses</h1>
+        <h1 style="font-size:1.5rem;font-weight:700;color:var(--text);letter-spacing:-0.02em;"><i class="fas fa-graduation-cap" style="color:var(--primary);"></i> My Courses</h1>
         <p style="color:var(--text-muted);">{{ isset($enrollments) ? $enrollments->total() : 0 }} course(s) enrolled</p>
       </div>
       <div style="display:flex;gap:10px;">
@@ -43,15 +43,13 @@
           $totalMins   = $course->lessons->sum('duration_minutes');
           $hrs  = intdiv($totalMins, 60);
           $mins = $totalMins % 60;
-          $catEmojis = ['soil_crops'=>'🌽','livestock'=>'🐄','agri_tech'=>'🚁','agribusiness'=>'📊','organic'=>'🥦','irrigation'=>'💧','post_harvest'=>'🌾'];
           $catColors = ['soil_crops'=>'#dcfce7,#bbf7d0','livestock'=>'#fef9c3,#fef08a','agri_tech'=>'#e0f2fe,#bae6fd','agribusiness'=>'#f5f3ff,#ede9fe','organic'=>'#f0fdf4,#dcfce7','irrigation'=>'#e0f2fe,#bae6fd','post_harvest'=>'#fff7ed,#fed7aa'];
-          $emoji = $catEmojis[$course->category] ?? '🌱';
           $bg    = $catColors[$course->category] ?? '#dcfce7,#bbf7d0';
         @endphp
         <div class="course-enroll-card">
           {{-- Thumb --}}
-          <div style="height:140px;background:{{ explode(',', $bg)[0] }};display:flex;align-items:center;justify-content:center;font-size:3.5rem;position:relative;">
-            {{ $emoji }}
+          <div style="height:140px;background:{{ explode(',', $bg)[0] }};display:flex;align-items:center;justify-content:center;font-size:3rem;color:var(--primary);position:relative;">
+            <i class="fas {{ \App\Support\CategoryIcons::course($course->category) }}"></i>
             @if($enrollment->status === 'completed')
               <span style="position:absolute;top:10px;right:10px;background:var(--primary);color:#fff;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:20px;">✓ Completed</span>
             @endif

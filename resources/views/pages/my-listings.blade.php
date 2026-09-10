@@ -13,7 +13,7 @@
   <div class="container">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
       <div>
-        <h1 style="font-size:1.5rem;font-weight:700;color:var(--text);letter-spacing:-0.02em;">🏪 My Listings</h1>
+        <h1 style="font-size:1.5rem;font-weight:700;color:var(--text);letter-spacing:-0.02em;"><i class="fas fa-shop" style="color:var(--primary);"></i> My Listings</h1>
         <p style="color:var(--text-muted);">Manage your products — admin approves before they go live to buyers</p>
       </div>
       <a href="{{ route('marketplace') }}#sell" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add New Listing</a>
@@ -28,9 +28,9 @@
     {{-- Status guide --}}
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:22px;display:flex;gap:20px;flex-wrap:wrap;">
       <div style="font-size:.8125rem;font-weight:700;color:var(--text-muted);align-self:center;">Status guide:</div>
-      @foreach(['pending_review'=>['badge-earth','⏳ Pending Review','Waiting for admin approval'],'active'=>['badge-green','✅ Active','Live — visible to all buyers'],'inactive'=>['badge-gray','❌ Inactive','Hidden from buyers'],'sold_out'=>['badge-coral','📦 Sold Out','Out of stock']] as $status=>[$badge,$label,$desc])
+      @foreach(['pending_review'=>['badge-earth','fa-hourglass-half','Pending Review','Waiting for admin approval'],'active'=>['badge-green','fa-circle-check','Active','Live — visible to all buyers'],'inactive'=>['badge-gray','fa-circle-xmark','Inactive','Hidden from buyers'],'sold_out'=>['badge-coral','fa-box-open','Sold Out','Out of stock']] as $status=>[$badge,$icon,$label,$desc])
         <div style="display:flex;align-items:center;gap:6px;">
-          <span class="badge {{ $badge }}" style="font-size:.75rem;">{{ $label }}</span>
+          <span class="badge {{ $badge }}" style="font-size:.75rem;"><i class="fas {{ $icon }}"></i> {{ $label }}</span>
           <span style="font-size:.75rem;color:var(--text-muted);">{{ $desc }}</span>
         </div>
       @endforeach
@@ -64,9 +64,9 @@
                 <td style="padding:14px 16px;font-weight:700;color:var(--primary);">{{ $product->currency }} {{ number_format($product->price) }}/{{ $product->unit }}</td>
                 <td style="padding:14px 16px;text-align:center;">
                   @if($product->stock_quantity <= 0)
-                    <span style="color:#ef4444;font-weight:700;">0 ❌</span>
+                    <span style="color:#ef4444;font-weight:700;">0 <i class="fas fa-circle-xmark"></i></span>
                   @elseif($product->stock_quantity <= 5)
-                    <span style="color:#f59e0b;font-weight:700;">{{ $product->stock_quantity }} ⚠️</span>
+                    <span style="color:#f59e0b;font-weight:700;">{{ $product->stock_quantity }} <i class="fas fa-triangle-exclamation"></i></span>
                   @else
                     <span style="font-weight:600;">{{ $product->stock_quantity }}</span>
                   @endif

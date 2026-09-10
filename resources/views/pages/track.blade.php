@@ -196,7 +196,7 @@
 
       @if(in_array($delivery->status, ['delivered','failed']))
         <div style="background:var(--green-50);border:1px solid var(--green-200);border-radius:var(--radius-lg);padding:40px;text-align:center;">
-          <div style="font-size:3rem;margin-bottom:10px;">{{ $delivery->status==='delivered' ? '✅' : '❌' }}</div>
+          <div style="font-size:3rem;margin-bottom:10px;color:{{ $delivery->status==='delivered'?'var(--green-600)':'#ef4444' }};"><i class="fas {{ $delivery->status==='delivered' ? 'fa-circle-check' : 'fa-circle-xmark' }}"></i></div>
           <div style="font-weight:700;font-size:1.1rem;color:{{ $delivery->status==='delivered'?'var(--green-700)':'#ef4444' }};">
             {{ $delivery->status==='delivered' ? 'Order Delivered!' : 'Delivery Failed' }}
           </div>

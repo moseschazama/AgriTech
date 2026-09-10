@@ -37,7 +37,7 @@
 <div style="background:var(--bg-2);padding:0 20px 60px;">
   <div class="cert-wrapper">
     <div class="cert-inner">
-      <div class="cert-logo">🌱</div>
+      <div class="cert-logo"><i class="fas fa-seedling"></i></div>
       <div class="cert-org">AgriTech Pro</div>
       <div class="cert-tagline">Smart Agriculture Platform · Malawi</div>
       <div class="cert-body-text">This is to certify that</div>

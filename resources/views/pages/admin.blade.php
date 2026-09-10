@@ -117,17 +117,17 @@
   {{-- Tab buttons --}}
   <div class="admin-tabs">
     @foreach([
-      ['tab-analytics',  '📊 Analytics'],
-      ['tab-farmers',    '👥 Farmers'],
-      ['tab-products',   '📦 Products'],
-      ['tab-reviews',    '⭐ Reviews'],
-      ['tab-orders',     '🛒 Orders'],
-      ['tab-courses',    '🎓 Courses'],
-      ['tab-innovations','💡 Innovations'],
-      ['tab-sms',        '📱 SMS'],
-      ['tab-settings',   '⚙️ Settings'],
-    ] as [$tab,$label])
-      <button class="admin-tab {{ $tab==='tab-analytics'?'active':'' }}" onclick="switchAdminTab('{{ $tab }}',null)">{{ $label }}</button>
+      ['tab-analytics',  'fa-chart-line', 'Analytics'],
+      ['tab-farmers',    'fa-users', 'Farmers'],
+      ['tab-products',   'fa-box', 'Products'],
+      ['tab-reviews',    'fa-star', 'Reviews'],
+      ['tab-orders',     'fa-cart-shopping', 'Orders'],
+      ['tab-courses',    'fa-graduation-cap', 'Courses'],
+      ['tab-innovations','fa-lightbulb', 'Innovations'],
+      ['tab-sms',        'fa-comment-sms', 'SMS'],
+      ['tab-settings',   'fa-gear', 'Settings'],
+    ] as [$tab,$icon,$label])
+      <button class="admin-tab {{ $tab==='tab-analytics'?'active':'' }}" onclick="switchAdminTab('{{ $tab }}',null)"><i class="fas {{ $icon }}"></i> {{ $label }}</button>
     @endforeach
   </div>
 
@@ -154,7 +154,7 @@
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;">
-        <div style="font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:18px;">📍 Farmers by District</div>
+        <div style="font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:18px;"><i class="fas fa-location-dot" style="color:var(--primary);"></i> Farmers by District</div>
         @php $maxDistrict=isset($districtBreakdown)&&$districtBreakdown->count()>0?$districtBreakdown->max('total'):1; @endphp
         @forelse(isset($districtBreakdown)?$districtBreakdown->take(8):[] as $row)
           <div class="district-bar">
@@ -167,7 +167,7 @@
         @endforelse
       </div>
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;">
-        <div style="font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:18px;">📋 Recent Activity</div>
+        <div style="font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:18px;"><i class="fas fa-list" style="color:var(--primary);"></i> Recent Activity</div>
         <div style="overflow-y:auto;max-height:300px;">
           @forelse(isset($recentActivity)?$recentActivity:[] as $activity)
             <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);">
@@ -209,7 +209,7 @@
             </select>
             <button type="submit" class="btn btn-primary btn-sm">Filter</button>
           </form>
-          <button onclick="showToast('📊 CSV export coming soon','info')" class="btn btn-outline btn-sm"><i class="fas fa-download"></i> Export CSV</button>
+          <button onclick="showToast('CSV export coming soon','info')" class="btn btn-outline btn-sm"><i class="fas fa-download"></i> Export CSV</button>
         </div>
       </div>
       <div style="overflow-x:auto;">
@@ -343,7 +343,7 @@
   <div class="admin-panel" id="tab-reviews">
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
       <div style="padding:18px 20px;border-bottom:1px solid var(--border);">
-        <div style="font-size:.95rem;font-weight:700;">⭐ Pending Course Reviews</div>
+        <div style="font-size:.95rem;font-weight:700;"><i class="fas fa-star" style="color:#f59e0b;"></i> Pending Course Reviews</div>
         <div style="font-size:.78rem;color:var(--text-muted);margin-top:2px;">Reviews appear on course pages only after you approve them here.</div>
       </div>
       <div style="overflow-x:auto;">
@@ -416,7 +416,7 @@
                 <td style="font-size:.72rem;">
                   @if($sticker)
                     <span style="font-family:var(--font-mono);background:#f5f3ff;color:#6d28d9;padding:2px 6px;border-radius:4px;font-size:.68rem;">{{ $sticker->sticker_code }}</span>
-                    <button type="button" onclick="printSticker('{{ $sticker->sticker_code }}','{{ $sticker->qr_data }}','{{ $order->order_number }}','{{ addslashes($order->delivery_district) }}','{{ addslashes($order->delivery_town) }}')" class="btn btn-sm" style="font-size:.62rem;padding:2px 6px;margin-left:4px;" title="Print Sticker">🖨</button>
+                    <button type="button" onclick="printSticker('{{ $sticker->sticker_code }}','{{ $sticker->qr_data }}','{{ $order->order_number }}','{{ addslashes($order->delivery_district) }}','{{ addslashes($order->delivery_town) }}')" class="btn btn-sm" style="font-size:.62rem;padding:2px 6px;margin-left:4px;" title="Print Sticker"><i class="fas fa-print"></i></button>
                   @else
                     <span style="color:var(--text-muted);font-size:.68rem;">—</span>
                   @endif
@@ -507,7 +507,7 @@
                     <span class="badge {{ $c->lessons->count()>0?'badge-green':'badge-coral' }}" style="font-size:.68rem;">{{ $c->lessons->count() }} lesson{{ $c->lessons->count()===1?'':'s' }}</span>
                   </td>
                   <td style="text-align:center;font-weight:600;">{{ number_format($c->total_enrolled) }}</td>
-                  <td style="text-align:center;">{{ $c->average_rating ? '⭐ '.number_format($c->average_rating,1) : '—' }}</td>
+                  <td style="text-align:center;">@if($c->average_rating)<i class="fas fa-star" style="color:#f59e0b;"></i> {{ number_format($c->average_rating,1) }}@else — @endif</td>
                   <td><span class="badge {{ $c->status==='published'?'badge-green':($c->status==='draft'?'badge-gray':'badge-earth') }}" style="font-size:.67rem;">{{ ucfirst($c->status) }}</span></td>
                   <td>
                     <div style="display:flex;gap:5px;flex-wrap:wrap;">
@@ -531,7 +531,7 @@
                 {{-- Lesson Manager (hidden by default, toggled by JS) --}}
                 <tr id="lesson-manager-{{ $c->id }}" style="display:none;">
                   <td colspan="6" style="background:var(--bg-2);padding:18px 20px;">
-                    <div style="font-weight:700;font-size:.82rem;color:var(--text);margin-bottom:12px;">📚 Lessons — {{ $c->title }}</div>
+                    <div style="font-weight:700;font-size:.82rem;color:var(--text);margin-bottom:12px;"><i class="fas fa-list" style="color:var(--primary);"></i> Lessons — {{ $c->title }}</div>
                     @if($c->lessons->count() > 0)
                       <div style="margin-bottom:14px;">
                         @foreach($c->lessons->sortBy('sort_order') as $lesson)
@@ -607,15 +607,15 @@
           <div class="form-group"><label class="form-label">Guide Title *</label><input type="text" name="title" class="form-input" placeholder="e.g. Fall Armyworm Control Guide 2026" required maxlength="150"/></div>
           <div class="form-group"><label class="form-label">Topic *</label>
             <select name="topic" class="form-input form-select" required>
-              <option value="general">📄 General Farming</option>
-              <option value="soil_crops">🌽 Soil & Crops</option>
-              <option value="livestock">🐄 Livestock</option>
-              <option value="agri_tech">🚁 Agri-Tech</option>
-              <option value="agribusiness">📊 Agribusiness</option>
-              <option value="organic">🥦 Organic Farming</option>
-              <option value="irrigation">💧 Irrigation</option>
-              <option value="post_harvest">🌾 Post-Harvest</option>
-              <option value="disease_control">🔬 Disease Control</option>
+              <option value="general">General Farming</option>
+              <option value="soil_crops">Soil & Crops</option>
+              <option value="livestock">Livestock</option>
+              <option value="agri_tech">Agri-Tech</option>
+              <option value="agribusiness">Agribusiness</option>
+              <option value="organic">Organic Farming</option>
+              <option value="irrigation">Irrigation</option>
+              <option value="post_harvest">Post-Harvest</option>
+              <option value="disease_control">Disease Control</option>
             </select>
           </div>
           <div class="form-group"><label class="form-label">Description</label><textarea name="description" class="form-input" rows="2" maxlength="500" placeholder="What this guide covers and who it's for..."></textarea></div>
@@ -643,7 +643,7 @@
               @forelse(\App\Models\CourseGuide::latest()->get() as $guide)
                 <tr>
                   <td style="font-weight:600;font-size:.8rem;max-width:160px;">{{ Str::limit($guide->title,30) }}</td>
-                  <td><span class="badge badge-gray" style="font-size:.65rem;">{{ $guide->topic_emoji }}</span></td>
+                  <td><span class="badge badge-gray" style="font-size:.65rem;"><i class="fas {{ \App\Support\CategoryIcons::course($guide->topic) }}" style="margin-right:3px;"></i>{{ ucwords(str_replace('_',' ',$guide->topic)) }}</span></td>
                   <td style="font-size:.76rem;">{{ $guide->file_size_formatted }}</td>
                   <td style="text-align:center;font-weight:700;color:var(--primary);font-size:.82rem;">{{ $guide->download_count }}</td>
                   <td><span class="badge {{ $guide->is_published?'badge-green':'badge-gray' }}" style="font-size:.65rem;">{{ $guide->is_published?'Live':'Hidden' }}</span></td>
@@ -727,7 +727,7 @@
                     <td style="font-size:.75rem;color:var(--text-muted);max-width:150px;">{{ Str::limit($rk->impact_summary,30) }}</td>
                     <td>
                       @if($rk->winner_position)
-                        <span class="badge badge-earth" style="font-size:.67rem;">🏆 #{{ $rk->winner_position }}</span>
+                        <span class="badge badge-earth" style="font-size:.67rem;"><i class="fas fa-trophy"></i> #{{ $rk->winner_position }}</span>
                       @elseif($rk->in_competition)
                         <span class="badge badge-green" style="font-size:.67rem;">Entered</span>
                       @else
@@ -758,7 +758,7 @@
 
           @if($adminWinners->count()>0)
             <div style="margin-top:16px;padding:12px 16px;background:#fefce8;border:1.5px solid #fbbf24;border-radius:var(--radius-md);font-size:.8rem;">
-              <strong>🏆 Published winners:</strong> 
+              <strong><i class="fas fa-trophy" style="color:#f59e0b;"></i> Published winners:</strong> 
               @foreach($adminWinners as $w)
                 <span style="margin-right:10px;">#{{ $w->winner_position }} — {{ $w->title }} ({{ $w->user->full_name??'Farmer' }}, {{ $w->vote_count }} votes)</span>
               @endforeach
@@ -836,10 +836,10 @@
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;">
           <div style="font-size:.82rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">Quick Templates</div>
           @foreach([
-            ['Disease Alert','⚠️ DISEASE ALERT: {disease} detected in {district}. Action: {action}. agritechpro.mw/diseases'],
-            ['New Course',   '🌱 New course: "{title}" now available at agritechpro.mw/learn'],
-            ['Weather',      '🌧️ Weather Warning: Heavy rain expected in {district}. Protect your crops.'],
-            ['Market Price', '💰 Maize price K{price}/50kg in {district} today. agritechpro.mw/marketplace'],
+['Disease Alert','DISEASE ALERT: {disease} detected in {district}. Action: {action}. agritechpro.mw/diseases'],
+            ['New Course',   'New course: "{title}" now available at agritechpro.mw/learn'],
+            ['Weather',      'Weather Warning: Heavy rain expected in {district}. Protect your crops.'],
+            ['Market Price', 'Maize price K{price}/50kg in {district} today. agritechpro.mw/marketplace'],
           ] as [$name,$tpl])
             <div class="sms-template" onclick="useTemplate(this)">
               <div class="sms-template-title">{{ $name }}</div>
@@ -849,7 +849,7 @@
         </div>
       </div>
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;">
-        <div style="font-size:.95rem;font-weight:700;margin-bottom:18px;">📤 Send SMS Broadcast</div>
+        <div style="font-size:.95rem;font-weight:700;margin-bottom:18px;"><i class="fas fa-paper-plane" style="color:var(--primary);"></i> Send SMS Broadcast</div>
         <form method="POST" action="{{ route('admin.sms.broadcast') }}">
           @csrf
           <div class="form-group"><label class="form-label">Campaign Name *</label><input type="text" name="name" class="form-input" placeholder="e.g. Fall Armyworm Alert - July 2026" required/></div>
@@ -904,7 +904,7 @@
 <div id="farmerDetailModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;" onclick="if(event.target===this)closeFarmerModal()">
   <div style="background:var(--bg-card);border-radius:var(--radius-xl);max-width:500px;width:90%;max-height:80vh;overflow-y:auto;padding:24px;box-shadow:var(--shadow-xl);">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
-      <div style="font-size:1rem;font-weight:800;color:var(--text);">👤 Farmer Details</div>
+      <div style="font-size:1rem;font-weight:800;color:var(--text);"><i class="fas fa-user" style="color:var(--primary);"></i> Farmer Details</div>
       <button onclick="closeFarmerModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-muted);">&times;</button>
     </div>
     <div id="farmerDetailBody" style="font-size:.86rem;color:var(--text);">
@@ -921,7 +921,7 @@
   <div class="admin-panel" id="tab-settings">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;">
-        <div style="font-size:.95rem;font-weight:700;margin-bottom:18px;">⚙️ Platform Settings</div>
+        <div style="font-size:.95rem;font-weight:700;margin-bottom:18px;"><i class="fas fa-gear" style="color:var(--text-muted);"></i> Platform Settings</div>
         <form method="POST" action="{{ route('admin.settings.update') }}">
           @csrf
           @php
@@ -949,7 +949,7 @@
         </form>
       </div>
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;">
-        <div style="font-size:.95rem;font-weight:700;margin-bottom:18px;">🔐 Security Settings</div>
+        <div style="font-size:.95rem;font-weight:700;margin-bottom:18px;"><i class="fas fa-shield-halved" style="color:var(--text-muted);"></i> Security Settings</div>
         <form method="POST" action="{{ route('profile.password') }}">
           @csrf
           <div class="form-group"><label class="form-label">Current Password</label><input type="password" name="current_password" class="form-input" required/></div>
@@ -1147,7 +1147,7 @@ function printSticker(code, qrUrl, order, district, town) {
       '@media print{@page{margin:0;}body{padding:0;}}' +
     '</style></head><body>' +
     '<div class="sticker">' +
-      '<div class="brand">🌱 AgriTech Pro</div>' +
+      '<div class="brand">AgriTech Pro</div>' +
       '<div class="code">' + code + '</div>' +
       '<div class="qr"><img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=' + encodeURIComponent(qrUrl) + '" alt="QR"></div>' +
       '<div class="order">Order: ' + order + '</div>' +

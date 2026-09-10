@@ -5,7 +5,7 @@
 <div class="section" style="background:var(--bg-2);">
   <div class="container">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
-      <div><h1 style="font-size:1.5rem;font-weight:700;color:var(--text);letter-spacing:-0.02em;">💡 My Innovations</h1>
+      <div><h1 style="font-size:1.5rem;font-weight:700;color:var(--text);letter-spacing:-0.02em;"><i class="fas fa-lightbulb" style="color:var(--primary);"></i> My Innovations</h1>
       <p style="color:var(--text-muted);">Innovations you've submitted to the community</p></div>
       <a href="{{ route('innovation') }}#submit" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Submit New</a>
     </div>
@@ -13,12 +13,12 @@
       @forelse(isset($innovations)?$innovations:[] as $innovation)
         @php $sc=['draft'=>'badge-gray','pending_review'=>'badge-earth','approved'=>'badge-green','featured'=>'badge-sky','rejected'=>'badge-coral']; @endphp
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;">
-          <div style="width:52px;height:52px;border-radius:14px;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">💡</div>
+          <div style="width:52px;height:52px;border-radius:14px;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--green-700);flex-shrink:0;"><i class="fas fa-lightbulb"></i></div>
           <div style="flex:1;min-width:200px;">
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
               <span class="badge {{ $sc[$innovation->status]??'badge-gray' }}" style="font-size:.75rem;">{{ ucfirst($innovation->status) }}</span>
               <span class="badge badge-gray" style="font-size:.75rem;">{{ ucwords(str_replace('_',' ',$innovation->category)) }}</span>
-              @if($innovation->in_competition)<span class="badge badge-earth" style="font-size:.75rem;">🏆 Competition</span>@endif
+              @if($innovation->in_competition)<span class="badge badge-earth" style="font-size:.75rem;"><i class="fas fa-trophy"></i> Competition</span>@endif
             </div>
             <div style="font-size:1.0625rem;font-weight:600;color:var(--text);letter-spacing:-0.01em;margin-bottom:4px;">{{ $innovation->title }}</div>
             <div style="font-size:.8125rem;color:var(--text-muted);line-height:1.5;margin-bottom:10px;">{{ Str::limit($innovation->description,120) }}</div>

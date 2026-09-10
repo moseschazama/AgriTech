@@ -188,7 +188,7 @@
             action="{{ route('login.submit') }}" method="POST" novalidate>
         @csrf
         <div>
-          <div class="auth-heading">Welcome back 👋</div>
+          <div class="auth-heading">Welcome back</div>
           <div class="auth-subheading">Sign in to your AgriTech Pro account</div>
         </div>
 
@@ -245,7 +245,7 @@
       {{-- ── Forgot Password Overlay ── --}}
       <div id="forgotPasswordOverlay" style="display:none;flex-direction:column;gap:16px;">
         <div>
-          <div class="auth-heading">Reset Password 🔑</div>
+          <div class="auth-heading"><i class="fas fa-key" style="color:var(--text-muted);"></i> Reset Password</div>
           <div class="auth-subheading">Enter your phone number to receive a reset code via SMS</div>
         </div>
         <form method="POST" action="{{ route('password.send-otp') }}" id="forgotPhoneForm">
@@ -282,7 +282,7 @@
             action="{{ route('register.submit') }}" method="POST" novalidate>
         @csrf
         <div>
-          <div class="auth-heading">Join AgriTech Pro 🌱</div>
+<div class="auth-heading">Join AgriTech Pro</div>
           <div class="auth-subheading">No credit card required</div>
         </div>
 

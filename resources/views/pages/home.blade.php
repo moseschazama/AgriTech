@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'AgriTech Pro — Weather, courses & markets for Malawian farmers')
+@section('title', 'AgriTech Pro Weather, courses & markets for Malawian farmers')
 @section('extra_css')
 <link rel="stylesheet" href="{{ asset('css/home.css') }}"/>
 <style>
@@ -188,7 +188,7 @@
               @if($course->access_type === 'free')     <span class="badge badge-green">Open</span>@endif
               @if($course->access_type === 'premium')  <span class="course-premium-badge"><i class="fas fa-crown"></i> Premium</span>@endif
               @if($course->is_featured)                <span class="badge badge-earth">Bestseller</span>@endif
-              @if($course->has_certificate)            <span class="badge badge-sky">🎓 Certificate</span>@endif
+              @if($course->has_certificate)            <span class="badge badge-sky"><i class="fas fa-graduation-cap"></i> Certificate</span>@endif
             </div>
           </div>
           <div class="course-body">
@@ -253,8 +253,8 @@
     {{-- Category Tabs --}}
     <div class="mkt-cats" id="mktCats">
       <button class="mkt-cat active" onclick="filterMkt(this,'all')"><i class="fas fa-th"></i> All</button>
-      @foreach(['seeds'=>'🌱 Seeds','fertilizer'=>'🧪 Fertilizers','produce'=>'🍅 Fresh Produce','livestock'=>'🐐 Livestock','tools'=>'⚙️ Tools','equipment'=>'🌊 Equipment'] as $cat => $label)
-        <button class="mkt-cat" onclick="filterMkt(this,'{{ $cat }}')">{{ $label }}</button>
+      @foreach(['seeds'=>'Seeds','fertilizer'=>'Fertilizers','produce'=>'Fresh Produce','livestock'=>'Livestock','tools'=>'Tools','equipment'=>'Equipment'] as $cat => $label)
+        <button class="mkt-cat" onclick="filterMkt(this,'{{ $cat }}')"><i class="fas {{ \App\Support\CategoryIcons::product($cat) }}"></i> {{ $label }}</button>
       @endforeach
     </div>
 
@@ -274,7 +274,7 @@
                 <i class="{{ $product->wishlistedBy->isNotEmpty() ? 'fas' : 'far' }} fa-heart" style="{{ $product->wishlistedBy->isNotEmpty() ? 'color:#ef4444' : '' }}"></i>
               </button>
             @endauth
-            @if($product->is_featured) <span class="mkt-badge" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca;">🔥 Hot</span>
+            @if($product->is_featured) <span class="mkt-badge" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca;">Hot</span>
             @elseif($product->total_sold < 5) <span class="mkt-badge" style="background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;">New</span>
             @elseif($product->category === 'produce') <span class="mkt-badge" style="background:var(--green-50);color:var(--green-700);border:1px solid var(--green-200);">✓ Fresh</span>
             @endif
@@ -316,7 +316,7 @@
     {{-- Seller CTA --}}
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px 36px;margin-top:36px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;box-shadow:var(--shadow-xs);">
       <div style="display:flex;align-items:center;gap:18px;">
-        <div style="width:52px;height:52px;border-radius:14px;background:var(--green-100);color:var(--green-700);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🛒</div>
+        <div style="width:52px;height:52px;border-radius:14px;background:var(--green-100);color:var(--green-700);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;"><i class="fas fa-store"></i></div>
         <div>
           <div style="font-size:1.0625rem;font-weight:800;color:var(--text);margin-bottom:4px;">Are you a farmer or agri-business?</div>
           <div style="font-size:.86rem;color:var(--text-muted);">List your products and reach {{ number_format($stats['total_farmers']) }} registered farmers across Malawi.</div>
@@ -512,10 +512,10 @@
             <div style="width:60px;height:10px;background:#050e05;border-radius:6px;margin:0 auto 10px;"></div>
             <div style="background:#0d1f0d;border-radius:18px;overflow:hidden;padding:0 0 8px;">
               <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px 6px;background:#0d3d22;border-bottom:1px solid #14532d;">
-                <span style="font-size:.62rem;font-weight:700;color:rgba(255,255,255,.85);">🔬 Disease Scanner</span>
+                <span style="font-size:.62rem;font-weight:700;color:rgba(255,255,255,.85);"><i class="fas fa-microscope" style="margin-right:3px;"></i> Disease Scanner</span>
                 <span style="font-size:.55rem;font-weight:700;background:#22c55e;color:#fff;padding:2px 6px;border-radius:6px;">Ready</span>
               </div>
-              <div style="margin:8px;height:130px;background:#061206;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:3rem;">🌿</div>
+              <div style="margin:8px;height:130px;background:#061206;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:3rem;color:#22c55e;"><i class="fas fa-leaf"></i></div>
               <div style="margin:0 8px 6px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:7px 8px;display:flex;align-items:center;justify-content:space-between;">
                 <div>
                   <div style="font-size:.62rem;font-weight:700;color:#fff;">Fall Armyworm</div>
@@ -613,7 +613,7 @@ function toggleWishlist(btn, productId) {
       icon.className = 'fas fa-heart';
       icon.style.color = '#ef4444';
       btn.classList.add('active');
-      showToast('❤️ Added to wishlist!', 'success');
+      showToast('Added to wishlist!', 'success');
     } else {
       icon.className = 'far fa-heart';
       icon.style.color = '';

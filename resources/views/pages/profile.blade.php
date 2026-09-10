@@ -20,7 +20,6 @@
 .form-section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:20px;}
 .form-section-title{font-size:.9375rem;font-weight:700;color:var(--text);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
 .cert-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;color:var(--text);position:relative;overflow:hidden;}
-.cert-card::before{content:'🎓';position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:4rem;opacity:.15;}
 .cert-number{font-size:.8125rem;background:rgba(255,255,255,.15);border-radius:var(--radius-full);padding:3px 10px;display:inline-block;margin-bottom:10px;}
 .production-table{width:100%;border-collapse:collapse;}
 .production-table th{font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);}
@@ -128,8 +127,8 @@
 
     {{-- Profile Tabs --}}
     <div class="profile-tabs">
-      @foreach([['tab-info','👤 Personal Info'],['tab-farm','🌾 Farm Details'],['tab-certs','🎓 Certificates'],['tab-listings','🛒 My Listings'],['tab-security','🔐 Security']] as [$id,$label])
-        <button class="profile-tab {{ $id==='tab-info'?'active':'' }}" onclick="switchTab('{{ $id }}',this)">{{ $label }}</button>
+      @foreach([['tab-info','fa-user','Personal Info'],['tab-farm','fa-wheat-awn','Farm Details'],['tab-certs','fa-graduation-cap','Certificates'],['tab-listings','fa-cart-shopping','My Listings'],['tab-security','fa-shield-halved','Security']] as [$id,$icon,$label])
+        <button class="profile-tab {{ $id==='tab-info'?'active':'' }}" onclick="switchTab('{{ $id }}',this)"><i class="fas {{ $icon }}"></i> {{ $label }}</button>
       @endforeach
     </div>
 
@@ -374,7 +373,7 @@
                   <td style="font-weight:700;color:var(--primary);">{{ $product->currency }} {{ number_format($product->price) }}/{{ $product->unit }}</td>
                   <td style="text-align:center;">
                     @if($product->stock_quantity<=5&&$product->stock_quantity>0)
-                      <span style="color:#f59e0b;font-weight:700;">{{ $product->stock_quantity }} ⚠️</span>
+                      <span style="color:#f59e0b;font-weight:700;">{{ $product->stock_quantity }} <i class="fas fa-triangle-exclamation"></i></span>
                     @else
                       {{ $product->stock_quantity }}
                     @endif
@@ -387,7 +386,7 @@
                   </td>
                   <td>
                     <div style="display:flex;gap:5px;flex-wrap:wrap;">
-                      <button onclick="showToast('✏️ Edit feature coming soon!','info')" class="btn btn-outline btn-sm" style="font-size:.72rem;padding:4px 10px;">Edit</button>
+                      <button onclick="showToast('Edit feature coming soon!','info')" class="btn btn-outline btn-sm" style="font-size:.72rem;padding:4px 10px;">Edit</button>
                       <form method="POST" action="{{ route('marketplace.destroy',$product) }}" onsubmit="return confirm('Remove this listing?')">
                         @csrf @method('DELETE')
                         <button type="submit" class="btn btn-sm" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca;font-size:.72rem;padding:4px 10px;">Remove</button>
@@ -440,7 +439,7 @@
             <div class="form-section-title"><i class="fas fa-shield-alt" style="color:var(--primary);"></i> Two-Factor Authentication</div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
               <div>
-                <div style="font-size:.88rem;font-weight:600;color:var(--text);">{{ Auth::user()->two_factor_enabled ? '✅ 2FA Enabled' : '❌ 2FA Disabled' }}</div>
+                <div style="font-size:.88rem;font-weight:600;color:var(--text);"><i class="fas {{ Auth::user()->two_factor_enabled ? 'fa-circle-check' : 'fa-circle-xmark' }}" style="color:{{ Auth::user()->two_factor_enabled ? 'var(--green-600)' : '#ef4444' }};margin-right:5px;"></i> 2FA {{ Auth::user()->two_factor_enabled ? 'Enabled' : 'Disabled' }}</div>
                 <div style="font-size:.76rem;color:var(--text-muted);">OTP code sent via SMS on login</div>
               </div>
               <form method="POST" action="{{ route('profile.2fa') }}">
@@ -471,7 +470,7 @@
               <span class="badge badge-green" style="font-size:.7rem;">{{ ucfirst(Auth::user()->status) }}</span>
             </div>
             <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
-              <button onclick="showToast('⚠️ All other sessions have been signed out.','warning')" class="btn btn-outline btn-sm">
+              <button onclick="showToast('All other sessions have been signed out.','warning')" class="btn btn-outline btn-sm">
                 <i class="fas fa-sign-out-alt"></i> Sign Out Other Devices
               </button>
               <a href="{{ route('notifications') }}" class="btn btn-outline btn-sm">

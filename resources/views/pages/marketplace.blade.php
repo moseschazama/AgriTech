@@ -25,7 +25,6 @@
 .product-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all .2s;}
 .product-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--green-300);}
 .product-thumb{height:170px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.product-emoji{font-size:3.8rem;filter:drop-shadow(0 3px 6px rgba(0,0,0,.1));}
 .product-wishlist{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gray-400);transition:all .15s;z-index:2;}
 .product-wishlist:hover,.product-wishlist.active{color:#ef4444;transform:scale(1.1);}
 .product-badge{position:absolute;top:10px;left:10px;font-size:.67rem;font-weight:700;padding:3px 8px;border-radius:var(--radius-full);z-index:2;}
@@ -55,7 +54,7 @@
 @media(max-width:1100px){.product-grid{grid-template-columns:repeat(3,1fr);}}
 @media(max-width:900px){.market-layout{grid-template-columns:1fr;}.market-sidebar{position:static;}.product-grid{grid-template-columns:repeat(2,1fr);gap:14px;}}
 @media(max-width:768px){.market-sidebar{display:none;position:fixed;top:var(--nav-h);left:0;right:0;bottom:0;z-index:500;overflow-y:auto;padding:20px;background:var(--bg-card);}.market-sidebar.open{display:block;}.product-grid{grid-template-columns:repeat(2,1fr);gap:12px;}.cart-drawer{width:100%;}.product-body{padding:12px;}.product-name{font-size:.85rem;}.add-cart-btn{width:38px;height:38px;}}
-@media(max-width:639px){.product-grid{grid-template-columns:1fr;gap:14px;}.product-thumb{height:180px;}.product-body{padding:14px 16px;}.product-name{font-size:.95rem;}.product-cat{font-size:.73rem;}.product-price{font-size:1.05rem;}.product-seller{font-size:.8rem;}.product-emoji{font-size:3rem;}.product-stars{font-size:.85rem;}.add-cart-btn{width:44px;height:44px;font-size:1.05rem;}.product-wishlist{width:36px;height:36px;font-size:.95rem;}.toolbar{flex-direction:column;align-items:stretch;gap:10px;}.toolbar-left{font-size:.82rem;text-align:center;}.toolbar .btn{width:100%;justify-content:center;}.toolbar select{width:100%;}.sell-form-section{padding:20px 16px;}}
+@media(max-width:639px){.product-grid{grid-template-columns:1fr;gap:14px;}.product-thumb{height:180px;}.product-body{padding:14px 16px;}.product-name{font-size:.95rem;}.product-cat{font-size:.73rem;}.product-price{font-size:1.05rem;}.product-seller{font-size:.8rem;}.product-stars{font-size:.85rem;}.add-cart-btn{width:44px;height:44px;font-size:1.05rem;}.product-wishlist{width:36px;height:36px;font-size:.95rem;}.toolbar{flex-direction:column;align-items:stretch;gap:10px;}.toolbar-left{font-size:.82rem;text-align:center;}.toolbar .btn{width:100%;justify-content:center;}.toolbar select{width:100%;}.sell-form-section{padding:20px 16px;}}
 @media(max-width:380px){.product-thumb{height:160px;}}
 .sell-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 @media(max-width:640px){.sell-form-grid{grid-template-columns:1fr;gap:14px;}.sell-form-grid .form-input,.sell-form-grid .form-select,.sell-form-grid select{min-height:48px;font-size:16px;}.sell-form-section .btn-lg{width:100%;justify-content:center;}}
@@ -135,9 +134,9 @@
               <label class="filter-check {{ !request('category') ? 'selected' : '' }}">
                 <input type="radio" name="category" value="" @checked(!request('category'))/> All Categories
               </label>
-              @foreach(['seeds'=>'🌱 Seeds','fertilizer'=>'🧪 Fertilizer','produce'=>'🍅 Fresh Produce','livestock'=>'🐐 Livestock','tools'=>'🔧 Tools','equipment'=>'⚙️ Equipment','chemicals'=>'⚗️ Chemicals'] as $v=>$l)
+              @foreach(['seeds'=>'Seeds','fertilizer'=>'Fertilizer','produce'=>'Fresh Produce','livestock'=>'Livestock','tools'=>'Tools','equipment'=>'Equipment','chemicals'=>'Chemicals'] as $v=>$l)
                 <label class="filter-check {{ request('category')===$v ? 'selected' : '' }}">
-                  <input type="radio" name="category" value="{{ $v }}" @checked(request('category')===$v)/> {{ $l }}
+                  <input type="radio" name="category" value="{{ $v }}" @checked(request('category')===$v)/> <i class="fas {{ \App\Support\CategoryIcons::product($v) }}"></i> {{ $l }}
                 </label>
               @endforeach
             </div>
@@ -206,10 +205,8 @@
         <div class="product-grid">
           @forelse(isset($products) ? $products : [] as $product)
             @php
-              $pEmojis=['seeds'=>'🌽','fertilizer'=>'🧪','produce'=>'🍅','livestock'=>'🐐','tools'=>'💧','equipment'=>'⚙️','chemicals'=>'⚗️','other'=>'📦'];
               $pColors=['seeds'=>'#dcfce7,#bbf7d0','fertilizer'=>'#e0f2fe,#bae6fd','produce'=>'#fef2f2,#fecaca','livestock'=>'#fef9c3,#fef08a','tools'=>'#f0fdf4,#dcfce7','equipment'=>'#f5f3ff,#ede9fe','chemicals'=>'#fff7ed,#fed7aa'];
               $pImgs=['seeds'=>'seedling.jpg','fertilizer'=>'spraying2.jpg','produce'=>'tomato.jpg','livestock'=>'cows.jpg','tools'=>'irrigation.jpg','equipment'=>'agritech-drone.jpg','chemicals'=>'spraying2.jpg','other'=>'market-stall.jpg'];
-              $pEmoji=$pEmojis[$product->category]??'📦';
               $pColor=$pColors[$product->category]??'#dcfce7,#bbf7d0';
               $pCover=asset('assets/img/agri/'.($pImgs[$product->category]??'leaf-healthy.jpg'));
               $wishlisted=auth()->check()&&$product->wishlistedBy->isNotEmpty();
@@ -227,7 +224,7 @@
                   </button>
                 @endauth
                 @if($product->is_featured)
-                  <span class="product-badge" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca;">🔥 Hot</span>
+                  <span class="product-badge" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca;">Hot</span>
                 @elseif($product->total_sold<5)
                   <span class="product-badge" style="background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;">New</span>
                 @elseif($product->category==='produce')
@@ -246,9 +243,9 @@
                   {{ $product->seller->full_name??'Verified Seller' }} · {{ $product->district }}
                 </div>
                 @if(!$product->in_stock)
-                  <div style="font-size:.72rem;color:#ef4444;font-weight:600;margin-bottom:6px;">⚠️ Out of Stock</div>
+                  <div style="font-size:.72rem;color:#ef4444;font-weight:600;margin-bottom:6px;"><i class="fas fa-triangle-exclamation" style="margin-right:3px;"></i> Out of Stock</div>
                 @elseif($product->stock_quantity<=5)
-                  <div style="font-size:.72rem;color:#f59e0b;font-weight:600;margin-bottom:6px;">⚡ Only {{ $product->stock_quantity }} left!</div>
+                  <div style="font-size:.72rem;color:#f59e0b;font-weight:600;margin-bottom:6px;"><i class="fas fa-bolt" style="margin-right:3px;"></i> Only {{ $product->stock_quantity }} left!</div>
                 @endif
                 <div class="product-footer">
                   <div>
@@ -290,7 +287,7 @@
         {{-- Sell a Product Form --}}
         @auth
         <div class="sell-form-section content-end" id="sell">
-          <h3 style="font-size:clamp(1rem,4vw,1.2rem);font-weight:800;color:var(--text);margin-bottom:6px;word-break:break-word;">🌾 List Your Product</h3>
+<h3 style="font-size:clamp(1rem,4vw,1.2rem);font-weight:800;color:var(--text);margin-bottom:6px;word-break:break-word;"><i class="fas fa-wheat-awn" style="color:var(--primary);"></i> List Your Product</h3>
           <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:22px;">Reach 12,000+ buyers across Malawi. Your listing goes live once approved (usually within 24 hours).</p>
           <form method="POST" action="{{ route('marketplace.store') }}" enctype="multipart/form-data">
             @csrf
@@ -385,7 +382,7 @@
 <div class="overlay" id="cartOverlay" onclick="closeCart()"></div>
 <div class="cart-drawer" id="cartDrawer">
   <div class="cart-drawer-header">
-    <h3 style="font-size:1rem;font-weight:700;">🛒 Your Cart ({{ $cartCount }})</h3>
+    <h3 style="font-size:1rem;font-weight:700;"><i class="fas fa-cart-shopping"></i> Your Cart ({{ $cartCount }})</h3>
     <button onclick="closeCart()" style="background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--text-muted);">✕</button>
   </div>
   <div class="cart-drawer-body">
@@ -394,8 +391,8 @@
       @foreach($cartItems as $productId=>$qty)
         @php $p=\App\Models\Product::find($productId); if(!$p) continue; $lineTotal=$p->price*$qty; $cartTotal+=$lineTotal; @endphp
         <div class="cart-item">
-          <div style="width:50px;height:50px;background:var(--bg-2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;">
-            {{ ['seeds'=>'🌽','fertilizer'=>'🧪','produce'=>'🍅','livestock'=>'🐐','tools'=>'💧','equipment'=>'⚙️'][$p->category]??'📦' }}
+          <div style="width:50px;height:50px;background:var(--bg-2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--green-600);flex-shrink:0;">
+            <i class="fas {{ \App\Support\CategoryIcons::product($p->category) }}"></i>
           </div>
           <div style="flex:1;min-width:0;">
             <div style="font-size:.83rem;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $p->name }}</div>
@@ -461,7 +458,7 @@ function toggleWishlist(btn,productId){
     headers:{'X-CSRF-TOKEN':document.querySelector('meta[name=csrf-token]').content,'Accept':'application/json'}
   }).then(r=>r.json()).then(data=>{
     const icon=btn.querySelector('i');
-    if(data.added){icon.className='fas fa-heart';icon.style.color='#ef4444';btn.classList.add('active');showToast('❤️ Added to wishlist!','success');}
+    if(data.added){icon.className='fas fa-heart';icon.style.color='#ef4444';btn.classList.add('active');showToast('Added to wishlist!','success');}
     else{icon.className='far fa-heart';icon.style.color='';btn.classList.remove('active');showToast('Removed from wishlist','info');}
   });
 }

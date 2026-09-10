@@ -25,7 +25,6 @@
 .vote-btn{display:flex;align-items:center;gap:6px;background:var(--bg-2);border:1.5px solid var(--border);border-radius:var(--radius-full);padding:6px 14px;font-size:.8125rem;font-weight:700;color:var(--text);cursor:pointer;transition:all .15s;flex-shrink:0;}
 .vote-btn:hover,.vote-btn.voted{background:var(--primary);border-color:var(--primary);color:#fff;}
 .comp-card{background:var(--green-50);border:1px solid var(--green-200);border-radius:var(--radius-xl);padding:36px;color:var(--text);position:relative;overflow:hidden;margin-bottom:36px;}
-.comp-card::before{content:'🏆';position:absolute;right:32px;top:50%;transform:translateY(-50%);font-size:6rem;opacity:.12;}
 .prize-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 20px;text-align:center;}
 .submit-form-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:36px;margin-top:40px;}
 .innov-filter-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;}
@@ -129,7 +128,7 @@
     @if(isset($leaders) && $leaders->count() > 0)
     <div style="margin-bottom:32px;">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
-        <div style="width:38px;height:38px;border-radius:12px;background:#fefce8;display:flex;align-items:center;justify-content:center;font-size:1.05rem;">🏆</div>
+        <div style="width:38px;height:38px;border-radius:12px;background:#fefce8;display:flex;align-items:center;justify-content:center;color:#b45309;"><i class="fas fa-trophy"></i></div>
         <div>
           <h3 style="font-size:1.1rem;font-weight:700;letter-spacing:-0.01em;color:var(--text);margin-bottom:2px;">Community Leaderboard</h3>
           <p style="font-size:.8rem;color:var(--text-muted);">The people leading right now — cast your vote to help crown the next champion.</p>
@@ -154,7 +153,7 @@
               @endif
               <span style="position:absolute;top:10px;left:10px;background:{{ $rankBorders[$pos-1] }};color:#fff;font-size:.78rem;font-weight:800;padding:4px 10px;border-radius:20px;">#{{ $pos }}</span>
               @if($ld->in_competition)
-                <span style="position:absolute;top:10px;right:10px;background:#d97706;color:#fff;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:20px;">🏆 Competition</span>
+                <span style="position:absolute;top:10px;right:10px;background:#d97706;color:#fff;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:20px;"><i class="fas fa-trophy"></i> Competition</span>
               @endif
             </div>
             <div style="padding:16px;">
@@ -195,8 +194,8 @@
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
       <div class="innov-filter-tabs">
         <a href="{{ route('innovation') }}" class="innov-tab {{ !request('category') ? 'active' : '' }}">All</a>
-        @foreach(['water_management'=>'💧 Water','technology'=>'📱 Technology','infrastructure'=>'🏗️ Infrastructure','crop_solutions'=>'🌽 Crops','energy'=>'⚡ Energy','post_harvest'=>'🌾 Post-Harvest','livestock'=>'🐄 Livestock','business'=>'📊 Business'] as $key=>$label)
-          <a href="{{ route('innovation',['category'=>$key]) }}" class="innov-tab {{ request('category')===$key ? 'active' : '' }}">{{ $label }}</a>
+        @foreach(['water_management'=>'Water','technology'=>'Technology','infrastructure'=>'Infrastructure','crop_solutions'=>'Crops','energy'=>'Energy','post_harvest'=>'Post-Harvest','livestock'=>'Livestock','business'=>'Business'] as $key=>$label)
+          <a href="{{ route('innovation',['category'=>$key]) }}" class="innov-tab {{ request('category')===$key ? 'active' : '' }}"><i class="fas {{ \App\Support\CategoryIcons::innovation($key) }}"></i> {{ $label }}</a>
         @endforeach
       </div>
       <select class="form-select" style="font-size:.8125rem;padding:8px 12px;" onchange="window.location=this.value">
@@ -227,7 +226,7 @@
             </span>
             @if($innovation->in_competition)
               <span style="position:absolute;top:10px;left:10px;background:#d97706;color:#fff;font-size:.75rem;font-weight:700;padding:3px 8px;border-radius:20px;">
-                🏆 Competition
+                <i class="fas fa-trophy"></i> Competition
               </span>
             @endif
           </div>
@@ -288,7 +287,7 @@
     <div style="margin-top:44px;">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px;">
         <div style="display:flex;align-items:center;gap:12px;">
-          <div style="width:38px;height:38px;border-radius:12px;background:#fefce8;display:flex;align-items:center;justify-content:center;font-size:1.05rem;">🥇</div>
+          <div style="width:38px;height:38px;border-radius:12px;background:#fefce8;display:flex;align-items:center;justify-content:center;color:#b45309;"><i class="fas fa-medal"></i></div>
           <div>
             <h3 style="font-size:1.1rem;font-weight:700;letter-spacing:-0.01em;color:var(--text);margin-bottom:2px;">Previous Winners</h3>
             <p style="font-size:.8rem;color:var(--text-muted);">Champions from the last competition round — new entries open soon.</p>
@@ -314,7 +313,7 @@
               @if($w->images&&count($w->images)>0)
                 <img src="{{ asset('storage/'.$w->images[0]) }}" alt="{{ $w->title }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
               @endif
-              <span style="position:absolute;top:10px;left:10px;background:{{ $medals[$w->winner_position-1] }};color:#fff;font-size:.72rem;font-weight:800;padding:4px 10px;border-radius:20px;">🏆 {{ $medalLabel[$w->winner_position-1] }}</span>
+              <span style="position:absolute;top:10px;left:10px;background:{{ $medals[$w->winner_position-1] }};color:#fff;font-size:.72rem;font-weight:800;padding:4px 10px;border-radius:20px;"><i class="fas fa-trophy"></i> {{ $medalLabel[$w->winner_position-1] }}</span>
               @if($w->winner_prize)
                 <span style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.6);color:#fde68a;font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:20px;">K {{ number_format($w->winner_prize) }}</span>
               @endif
@@ -345,7 +344,7 @@
     {{-- Submit Innovation Form --}}
     <div class="submit-form-card" id="submit">
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px;">
-        <div style="width:52px;height:52px;border-radius:14px;background:var(--green-100);display:flex;align-items:center;justify-content:center;font-size:1.5rem;">💡</div>
+        <div style="width:52px;height:52px;border-radius:14px;background:var(--green-100);display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:var(--green-700);"><i class="fas fa-lightbulb"></i></div>
         <div>
           <h2 style="font-size:1.25rem;font-weight:700;color:var(--text);letter-spacing:-0.01em;margin-bottom:4px;">Submit Your Innovation</h2>
           <p style="font-size:.8125rem;color:var(--text-muted);">Share how you're solving farming challenges. Approved innovations are visible to 12,000+ farmers.</p>
@@ -369,7 +368,7 @@
               <label class="form-label">Category *</label>
               <select name="category" class="form-input form-select" required>
                 <option value="">Select category</option>
-                @foreach(['water_management'=>'💧 Water Management','technology'=>'📱 Technology','infrastructure'=>'🏗️ Infrastructure','crop_solutions'=>'🌽 Crop Solutions','energy'=>'⚡ Energy','post_harvest'=>'🌾 Post Harvest','livestock'=>'🐄 Livestock','business'=>'📊 Agribusiness'] as $v=>$l)
+                @foreach(['water_management'=>'Water Management','technology'=>'Technology','infrastructure'=>'Infrastructure','crop_solutions'=>'Crop Solutions','energy'=>'Energy','post_harvest'=>'Post Harvest','livestock'=>'Livestock','business'=>'Agribusiness'] as $v=>$l)
                   <option value="{{ $v }}" @selected(old('category')===$v)>{{ $l }}</option>
                 @endforeach
               </select>
@@ -414,7 +413,7 @@
                   <input type="checkbox" id="inCompetition" name="in_competition" value="1" @checked(old('in_competition')) style="width:auto;accent-color:var(--primary);margin-top:2px;"/>
                   <input type="hidden" id="compId" name="competition_id" value="{{ $activeCompetition->id }}"/>
                   <div>
-                    <div style="font-weight:700;color:var(--text);font-size:.8125rem;margin-bottom:3px;">🏆 Enter this innovation into "{{ $activeCompetition->title }}"</div>
+                    <div style="font-weight:700;color:var(--text);font-size:.8125rem;margin-bottom:3px;"><i class="fas fa-trophy" style="color:#d97706;"></i> Enter this innovation into "{{ $activeCompetition->title }}"</div>
                     <div style="font-size:.8125rem;color:var(--text-muted);">Win up to K {{ number_format($activeCompetition->first_prize) }} in prizes. {{ $activeCompetition->daysRemaining() }} days left to enter.</div>
                   </div>
                 </label>
@@ -428,7 +427,7 @@
         </form>
       @else
         <div style="text-align:center;padding:32px;background:var(--bg-2);border-radius:var(--radius-lg);">
-          <div style="font-size:3rem;margin-bottom:14px;">🌱</div>
+          <div style="font-size:2.5rem;margin-bottom:14px;color:var(--primary);"><i class="fas fa-seedling"></i></div>
           <h3 style="font-size:1.25rem;font-weight:600;letter-spacing:-0.01em;margin-bottom:8px;">Join to Submit Your Innovation</h3>
           <p style="font-size:.8125rem;color:var(--text-muted);margin-bottom:20px;">Create an account to share your farming innovations with 12,000+ farmers across Africa.</p>
           <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">

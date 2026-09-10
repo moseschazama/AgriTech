@@ -20,7 +20,7 @@
 {{-- Hero --}}
 <section class="confirm-hero">
   <div class="container">
-    <div style="font-size:4rem;margin-bottom:16px;">🎉</div>
+    <div style="font-size:3.5rem;margin-bottom:16px;color:var(--green-600);"><i class="fas fa-circle-check"></i></div>
     <h1 class="heading-lg" style="margin-bottom:8px;">Order Placed Successfully!</h1>
     <p style="color:var(--text-muted);">Order <strong class="code">{{ $order->order_number }}</strong> received</p>
     <div style="display:inline-flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-full);padding:6px 18px;margin-top:12px;" class="body-sm">
@@ -41,7 +41,7 @@
     @if($paymentMethod === 'airtel_money')
       <div class="pay-box" style="background:#fff7ed;border:1.5px solid #fb923c;">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-          <div style="width:48px;height:48px;background:#ea580c;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;">📱</div>
+          <div style="width:48px;height:48px;background:#ea580c;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;color:#fff;"><i class="fas fa-mobile-screen-button"></i></div>
           <div><div class="heading-xs" style="color:#9a3412;">Pay via Airtel Money</div><div class="body-sm" style="color:#c2410c;">Complete payment now to confirm your order</div></div>
         </div>
         <div class="pay-step"><div class="pay-num" style="background:#ea580c;color:#fff;">1</div><div style="color:#7c2d12;" class="body-sm">Dial <strong>*299#</strong> on your Airtel line</div></div>
@@ -58,7 +58,7 @@
     @elseif($paymentMethod === 'tnm_mpamba')
       <div class="pay-box" style="background:#eff6ff;border:1.5px solid #3b82f6;">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-          <div style="width:48px;height:48px;background:#1d4ed8;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;">📱</div>
+          <div style="width:48px;height:48px;background:#1d4ed8;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;color:#fff;"><i class="fas fa-mobile-screen-button"></i></div>
           <div><div class="heading-xs" style="color:#1e3a8a;">Pay via TNM Mpamba</div><div class="body-sm" style="color:#1d4ed8;">Complete payment to confirm your order</div></div>
         </div>
         <div class="pay-step"><div class="pay-num" style="background:#1d4ed8;color:#fff;">1</div><div style="color:#1e3a8a;" class="body-sm">Dial <strong>*116#</strong> on your TNM line</div></div>
@@ -71,7 +71,7 @@
     @elseif($paymentMethod === 'mtn_momo')
       <div class="pay-box" style="background:#fefce8;border:1.5px solid #ca8a04;">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-          <div style="width:48px;height:48px;background:#ca8a04;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;">📱</div>
+          <div style="width:48px;height:48px;background:#ca8a04;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;color:#fff;"><i class="fas fa-mobile-screen-button"></i></div>
           <div><div class="heading-xs" style="color:#713f12;">Pay via MTN MoMo</div><div class="body-sm" style="color:#92400e;">Complete payment to confirm your order</div></div>
         </div>
         <div class="pay-step"><div class="pay-num" style="background:#ca8a04;color:#fff;">1</div><div style="color:#713f12;" class="body-sm">Dial <strong>*165#</strong> on your MTN line</div></div>

@@ -83,12 +83,12 @@
     @auth
     @if(isset($continueWatching) && $continueWatching->count() > 0)
     <div style="margin-bottom:40px;">
-      <h2 class="heading-sm font-800" style="color:var(--text);margin-bottom:16px;">▶️ Continue Learning</h2>
+      <h2 class="heading-sm font-800" style="color:var(--text);margin-bottom:16px;"><i class="fas fa-play-circle" style="color:var(--primary);"></i> Continue Learning</h2>
       <div class="continue-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
         @foreach($continueWatching as $enrollment)
           @php $pct = $enrollment->progressPercentage(); @endphp
           <div class="continue-card">
-            <div style="width:48px;height:48px;border-radius:12px;background:var(--green-100);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🌱</div>
+            <div style="width:48px;height:48px;border-radius:12px;background:var(--green-100);display:flex;align-items:center;justify-content:center;font-size:1.15rem;color:var(--green-700);flex-shrink:0;"><i class="fas fa-seedling"></i></div>
             <div style="flex:1;min-width:0;">
               <div class="body-base font-700" style="color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $enrollment->course->title }}</div>
               <div class="progress-bar-outer"><div class="progress-bar-inner" style="width:{{ $pct }}%;"></div></div>
@@ -107,9 +107,9 @@
       <div class="filter-tabs">
         <a href="{{ route('learn', array_merge(request()->query(), ['category'=>null])) }}"
            class="filter-tab {{ !request('category') ? 'active' : '' }}">All</a>
-        @foreach(['soil_crops'=>'🌽 Soil & Crops','livestock'=>'🐄 Livestock','agri_tech'=>'🚁 Agri-Tech','agribusiness'=>'📊 Agribusiness','organic'=>'🥦 Organic','irrigation'=>'💧 Irrigation','post_harvest'=>'🌾 Post-Harvest'] as $key=>$label)
+        @foreach(['soil_crops'=>'Soil & Crops','livestock'=>'Livestock','agri_tech'=>'Agri-Tech','agribusiness'=>'Agribusiness','organic'=>'Organic','irrigation'=>'Irrigation','post_harvest'=>'Post-Harvest'] as $key=>$label)
           <a href="{{ route('learn', array_merge(request()->query(), ['category'=>$key])) }}"
-             class="filter-tab {{ request('category') === $key ? 'active' : '' }}">{{ $label }}</a>
+             class="filter-tab {{ request('category') === $key ? 'active' : '' }}"><i class="fas {{ \App\Support\CategoryIcons::course($key) }}"></i> {{ $label }}</a>
         @endforeach
       </div>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
@@ -126,10 +126,8 @@
     <div class="course-grid" id="courseGrid">
       @forelse(isset($courses) ? $courses : [] as $course)
         @php
-          $catEmojis=['soil_crops'=>'🌽','livestock'=>'🐄','agri_tech'=>'🚁','agribusiness'=>'📊','organic'=>'🥦','irrigation'=>'💧','post_harvest'=>'🌾'];
           $catColors=['soil_crops'=>'#dcfce7,#bbf7d0','livestock'=>'#fef9c3,#fef08a','agri_tech'=>'#e0f2fe,#bae6fd','agribusiness'=>'#f5f3ff,#ede9fe','organic'=>'#f0fdf4,#dcfce7','irrigation'=>'#e0f2fe,#bae6fd','post_harvest'=>'#fff7ed,#fed7aa'];
           $catImgs=['soil_crops'=>'maize-field.jpg','livestock'=>'cows.jpg','agri_tech'=>'agritech-drone.jpg','agribusiness'=>'market-stall.jpg','organic'=>'seedling.jpg','irrigation'=>'irrigation.jpg','post_harvest'=>'harvest.jpg'];
-          $emoji=$catEmojis[$course->category]??'🌱';
           $color=$catColors[$course->category]??'#dcfce7,#bbf7d0';
           $cover=$course->thumbnail_url ?? asset('assets/img/agri/'.($catImgs[$course->category]??'seedling.jpg'));
           $hrs=intdiv($course->total_duration_minutes,60);
@@ -147,7 +145,7 @@
               @if($course->is_featured)             <span class="badge badge-earth">Bestseller</span>@endif
               @if($isEnrolled&&$enrollment?->status==='completed') <span class="badge badge-green"><i class="fas fa-check"></i> Completed</span>@endif
               @if($isEnrolled&&$enrollment?->status==='active')    <span class="badge badge-sky"><i class="fas fa-play"></i> Enrolled</span>@endif
-              @if($course->has_certificate)         <span class="badge badge-gray">🎓 Certificate</span>@endif
+              @if($course->has_certificate)         <span class="badge badge-gray"><i class="fas fa-graduation-cap"></i> Certificate</span>@endif
             </div>
           </div>
           <div class="course-body">
@@ -217,7 +215,7 @@
       {{-- Topic filter chips --}}
       <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:28px;">
         <a href="{{ route('learn') }}" class="filter-tab {{ !request('guide_topic') ? 'active' : '' }}">All Guides</a>
-        @foreach(['soil_crops'=>'🌽 Soil & Crops','livestock'=>'🐄 Livestock','agri_tech'=>'🚁 Agri-Tech','agribusiness'=>'📊 Agribusiness','organic'=>'🥦 Organic','irrigation'=>'💧 Irrigation','post_harvest'=>'🌾 Post-Harvest','disease_control'=>'🔬 Disease Control'] as $key=>$label)
+        @foreach(['soil_crops'=>'Soil & Crops','livestock'=>'Livestock','agri_tech'=>'Agri-Tech','agribusiness'=>'Agribusiness','organic'=>'Organic','irrigation'=>'Irrigation','post_harvest'=>'Post-Harvest','disease_control'=>'Disease Control'] as $key=>$label)
           <a href="{{ route('learn',['guide_topic'=>$key]) }}" class="filter-tab {{ request('guide_topic')===$key ? 'active' : '' }}">{{ $label }}</a>
         @endforeach
       </div>
@@ -225,7 +223,7 @@
       <div class="guides-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;">
         @forelse(isset($guides) ? $guides : [] as $guide)
           <div class="guide-card">
-            <div class="guide-icon" style="background:var(--green-50);font-size:2rem;">{{ $guide->topic_emoji }}</div>
+            <div class="guide-icon" style="background:var(--green-50);font-size:1.4rem;color:var(--green-700);"><i class="fas {{ \App\Support\CategoryIcons::course($guide->topic) }}"></i></div>
             <div class="body-base font-700" style="color:var(--text);margin-bottom:6px;line-height:1.3;">{{ $guide->title }}</div>
             <div class="body-xs" style="color:var(--text-muted);margin-bottom:10px;">
               {{ $guide->page_count ? $guide->page_count.' pages · ' : '' }}{{ $guide->file_size_formatted }}
@@ -255,7 +253,7 @@
 
     {{-- ── BECOME AN INSTRUCTOR CTA ── --}}
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:40px;margin-top:48px;text-align:center;color:var(--text);box-shadow:var(--shadow-md);">
-      <div style="font-size:2.5rem;margin-bottom:14px;">👨‍🏫</div>
+      <div style="font-size:2.5rem;margin-bottom:14px;color:var(--primary);"><i class="fas fa-chalkboard-user"></i></div>
       <h2 class="heading-md" style="margin-bottom:10px;">Are You an Agricultural Expert?</h2>
       <p class="body-base" style="color:var(--text-muted);max-width:480px;margin:0 auto 24px;">Share your knowledge with 12,000+ farmers across Malawi. Create courses and earn from your expertise.</p>
       <a href="{{ route('register') }}" class="btn btn-primary btn-lg"><i class="fas fa-chalkboard-teacher"></i> Become an Instructor</a>
@@ -272,7 +270,7 @@
       <button onclick="closeVideoModal()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-muted);">✕</button>
     </div>
     <div class="video-player">
-      <div class="video-play-btn" onclick="showToast('▶️ Video playing...','info')">
+      <div class="video-play-btn" onclick="showToast('Video playing...','info')">
         <i class="fas fa-play" style="margin-left:4px;"></i>
       </div>
     </div>
@@ -280,7 +278,7 @@
       <div id="videoLessonName" class="body-sm" style="color:var(--text-muted);">Lesson 1</div>
       <div style="display:flex;gap:8px;">
         <button class="btn btn-outline btn-sm" onclick="showToast('← Previous lesson','info')"><i class="fas fa-chevron-left"></i> Prev</button>
-        <button class="btn btn-primary btn-sm" onclick="showToast('✅ Lesson marked complete!','success')"><i class="fas fa-check"></i> Mark Complete</button>
+        <button class="btn btn-primary btn-sm" onclick="showToast('Lesson marked complete!','success')"><i class="fas fa-check"></i> Mark Complete</button>
         <button class="btn btn-outline btn-sm" onclick="showToast('Next lesson →','info')">Next <i class="fas fa-chevron-right"></i></button>
       </div>
     </div>

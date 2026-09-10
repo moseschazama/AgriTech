@@ -42,7 +42,7 @@
       $images   = $innovation->images ?? [];
       $mainImg  = count($images) > 0 ? asset('storage/'.$images[0]) : $cover;
       $isWinner = $innovation->winner_position;
-      $medalLabels = [1=>'🏆 1st Place Winner',2=>'🥈 2nd Place Winner',3=>'🥉 3rd Place Winner'];
+      $medalLabels = [1=>'1st Place Winner',2=>'2nd Place Winner',3=>'3rd Place Winner'];
     @endphp
 
     <div class="detail-grid">
@@ -51,7 +51,7 @@
         <div style="position:relative;border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-lg);">
           <img id="detailMainImg" src="{{ $mainImg }}" alt="{{ $innovation->title }}" style="width:100%;height:320px;object-fit:cover;display:block;"/>
           @if($innovation->in_competition)
-            <span style="position:absolute;top:14px;left:14px;background:#d97706;color:#fff;font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:20px;">🏆 Competition Entry</span>
+            <span style="position:absolute;top:14px;left:14px;background:#d97706;color:#fff;font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:20px;"><i class="fas fa-trophy"></i> Competition Entry</span>
           @endif
           @if($isWinner)
             <span style="position:absolute;top:14px;right:14px;background:#b45309;color:#fff;font-size:.75rem;font-weight:800;padding:4px 12px;border-radius:20px;">{{ $medalLabels[$isWinner] ?? 'Winner' }}</span>

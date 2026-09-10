@@ -9,7 +9,7 @@
   <div class="container" style="max-width:760px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
       <div>
-        <h1 class="heading-md" style="color:var(--text);">🔔 Notifications</h1>
+        <h1 class="heading-md" style="color:var(--text);"><i class="fas fa-bell" style="color:var(--primary);"></i> Notifications</h1>
         <p style="color:var(--text-muted);">{{ Auth::user()->unreadNotifications()->count() }} unread</p>
       </div>
       @if(Auth::user()->unreadNotifications()->count()>0)

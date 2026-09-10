@@ -31,11 +31,11 @@
     <div class="pd-layout">
       {{-- Gallery --}}
       <div>
-        @php $pEmojis=['seeds'=>'🌽','fertilizer'=>'🧪','produce'=>'🍅','livestock'=>'🐐','tools'=>'💧','equipment'=>'⚙️','chemicals'=>'⚗️','other'=>'📦'];
+        @php $pIcon=\App\Support\CategoryIcons::product($product->category);
               $pColors=['seeds'=>'#dcfce7,#bbf7d0','fertilizer'=>'#e0f2fe,#bae6fd','produce'=>'#fef2f2,#fecaca','livestock'=>'#fef9c3,#fef08a','tools'=>'#f0fdf4,#dcfce7','equipment'=>'#f5f3ff,#ede9fe']; @endphp
         <div class="pd-gallery-main" id="pdMain" style="background:{{ explode(',', $pColors[$product->category]??'#dcfce7')[0] }};">
           @if($product->thumbnail)<img src="{{ asset('storage/'.$product->thumbnail) }}" style="width:100%;height:100%;object-fit:cover;"/>
-          @else {{ $pEmojis[$product->category]??'📦' }} @endif
+          @else <i class="fas {{ $pIcon }}" style="font-size:3.5rem;color:var(--primary);"></i> @endif
         </div>
         @if($product->images&&count($product->images)>1)
           <div class="pd-thumb-row">
@@ -55,7 +55,7 @@
 
         {{-- Reviews --}}
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;margin-top:22px;">
-          <h3 class="heading-xs font-700" style="margin-bottom:6px;">⭐ Reviews ({{ $product->total_reviews }})</h3>
+          <h3 class="heading-xs font-700" style="margin-bottom:6px;"><i class="fas fa-star" style="color:#f59e0b;"></i> Reviews ({{ $product->total_reviews }})</h3>
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
             <span style="color:#f59e0b;font-size:1.1rem;">{{ str_repeat('★',round($product->average_rating)) }}{{ str_repeat('☆',5-round($product->average_rating)) }}</span>
             <span style="font-weight:700;">{{ number_format($product->average_rating,1) }}</span>
@@ -141,7 +141,7 @@
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
           @foreach($related as $rp)
             <a href="{{ route('marketplace.show',$rp) }}" class="related-card" style="text-decoration:none;display:block;">
-              <div style="height:120px;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-size:2.5rem;">{{ $pEmojis[$rp->category]??'📦' }}</div>
+              <div style="height:120px;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--green-600);"><i class="fas {{ \App\Support\CategoryIcons::product($rp->category) }}"></i></div>
               <div style="padding:12px;">
                 <div class="body-base font-700" style="color:var(--text);margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ $rp->name }}</div>
                 <div class="body-sm font-700" style="color:var(--primary);">{{ $rp->currency }} {{ number_format($rp->price) }}</div>

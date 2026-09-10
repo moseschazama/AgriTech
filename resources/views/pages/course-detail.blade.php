@@ -54,7 +54,7 @@
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
         @if($course->access_type==='free')   <span class="badge badge-green">Open Access</span> @endif
         @if($course->is_featured)            <span class="badge badge-earth">Bestseller</span> @endif
-        @if($course->has_certificate)        <span class="badge badge-sky">🎓 Certificate</span> @endif
+        @if($course->has_certificate)        <span class="badge badge-sky"><i class="fas fa-graduation-cap"></i> Certificate</span> @endif
         <span class="badge" style="background:var(--bg-card);color:var(--text);border:1px solid var(--border);">{{ ucfirst($course->level) }}</span>
       </div>
       <h1 class="heading-lg" style="font-size:clamp(1.6rem,4vw,2.4rem);margin-bottom:12px;line-height:1.2;">{{ $course->title }}</h1>
@@ -90,7 +90,7 @@
           @php $pct = $enrollment->progressPercentage(); @endphp
           <div id="progress-section" style="background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--radius-lg);padding:18px 22px;margin-bottom:22px;">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-              <span class="body-base font-700" style="color:var(--green-700);">📚 Your Progress</span>
+              <span class="body-base font-700" style="color:var(--green-700);"><i class="fas fa-book-open"></i> Your Progress</span>
               <span id="progress-pct" class="heading-sm font-800" style="color:var(--primary);">{{ $pct }}%</span>
             </div>
             <div class="progress-bar-outer"><div id="progress-bar" class="progress-bar-inner" style="width:{{ $pct }}%;"></div></div>
@@ -100,7 +100,7 @@
           </div>
         @elseif($enrollment && $enrollment->status === 'completed')
           <div style="background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--radius-lg);padding:16px 22px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-            <span class="body-base font-700" style="color:var(--green-700);">🎉 Course Completed — {{ $enrollment->completed_at?->format('M j, Y') }}</span>
+            <span class="body-base font-700" style="color:var(--green-700);"><i class="fas fa-circle-check"></i> Course Completed — {{ $enrollment->completed_at?->format('M j, Y') }}</span>
             @if($enrollment->certificate_number)
               <a href="{{ route('learn.certificate.pdf', $enrollment) }}" class="btn btn-primary btn-sm"><i class="fas fa-download"></i> Download Certificate PDF</a>
             @endif
@@ -110,7 +110,7 @@
         {{-- What You'll Learn --}}
         @if($course->what_you_learn)
           <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:22px;">
-            <h2 class="heading-xs font-800" style="color:var(--text);margin-bottom:16px;">✅ What You'll Learn</h2>
+            <h2 class="heading-xs font-800" style="color:var(--text);margin-bottom:16px;"><i class="fas fa-circle-check" style="color:var(--green-600);"></i> What You'll Learn</h2>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
               @foreach(explode(',',$course->what_you_learn) as $item)
                 @if(trim($item))
@@ -128,7 +128,7 @@
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:22px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:8px;">
             <h2 class="heading-xs font-800" style="color:var(--text);">
-              📋 Course Lessons ({{ $lessonCount }})
+              <i class="fas fa-list-ul" style="color:var(--primary);"></i> Course Lessons ({{ $lessonCount }})
             </h2>
             <div class="body-sm" style="color:var(--text-muted);">
               <i class="fas fa-clock"></i> {{ $hrs }}h {{ $mins }}m ·
@@ -212,7 +212,7 @@
         {{-- ── INSTRUCTOR ── --}}
         @if($course->instructor)
           <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:22px;">
-            <h2 class="heading-xs font-800" style="color:var(--text);margin-bottom:16px;">👨‍🏫 About the Instructor</h2>
+            <h2 class="heading-xs font-800" style="color:var(--text);margin-bottom:16px;"><i class="fas fa-chalkboard-user" style="color:var(--primary);"></i> About the Instructor</h2>
             <div style="display:flex;gap:14px;align-items:flex-start;">
               <div class="avatar avatar-lg" style="background:#16a34a;color:#fff;font-size:1rem;flex-shrink:0;">
                 {{ strtoupper(substr($course->instructor->name, 0, 2)) }}
@@ -228,7 +228,7 @@
 
         {{-- ── REVIEWS ── --}}
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:22px;">
-          <h2 class="heading-xs font-800" style="color:var(--text);margin-bottom:6px;">⭐ Student Reviews</h2>
+          <h2 class="heading-xs font-800" style="color:var(--text);margin-bottom:6px;"><i class="fas fa-star" style="color:#f59e0b;"></i> Student Reviews</h2>
           <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap;">
             <div style="text-align:center;">
               <div class="heading-xl font-800" style="color:var(--primary);line-height:1;">{{ number_format($course->average_rating, 1) }}</div>
@@ -298,12 +298,10 @@
       {{-- ── SIDEBAR ── --}}
       <div class="cd-sidebar">
         @php
-          $catEmojis = ['soil_crops'=>'🌽','livestock'=>'🐄','agri_tech'=>'🚁','agribusiness'=>'📊','organic'=>'🥦','irrigation'=>'💧','post_harvest'=>'🌾'];
           $catColors = ['soil_crops'=>'#dcfce7,#bbf7d0','livestock'=>'#fef9c3,#fef08a','agri_tech'=>'#e0f2fe,#bae6fd','agribusiness'=>'#f5f3ff,#ede9fe','organic'=>'#f0fdf4,#dcfce7','irrigation'=>'#e0f2fe,#bae6fd','post_harvest'=>'#fff7ed,#fed7aa'];
-          $emoji = $catEmojis[$course->category] ?? '🌱';
           $bg    = $catColors[$course->category] ?? '#dcfce7,#bbf7d0';
         @endphp
-        <div class="cd-sidebar-thumb" style="background:{{ explode(',', $bg)[0] }};">{{ $emoji }}</div>
+        <div class="cd-sidebar-thumb" style="background:{{ explode(',', $bg)[0] }};"><i class="fas {{ \App\Support\CategoryIcons::course($course->category) }}" style="font-size:3rem;color:var(--primary);"></i></div>
         <div class="cd-sidebar-body">
           {{-- Price --}}
           @if($course->access_type === 'free')
@@ -351,7 +349,7 @@
           @else
             @auth
               <button class="btn btn-primary btn-md" style="width:100%;justify-content:center;margin-bottom:10px;"
-                      onclick="showToast('💳 Paid enrollment — contact us to enroll','info')">
+                      onclick="showToast('Paid enrollment — contact us to enroll','info')">
                 <i class="fas fa-lock-open"></i> Enroll for {{ $course->currency }} {{ number_format($course->price) }}
               </button>
             @else
@@ -382,7 +380,7 @@
           </div>
 
           <div style="display:flex;gap:8px;margin-top:14px;">
-            <button onclick="showToast('🔗 Link copied!','success')" class="btn btn-outline btn-sm" style="flex:1;justify-content:center;"><i class="fas fa-share-alt"></i> Share</button>
+            <button onclick="showToast('Link copied!','success')" class="btn btn-outline btn-sm" style="flex:1;justify-content:center;"><i class="fas fa-share-alt"></i> Share</button>
             <a href="{{ route('learn') }}" class="btn btn-outline btn-sm" style="flex:1;justify-content:center;"><i class="fas fa-book"></i> More Courses</a>
           </div>
         </div>
@@ -622,7 +620,7 @@ function updateProgressUI(data) {
   if (data.completed) {
     const section = document.getElementById('progress-section');
     if (section) {
-      section.outerHTML = '<div id="progress-section" style="background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--radius-lg);padding:16px 22px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;"><span class="body-base font-700" style="color:var(--green-700);">🎉 Course Completed!</span></div>';
+      section.outerHTML = '<div id="progress-section" style="background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--radius-lg);padding:16px 22px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;"><span class="body-base font-700" style="color:var(--green-700);">Course Completed!</span></div>';
     }
   }
 }
@@ -652,7 +650,7 @@ async function markLessonComplete() {
       },
     });
     const data = await res.json();
-    showToast(data.message || '✅ Lesson marked as complete!', 'success');
+    showToast(data.message || 'Lesson marked as complete!', 'success');
 
     // Update progress bar + counts immediately
     updateProgressUI(data);
